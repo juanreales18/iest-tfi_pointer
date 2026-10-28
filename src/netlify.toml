@@ -1,0 +1,56 @@
+# =============================================================
+# KIOSCO SYSTEM - NETLIFY.TOML
+# Configuracion de build y variables de entorno para Netlify
+# =============================================================
+
+[build]
+  # Netlify no necesita comando de build para sitios estaticos puros.
+  # Si en el futuro agregas un bundler (Vite, Parcel) va aqui.
+  publish = "."
+
+# 1. Headers de seguridad globales para todas las paginas
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Evita que el sitio sea embebido en iframes de otros dominios
+    X-Frame-Options = "DENY"
+    # Evita sniffing de tipo de contenido
+    X-Content-Type-Options = "nosniff"
+    # Politica de referencia
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Fuerza HTTPS
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    # Politica de permisos (deshabilita APIs no usadas)
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    # Que los buscadores no indexen el sistema (es privado de cada negocio)
+    X-Robots-Tag = "noindex, nofollow"
+    # Politica de seguridad de contenido: solo se carga codigo del propio sitio y las
+    # conexiones salen unicamente hacia Supabase. Se mantiene 'unsafe-inline' porque el
+    # sistema usa scripts y estilos en linea (onclick, style=). Fuentes: Google Fonts.
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+    # Por defecto, forzamos revalidación suave en la raíz
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# 2. Control estricto de caché para evitar que el index se quede pegado
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# 3. Cache agresivo para assets estaticos (Esto está perfecto porque tienen nombres/rutas fijas)
+# Cache controlado para assets estaticos (Eliminamos 'immutable' y bajamos el tiempo)
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Redirigir cualquier ruta desconocida al index (SPA-like)
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200

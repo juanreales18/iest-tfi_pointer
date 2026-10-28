@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="supabase-url"  content="https://iwfwjdwwkrczyrnmmprw.supabase.co">
+    <meta name="supabase-anon" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3ZndqZHd3a3Jjenlybm1tcHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NDIwODcsImV4cCI6MjA5NDUxODA4N30.ryrLkf4RT2tXqZ-dDXGtDV-DRdTiCZ9zRUwIJS6S2w0">
+    <meta name="robots"        content="noindex, nofollow">
+    <meta name="license-key"   content="LIC-06J57OI3">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KioscoSystem - Punto de Venta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/pos.css">
+</head>
+<body class="pos-body">
+
+    <!-- HEADER DEL POS -->
+    <header class="pos-header">
+        <div class="pos-header-left">
+            <a href="dashboard.html" class="pos-back-btn" aria-label="Volver al dashboard">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            </a>
+            <div class="pos-logo">
+                <span class="pos-logo-icon">K</span>
+                <span class="pos-logo-text">Punto de Venta</span>
+            </div>
+        </div>
+        <div class="pos-header-center">
+            <!-- Buscador principal del POS -->
+            <div class="pos-search-wrapper">
+                <svg class="pos-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input
+                    type="text"
+                    id="pos-search"
+                    class="pos-search-input"
+                    placeholder="Buscar por nombre o codigo de barras..."
+                    autocomplete="off"
+                    autofocus
+                >
+                <kbd class="pos-search-hint">F2</kbd>
+            </div>
+        </div>
+        <div class="pos-header-right">
+            <div class="pos-caja-info" id="pos-caja-info">
+                <span class="pos-caja-dot closed" id="pos-caja-dot"></span>
+                <span id="pos-caja-label">Sin caja</span>
+            </div>
+            <div class="pos-user-info">
+                <div class="pos-avatar" id="pos-avatar">U</div>
+                <span id="pos-username">-</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- TABS MÓVIL (fuera del layout para no romper alturas) -->
+    <div class="pos-mobile-tabs" id="pos-mobile-tabs" style="display:none">
+        <button class="pos-tab-btn active" id="tab-btn-productos" data-tab="productos">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+            Productos
+        </button>
+        <button class="pos-tab-btn" id="tab-btn-carrito" data-tab="carrito">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            Carrito
+            <span class="pos-tab-badge" id="tab-cart-count" style="display:none">0</span>
+        </button>
+    </div>
+
+    <!-- CUERPO PRINCIPAL DEL POS -->
+    <div class="pos-layout">
+
+        <!-- PANEL IZQUIERDO: categorias + productos -->
+        <div class="pos-left">
+
+            <!-- Filtros de categorias -->
+            <div class="pos-categories" id="pos-categories">
+                <button class="category-chip active" data-id="all">Todos</button>
+                <!-- Las categorias se cargan dinamicamente -->
+            </div>
+
+            <!-- Alerta: caja cerrada -->
+            <div class="pos-caja-alert hidden" id="pos-caja-alert">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <span>La caja esta cerrada. Abri la caja para registrar ventas.</span>
+                <button class="btn btn-sm btn-warning" id="btn-abrir-caja-alert">Abrir caja</button>
+            </div>
+
+            <!-- Grid de productos -->
+            <div class="pos-products-grid" id="pos-products-grid">
+                <!-- Skeleton de carga -->
+                <div class="product-skeleton"></div>
+                <div class="product-skeleton"></div>
+                <div class="product-skeleton"></div>
+                <div class="product-skeleton"></div>
+                <div class="product-skeleton"></div>
+                <div class="product-skeleton"></div>
+                <div class="product-skeleton"></div>
+                <div class="product-skeleton"></div>
+            </div>
+
+            <!-- Sin resultados -->
+            <div class="pos-empty hidden" id="pos-empty">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <p>No se encontraron productos</p>
+                <span id="pos-empty-query"></span>
+            </div>
+        </div>
+
+        <!-- PANEL DERECHO: carrito + cobro -->
+        <div class="pos-right">
+
+            <!-- Header del carrito -->
+            <div class="pos-cart-header">
+                <h3>Venta actual</h3>
+                <div class="pos-cart-actions">
+                    <button class="btn btn-ghost btn-sm" id="btn-cliente" title="Asignar cliente">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                        <span id="btn-cliente-text">Cliente</span>
+                    </button>
+                    <button class="btn btn-ghost btn-sm btn-danger" id="btn-clear-cart" title="Vaciar carrito" disabled>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cliente seleccionado -->
+            <div class="pos-cliente-badge hidden" id="pos-cliente-badge">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                <span id="pos-cliente-nombre">-</span>
+                <button class="cliente-badge-remove" id="btn-remove-cliente" aria-label="Quitar cliente">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <!-- Lista del carrito -->
+            <div class="pos-cart-list" id="pos-cart-list">
+                <div class="pos-cart-empty" id="pos-cart-empty">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <p>El carrito esta vacio</p>
+                    <span>Toca un producto para agregarlo</span>
+                </div>
+            </div>
+
+            <!-- ZONA FIJA INFERIOR: siempre visible -->
+            <div class="pos-bottom-fixed">
+
+                <!-- Resumen de totales -->
+                <div class="pos-totals" id="pos-totals">
+                    <div class="pos-total-row">
+                        <span>Subtotal</span>
+                        <span id="pos-subtotal">$0,00</span>
+                    </div>
+                    <div class="pos-total-row" id="pos-descuento-row" style="display:none">
+                        <span>Descuento</span>
+                        <span id="pos-descuento" class="text-danger">-$0,00</span>
+                    </div>
+                    <div class="pos-total-row" id="pos-impuesto-row" style="display:none">
+                        <span>IVA</span>
+                        <span id="pos-impuesto">$0,00</span>
+                    </div>
+                    <div class="pos-total-row pos-total-main">
+                        <span>TOTAL</span>
+                        <span id="pos-total">$0,00</span>
+                    </div>
+                </div>
+
+                <!-- Descuento rapido -->
+                <div class="pos-descuento-section">
+                    <label class="form-label-sm">Descuento rapido</label>
+                    <div class="descuento-chips">
+                        <button class="descuento-chip" data-pct="5">5%</button>
+                        <button class="descuento-chip" data-pct="10">10%</button>
+                        <button class="descuento-chip" data-pct="15">15%</button>
+                        <button class="descuento-chip" data-pct="20">20%</button>
+                        <div class="descuento-custom">
+                            <input type="number" id="descuento-custom" class="input-sm" placeholder="%" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metodo de pago -->
+                <div class="pos-payment-section">
+                    <label class="form-label-sm">Metodo de pago</label>
+                    <div class="payment-methods" id="payment-methods">
+                        <!-- Se cargan dinamicamente -->
+                    </div>
+                </div>
+
+                <!-- Monto recibido y vuelto -->
+                <div class="pos-change-section" id="pos-change-section">
+                    <div class="change-row">
+                        <label class="form-label-sm">Recibido</label>
+                        <input type="number" id="monto-recibido" class="input-change" placeholder="0,00" min="0" step="0.01">
+                    </div>
+                    <div class="change-row vuelto-row">
+                        <span class="form-label-sm">Vuelto</span>
+                        <span class="vuelto-amount" id="vuelto-amount">$0,00</span>
+                    </div>
+                </div>
+
+                <!-- Boton cobrar -->
+                <button class="btn-cobrar" id="btn-cobrar" disabled>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                    COBRAR
+                    <span id="btn-cobrar-total">$0,00</span>
+                </button>
+
+            </div><!-- /pos-bottom-fixed -->
+        </div>
+    </div>
+
+    <!-- MODAL: Seleccionar cliente -->
+    <div class="modal-overlay" id="modal-cliente-overlay">
+        <div class="modal modal-sm" id="modal-cliente">
+            <div class="modal-header">
+                <h3 class="modal-title">Seleccionar cliente</h3>
+                <button class="modal-close" id="modal-cliente-close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="cliente-search" class="form-input" placeholder="Buscar cliente por nombre o DNI...">
+                <div class="cliente-list" id="cliente-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Confirmacion de venta / ticket -->
+    <div class="modal-overlay" id="modal-venta-overlay">
+        <div class="modal modal-ticket" id="modal-venta">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-venta-title">Venta registrada</h3>
+                <button class="modal-close" id="modal-venta-close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="ticket-preview" class="ticket-container"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" id="btn-imprimir-ticket">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                    Imprimir
+                </button>
+                <button class="btn btn-primary" id="btn-nueva-venta">Nueva venta</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Abrir / Cerrar caja -->
+    <div class="modal-overlay" id="modal-caja-overlay">
+        <div class="modal modal-sm" id="modal-caja">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-caja-title">Abrir caja</h3>
+                <button class="modal-close" id="modal-caja-close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-caja-body"></div>
+            <div class="modal-footer" id="modal-caja-footer"></div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- SCRIPTS -->
+    <script src="js/vendor/supabase.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/pos.js"></script>
+    
+    <!-- TABS MÓVIL: lógica de navegación -->
+    <script>
+    (function() {
+        const MOBILE_BP = 600;
+        const tabBtns   = document.querySelectorAll('.pos-tab-btn');
+        const posLeft   = document.querySelector('.pos-left');
+        const posRight  = document.querySelector('.pos-right');
+        const tabsMeta  = document.getElementById('pos-mobile-tabs');
+
+        function isMobile() { return window.innerWidth <= MOBILE_BP; }
+
+        function showTab(tab) {
+            if (!isMobile()) return;
+            tabBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+            if (tab === 'productos') {
+                posLeft.classList.remove('tab-hidden');
+                posRight.classList.add('tab-hidden');
+            } else {
+                posLeft.classList.add('tab-hidden');
+                posRight.classList.remove('tab-hidden');
+            }
+        }
+
+        function resetTabs() {
+            posLeft.classList.remove('tab-hidden');
+            posRight.classList.remove('tab-hidden');
+            tabBtns.forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-btn-productos')?.classList.add('active');
+        }
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => showTab(btn.dataset.tab));
+        });
+
+        // Mostrar tabs solo en móvil
+        function handleResize() {
+            if (isMobile()) {
+                tabsMeta.style.display = 'flex';
+                showTab(document.querySelector('.pos-tab-btn.active')?.dataset.tab || 'productos');
+            } else {
+                tabsMeta.style.display = 'none';
+                resetTabs();
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        // Actualizar badge del carrito cuando cambie el DOM del carrito
+        const cartList = document.getElementById('pos-cart-list');
+        const badge    = document.getElementById('tab-cart-count');
+        if (cartList && badge) {
+            const obs = new MutationObserver(() => {
+                const items = cartList.querySelectorAll('.cart-item').length;
+                badge.textContent = items;
+                badge.style.display = items > 0 ? 'flex' : 'none';
+                // Auto-ir al carrito cuando se agrega el primer item en móvil
+                if (items === 1 && isMobile()) showTab('carrito');
+            });
+            obs.observe(cartList, { childList: true, subtree: true });
+        }
+    })();
+    </script>
+
+</body>
+</html>

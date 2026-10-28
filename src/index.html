@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="supabase-url"  content="https://iwfwjdwwkrczyrnmmprw.supabase.co">
+    <meta name="supabase-anon" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3ZndqZHd3a3Jjenlybm1tcHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NDIwODcsImV4cCI6MjA5NDUxODA4N30.ryrLkf4RT2tXqZ-dDXGtDV-DRdTiCZ9zRUwIJS6S2w0">
+    <meta name="robots"        content="noindex, nofollow">
+    <meta name="license-key"   content="LIC-06J57OI3">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KioscoSystem</title>
+    <style>
+        body {
+            margin: 0;
+            background: #1F2937;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            color: #fff;
+        }
+        .loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(245,158,11,0.3);
+            border-top-color: #F59E0B;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        p { margin: 0; font-size: 14px; color: #9CA3AF; }
+    </style>
+    <!-- Service Worker: invalida cache automaticamente en cada deploy -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .catch(function(e){ console.warn('SW:', e); });
+        }
+    </script>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <p>Cargando sistema...</p>
+    </div>
+    <!-- Supabase CDN -->
+    <script src="js/vendor/supabase.js"></script>
+    <script src="js/config.js"></script>
+    <script>
+        (async () => {
+            try {
+                const { data: { session } } = await window._supabase.auth.getSession();
+                if (session) {
+                    window.location.replace('dashboard.html');
+                } else {
+                    window.location.replace('login.html');
+                }
+            } catch (e) {
+                window.location.replace('login.html');
+            }
+        })();
+    </script>
+</body>
+</html>

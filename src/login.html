@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="supabase-url"  content="https://iwfwjdwwkrczyrnmmprw.supabase.co">
+    <meta name="supabase-anon" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3ZndqZHd3a3Jjenlybm1tcHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NDIwODcsImV4cCI6MjA5NDUxODA4N30.ryrLkf4RT2tXqZ-dDXGtDV-DRdTiCZ9zRUwIJS6S2w0">
+    <meta name="robots"        content="noindex, nofollow">
+    <meta name="license-key"   content="LIC-06J57OI3">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KioscoSystem - Ingresar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Service Worker: invalida cache automaticamente en cada deploy -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .catch(function(e){ console.warn('SW:', e); });
+        }
+    </script>
+</head>
+<body class="login-body">
+
+    <div class="login-wrapper">
+        <!-- Panel izquierdo: branding -->
+        <div class="login-brand">
+            <div class="login-brand-content">
+                <div class="brand-logo">
+                    <span class="brand-icon">K</span>
+                </div>
+                <h1 class="brand-title">KioscoSystem</h1>
+                <p class="brand-sub">Control total de tu negocio</p>
+                <ul class="brand-features">
+                    <li>Punto de venta rapido</li>
+                    <li>Control de stock en tiempo real</li>
+                    <li>Reportes y estadisticas</li>
+                    <li>Gestion de caja completa</li>
+                </ul>
+            </div>
+            <div class="brand-decor"></div>
+        </div>
+
+        <!-- Panel derecho: formulario -->
+        <div class="login-panel">
+            <div class="login-form-container">
+                <div class="login-header">
+                    <h2>Bienvenido</h2>
+                    <p>Ingresa tus credenciales para continuar</p>
+                </div>
+
+                <div id="login-alert" class="alert alert-error hidden"></div>
+
+                <form id="login-form" class="login-form" novalidate>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Correo electronico</label>
+                        <div class="input-wrapper">
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-input"
+                                placeholder="usuario@kiosco.com"
+                                autocomplete="email"
+                                required
+                            >
+                        </div>
+                        <span class="field-error" id="email-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Contrasena</label>
+                        <div class="input-wrapper input-password">
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-input"
+                                placeholder="••••••••"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <button type="button" class="toggle-password" id="toggle-password" aria-label="Mostrar contrasena">
+                                <svg id="icon-eye-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                                <svg id="icon-eye" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                        <span class="field-error" id="password-error"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" id="login-btn">
+                        <span id="login-btn-text">Ingresar</span>
+                        <span id="login-btn-loader" class="btn-spinner hidden"></span>
+                    </button>
+                </form>
+
+                <p class="login-footer-note">
+                    Sistema interno - Solo personal autorizado
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/vendor/supabase.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>
