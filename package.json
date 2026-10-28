@@ -1,0 +1,14 @@
+{
+  "name": "iest-tfi_pointer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pointer: sistema de gestión para kioscos (Trabajo Final Integrador de IA, IEST)",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "Juan Angel Reales",
+  "license": "UNLICENSED"
+}
