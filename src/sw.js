@@ -10,7 +10,7 @@
 // porque el archivo se regenera con la fecha actual cada vez
 // que arrastras la carpeta.
 // Si lo editas a mano, cambia cualquier caracter aqui:
-const CACHE_VERSION = 'kiosco-v-2026-10-21T01-30-00';
+const CACHE_VERSION = 'kiosco-v-2026-10-15T16-30-00';
 
 const ASSETS = [
     '/',
