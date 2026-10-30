@@ -33,7 +33,7 @@ Cada funcionalidad vive en `specs/NNN-nombre/` y pasa por estas fases, en orden:
 |---|---|---|
 | 1 · Spec | `/spec` | `spec.md` (historias, RF en EARS, casos límite, fuera de alcance, criterios de finalización) |
 | 2 · Clarificación | `/clarificar` | `clarificacion.md` (hallazgos como QA + decisión del autor) |
-| 3 · Plan | `/plan` | `plan.md` (cómo se construye, sin código, ligado a cada RF) |
+| 3 · Plan | `/planificar` | `plan.md` (cómo se construye, sin código, ligado a cada RF) |
 | 4 · Tareas | `/tareas` | `tasks.md` (tareas de menos de 30 min, cada una con «Listo cuando») |
 | 5 · Implementación | — | código + tests + un commit por tarea |
 | 6 · Validación | `/verificar` | `verificacion.md` (cada RF: cumple / no cumple / prueba manual pendiente) |

@@ -24,7 +24,7 @@ El proyecto sigue **Desarrollo Guiado por Especificaciones (SDD)** con **Claude 
 
 1. [`docs/CONSTITUCION.md`](docs/CONSTITUCION.md): 8 principios comprobables que el agente lee antes de cada tarea.
 2. [`AGENTS.md`](AGENTS.md), [`CLAUDE.md`](CLAUDE.md) y [`memory.md`](memory.md): el arnés del agente.
-3. Comandos en [`.claude/commands/`](.claude/commands): `/spec`, `/clarificar`, `/plan`, `/tareas`, `/verificar`, `/cambio`.
+3. Comandos en [`.claude/commands/`](.claude/commands): `/spec`, `/clarificar`, `/planificar`, `/tareas`, `/verificar`, `/cambio`.
 4. Skills propias en [`.agents/skills/`](.agents/skills): `verificar-criterios`, `revisar-seguridad`, `escribir-ears`.
 5. Una carpeta por funcionalidad en [`specs/`](specs).
 6. Registro de prompts y errores de la IA en [`docs/PROMPTS.md`](docs/PROMPTS.md) y declaración en [`docs/DECLARACION-IA.md`](docs/DECLARACION-IA.md).

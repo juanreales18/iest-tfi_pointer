@@ -8,7 +8,7 @@ Cada carpeta recorre las fases del ciclo SDD (ver `AGENTS.md`):
 specs/001-nombre/
 ├── spec.md            ← /spec        (historias, RF en EARS, casos límite, fuera de alcance, criterios)
 ├── clarificacion.md   ← /clarificar  (hallazgos de la IA como QA y decisión del autor)
-├── plan.md            ← /plan        (cómo se construye, sin código, ligado a cada RF)
+├── plan.md            ← /planificar  (cómo se construye, sin código, ligado a cada RF)
 ├── tasks.md           ← /tareas      (tareas de menos de 30 min con «Listo cuando»)
 └── verificacion.md    ← /verificar   (cada RF: cumple / no cumple / prueba manual pendiente)
 ```

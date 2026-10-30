@@ -53,7 +53,7 @@ iest-tfi_pointer/
 ├── docs/        ← constitución, kit de especificación, prompts y declaración de IA
 ├── specs/       ← una carpeta por funcionalidad (spec, clarificación, plan, tareas, verificación)
 ├── .agents/skills/   ← skills propias (verificar-criterios, revisar-seguridad, escribir-ears)
-├── .claude/commands/ ← comandos del agente (/spec, /clarificar, /plan, /tareas, /verificar, /cambio)
+├── .claude/commands/ ← comandos del agente (/spec, /clarificar, /planificar, /tareas, /verificar, /cambio)
 ├── src/         ← el sistema que se publica en Netlify (este árbol)
 ├── supabase/    ← SQL de la base y la Edge Function crear-usuario
 ├── tests/       ← tests automáticos (npm test)

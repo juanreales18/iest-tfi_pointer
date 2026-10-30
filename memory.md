@@ -21,6 +21,7 @@
 | 2026-10 | El IVA se suma encima del precio; por defecto 0 | Los kioscos cargan precios con IVA incluido |
 | 2026-10 | Licencia: 3 días de gracia si el panel no responde | Antes fallaba abierta |
 | 2026-10 | Nombre del emprendimiento: **Pointer** (antes Re-Kiosco) | Presentado así en la expo de carreras del IEST |
+| 2026-10 | El comando del plan se llama `/planificar` | `/plan` chocaba con el modo plan propio de Claude Code |
 
 ## Lecciones (errores que no hay que repetir)
 
