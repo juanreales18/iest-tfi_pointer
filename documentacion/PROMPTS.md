@@ -33,4 +33,9 @@
 - **Cómo se detectó:** revisando el código de Compras a pedido del autor; se reprodujo con una prueba dentro de una transacción (3 + 2 unidades sumaban 3).
 - **Cómo se corrigió:** la función agrupa por producto antes de sumar y el formulario junta las líneas repetidas. La prueba dio 5.
 
+### E-05 · Escaneo y búsqueda en la spec 001 (H-06)
+- **Qué hizo mal:** en `/clarificar` propuso tomar como código **todo** Enter con 3 o más caracteres, vinieran del lector o del teclado. Eso rompía la búsqueda a mano: escribir «coca» y apretar Enter mostraba «No encontramos ese producto».
+- **Cómo se detectó:** el autor leyó la consecuencia en el resumen de la clarificación y pidió que el buscador aceptara las dos formas.
+- **Cómo se corrigió:** un texto escrito igual a un `codigo_barra` agrega el producto; si no coincide, queda como búsqueda y no avisa. El aviso de código inexistente se muestra solo para el lector, que se reconoce por la velocidad (menos de 50 ms entre teclas). Se reescribieron RF-001-03 a RF-001-05 y se agregó RF-001-45.
+
 > Durante la Actividad 2 se agregan los errores nuevos con el mismo formato.
