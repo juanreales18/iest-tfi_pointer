@@ -30,7 +30,7 @@
   - **Listo cuando:** los casos de `MENSAJES` pasan sin `todo`; `npm test` en verde; el archivo no contiene `document`, `window._supabase` ni `precio_costo`.
   - **Commit:** `agrega pos-logica.js con los mensajes del punto de venta`
 
-- [ ] T03 · **Test:** `clasificarEntrada` y `buscarPorCodigo`
+- [x] T03 · **Test:** `clasificarEntrada` y `buscarPorCodigo`
   - **RF:** 03, 04, 05, 45
   - **Archivos:** `tests/pos-logica.test.js`
   - **Hace:** escaneo (3+ caracteres, todos con menos de 50 ms) contra texto escrito; código exacto; el nombre exacto no cuenta; producto inactivo no aparece; casos límite 1, 2 y 15.
