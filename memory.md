@@ -5,7 +5,7 @@
 ## Estado actual
 
 - **Fase del TFI:** Actividad 1 (constitución y arnés) terminada en el repositorio. Sigue la Actividad 2.
-- **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada (núcleo de la venta + ticket, uso del empleado) y clarificada (17 hallazgos, RF-001-01 a RF-001-45). Sigue `/planificar`. Rama: `feature/punto-de-venta`.
+- **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada (núcleo de la venta + ticket, uso del empleado) y clarificada (17 hallazgos, RF-001-01 a RF-001-45). `plan.md` aprobado (2026-11-01). Sigue `/tareas`. Rama: `feature/punto-de-venta`.
 - **Sistema:** en producción en Netlify (https://pointer-web001.netlify.app/) con Supabase como base de datos.
 - **Funcionando:** login y roles, punto de venta con lector, caja con arqueo, cancelar venta, productos, categorías, clientes con historial, proveedores, compras, gastos, reportes (con descuentos), usuarios por Edge Function, auditoría.
 - **Pendientes de seguridad:** ejecutar `base-de-datos/10-ocultar-costos.sql` en la base de producción; desactivar el registro público y activar la protección de contraseñas filtradas en Supabase Auth.
@@ -24,6 +24,10 @@
 | 2026-10 | Nombre del emprendimiento: **Pointer** (antes Re-Kiosco) | Presentado así en la expo de carreras del IEST |
 | 2026-10 | Estructura simple del repositorio: `documentacion/`, `specs/`, `sistema/`, `base-de-datos/`, `multimedia/`, `tests/` y `.claude/` | La estructura del PDF era un ejemplo; esta es más fácil de recorrer y explicar |
 | 2026-10 | El comando del plan se llama `/planificar` | `/plan` ya existe en Claude Code (activa el modo plan) |
+| 2026-11 | La lógica del POS que decide va en `sistema/js/pos-logica.js` (funciones puras) | `pos.js` vive dentro de `DOMContentLoaded` y no se puede probar con `node --test` |
+| 2026-11 | Los RF que resuelve la base se prueban con `tests/sql/`, que corre el autor en el panel con `ROLLBACK` | Un test automático contra la base necesitaría claves (P5) |
+| 2026-11 | La clave anti-duplicados depende solo de productos, cantidades y método de pago | RF-001-25 / H-01: no duplicar una venta si se toca otra cosa después de un corte |
+| 2026-11 | «Cobrar» no se deshabilita por falta de método de pago | Así se ve el mensaje de RF-001-16 |
 
 ## Lecciones (errores que no hay que repetir)
 
