@@ -23,7 +23,7 @@
   - **Listo cuando:** `npm test` termina en verde y muestra los casos de `MENSAJES` como `todo` fallidos.
   - **Commit:** `agrega los tests de los mensajes del punto de venta`
 
-- [ ] T02 · **Código:** crea `pos-logica.js` con la doble salida y `MENSAJES`
+- [x] T02 · **Código:** crea `pos-logica.js` con la doble salida y `MENSAJES`
   - **RF:** 01, 05, 09, 16, 18, 24, 39, 40, 43
   - **Archivos:** `sistema/js/pos-logica.js` (nuevo), `tests/pos-logica.test.js`
   - **Hace:** publica `window.PosLogica` en el navegador y `module.exports` en Node (D1); constante `MENSAJES` (D9). Sin DOM ni `window._supabase`.

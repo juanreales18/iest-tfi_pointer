@@ -34,15 +34,15 @@ const TEXTOS_FIJOS = [
 ];
 
 for (const [rf, clave, texto] of TEXTOS_FIJOS) {
-    test(`mensajes: ${rf} · ${clave}`, { todo: true }, () => {
+    test(`mensajes: ${rf} · ${clave}`, () => {
         assert.equal(MENSAJES[clave], texto);
     });
 }
 
-test('mensajes: RF-001-05 · productoNoEncontrado incluye el código', { todo: true }, () => {
+test('mensajes: RF-001-05 · productoNoEncontrado incluye el código', () => {
     assert.equal(MENSAJES.productoNoEncontrado('7790001'), 'No encontramos ese producto (código: 7790001)');
 });
 
-test('mensajes: RF-001-09 · stockDisponible incluye el stock', { todo: true }, () => {
+test('mensajes: RF-001-09 · stockDisponible incluye el stock', () => {
     assert.equal(MENSAJES.stockDisponible(3), 'Stock disponible: 3');
 });
