@@ -54,7 +54,7 @@ Base de datos PostgreSQL en Supabase. Todas las tablas tienen RLS activo. Los id
 | `reponer_stock_compra` | Trigger | Suma stock y actualiza el costo al recibir una compra |
 | `cajas_guard`, `ventas_guard_estado` | Triggers | Impiden que un empleado toque saldos o anule ventas por fuera de `cancelar_venta` |
 
-La estructura completa está en `supabase/sql/00-estructura.sql`.
+La estructura completa está en `base-de-datos/00-estructura.sql`.
 
 ## Reglas de integridad
 

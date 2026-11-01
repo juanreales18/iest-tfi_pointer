@@ -3,7 +3,7 @@
 ## Árbol de carpetas
 
 ```text
-iest-tfi_pointer/src/
+iest-tfi_pointer/sistema/
 ├── index.html              ← entrada: redirige a login o dashboard según la sesión
 ├── login.html              ← pantalla de ingreso
 ├── dashboard.html          ← aplicación (barra lateral + secciones dinámicas)
@@ -23,7 +23,7 @@ iest-tfi_pointer/src/
 │   ├── products.js         ← productos, categorías, proveedores, compras y gastos
 │   ├── reports.js          ← reportes de ventas y ganancias
 │   └── pos.js              ← carrito, cobro y lector de código de barras
-└── (sin carpetas docs/ ni specs/: viven en la raíz del repositorio)
+└── (sin carpetas documentacion/ ni specs/: viven en la raíz del repositorio)
 ```
 
 ## Función de cada parte
@@ -49,15 +49,14 @@ iest-tfi_pointer/src/
 
 ```text
 iest-tfi_pointer/
-├── AGENTS.md · CLAUDE.md · memory.md · README.md · package.json
-├── docs/        ← constitución, kit de especificación, prompts y declaración de IA
-├── specs/       ← una carpeta por funcionalidad (spec, clarificación, plan, tareas, verificación)
-├── .agents/skills/   ← skills propias (verificar-criterios, revisar-seguridad, escribir-ears)
-├── .claude/commands/ ← comandos del agente (/spec, /clarificar, /planificar, /tareas, /verificar, /cambio)
-├── src/         ← el sistema que se publica en Netlify (este árbol)
-├── supabase/    ← SQL de la base y la Edge Function crear-usuario
-├── tests/       ← tests automáticos (npm test)
-├── public/      ← marca/ (logos) y media/ (imágenes del sitio)
-└── multimedia/  ← piezas generadas con IA y FICHAS-IA.md
+├── README.md · AGENTS.md · CLAUDE.md · memory.md   ← lo que lee el agente (tienen que estar en la raíz)
+├── documentacion/   ← TODOS los .md del proyecto: constitución, kit 01 a 10, marca, prompts, declaración, matriz
+├── specs/           ← una carpeta por funcionalidad (001, 002, 003)
+├── sistema/         ← Pointer: el sitio que se publica en Netlify
+├── base-de-datos/   ← SQL de Supabase y la función crear-usuario
+├── multimedia/      ← logo, imágenes, video, gráficos y FICHAS-IA.md
+├── tests/           ← tests automáticos (npm test)
+└── .claude/         ← comandos y skills del agente (carpeta oculta: Claude Code la busca con ese nombre)
 ```
 
+Las imágenes que muestra el sitio van en `sistema/img/`; los originales del logo y las piezas generadas con IA quedan en `multimedia/`.

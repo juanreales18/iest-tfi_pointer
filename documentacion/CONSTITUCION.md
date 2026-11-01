@@ -6,13 +6,13 @@
 
 ## P1 · Stack
 
-El sistema es **HTML + CSS + JavaScript sin framework**, con **Supabase** (PostgreSQL, Auth, RLS) y publicado en **Netlify**. No se agregan React, Vue, jQuery, Tailwind ni Bootstrap sin cambiar primero `docs/03-TECNOLOGIAS.md`.
+El sistema es **HTML + CSS + JavaScript sin framework**, con **Supabase** (PostgreSQL, Auth, RLS) y publicado en **Netlify**. No se agregan React, Vue, jQuery, Tailwind ni Bootstrap sin cambiar primero `documentacion/03-TECNOLOGIAS.md`.
 
-**Comprobación:** `src/` no tiene `package.json` ni carpeta `node_modules/`; ningún HTML carga librerías desde un CDN de scripts.
+**Comprobación:** `sistema/` no tiene `package.json` ni carpeta `node_modules/`; ningún HTML carga librerías desde un CDN de scripts.
 
 ## P2 · Marca
 
-Los colores y las fuentes salen **solo de las variables CSS** definidas en `docs/IDENTIDAD-MARCA.md`. Ningún color se escribe a mano fuera del bloque `:root`.
+Los colores y las fuentes salen **solo de las variables CSS** definidas en `documentacion/IDENTIDAD-MARCA.md`. Ningún color se escribe a mano fuera del bloque `:root`.
 
 **Comprobación:** test `marca: sin colores escritos a mano` de `tests/constitucion.test.js`.
 
@@ -20,7 +20,7 @@ Los colores y las fuentes salen **solo de las variables CSS** definidas en `docs
 
 El navegador **muestra y pide**; la base de datos **decide**. Totales, stock, caja, costos y permisos se resuelven en PostgreSQL (funciones y RLS), nunca en el JavaScript del navegador.
 
-**Comprobación:** las ventas solo se crean con `rpc('crear_venta')` y se anulan con `rpc('cancelar_venta')`; no existe `.from('ventas').insert` en `src/`; las 17 tablas tienen RLS activo.
+**Comprobación:** las ventas solo se crean con `rpc('crear_venta')` y se anulan con `rpc('cancelar_venta')`; no existe `.from('ventas').insert` en `sistema/`; las 17 tablas tienen RLS activo.
 
 ## P4 · Tests
 
@@ -38,7 +38,7 @@ En el repositorio y en el chat con la IA **no hay secretos**: ni la clave `servi
 
 Todo en **español**: código, tablas, commits y documentación. La interfaz habla en **voseo**, con frases cortas y errores que dicen qué pasó y qué hacer.
 
-**Comprobación:** los mensajes de commit siguen `docs/07-CONVENCIONES.md` (verbo en presente, en español, en minúsculas).
+**Comprobación:** los mensajes de commit siguen `documentacion/07-CONVENCIONES.md` (verbo en presente, en español, en minúsculas).
 
 ## P7 · Accesibilidad y rendimiento
 
@@ -50,7 +50,7 @@ Se diseña **desde 360 px** (celular) hacia arriba. Todas las imágenes tienen `
 
 La IA **propone; la persona decide**. Ningún código, texto o imagen generado con IA entra al repositorio sin que el autor lo haya leído, entendido y aprobado. Nunca se pegan en un prompt datos personales reales, contraseñas ni claves. Toda pieza generada con IA lleva la leyenda **«Generado con IA»** y su ficha en `multimedia/FICHAS-IA.md`. No se generan imágenes, voces ni videos de personas reales.
 
-**Comprobación:** cada pedido importante y cada error de la IA quedan en `docs/PROMPTS.md`; cada pieza de `multimedia/` tiene su ficha; la declaración firmada está en `docs/DECLARACION-IA.md`.
+**Comprobación:** cada pedido importante y cada error de la IA quedan en `documentacion/PROMPTS.md`; cada pieza de `multimedia/` tiene su ficha; la declaración firmada está en `documentacion/DECLARACION-IA.md`.
 
 ---
 

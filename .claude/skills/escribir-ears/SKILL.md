@@ -24,7 +24,7 @@ Se pueden combinar: «**Mientras** la caja esté abierta, **cuando** el dueño c
 1. **Un requisito = una oración = un comportamiento.** Si tiene «y» entre dos acciones distintas, se divide.
 2. Siempre **«el sistema deberá»**: nunca «debería», «podría» ni «se intentará».
 3. **Medible:** nada de «rápido», «fácil» o «amigable» sin un número («en menos de 2 segundos», «con 2 clics»).
-4. Los nombres de pantallas, roles y estados son los de `docs/05-DATOS.md` y `docs/06-DISENO-UI.md` (`dueno`, `empleado`, `abierta`, `cerrada`, `completada`, `cancelada`).
+4. Los nombres de pantallas, roles y estados son los de `documentacion/05-DATOS.md` y `documentacion/06-DISENO-UI.md` (`dueno`, `empleado`, `abierta`, `cerrada`, `completada`, `cancelada`).
 5. Los textos que ve el usuario se escriben entre comillas, en voseo, tal cual van a aparecer.
 6. Numeración: `RF-NNN-01`, donde NNN es el número de la spec. Cada RF lleva prioridad **Alta**, **Media** o **Baja**.
 7. Cada RF de prioridad Alta tiene que poder probarse con un test automático o con una prueba manual descrita.

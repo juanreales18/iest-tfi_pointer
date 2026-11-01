@@ -1,5 +1,5 @@
-// Tests de la constitución de Pointer (docs/CONSTITUCION.md).
-// Cada test comprueba un principio sobre el código de src/ y el repositorio.
+// Tests de la constitución de Pointer (documentacion/CONSTITUCION.md).
+// Cada test comprueba un principio sobre el código de sistema/ y el repositorio.
 // Se corren con: npm test
 'use strict';
 
@@ -9,7 +9,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const RAIZ = path.join(__dirname, '..');
-const SRC = path.join(RAIZ, 'src');
+const SRC = path.join(RAIZ, 'sistema');
 const IGNORAR = new Set(['.git', 'node_modules', 'vendor']);
 
 // Lista recursiva de archivos, sin .git, node_modules ni librerías de terceros
@@ -30,8 +30,8 @@ const relativo = (ruta) => path.relative(RAIZ, ruta);
 // ---------------------------------------------------------------
 // P1 · Stack: sin frameworks ni scripts desde CDN
 // ---------------------------------------------------------------
-test('stack: src/ no tiene package.json ni scripts cargados desde internet', () => {
-    assert.equal(fs.existsSync(path.join(SRC, 'package.json')), false, 'src/ no debe tener package.json');
+test('stack: sistema/ no tiene package.json ni scripts cargados desde internet', () => {
+    assert.equal(fs.existsSync(path.join(SRC, 'package.json')), false, 'sistema/ no debe tener package.json');
     const conCdn = archivos(SRC, ['.html'])
         .filter((f) => /<script[^>]+src=["']https?:/i.test(leer(f)))
         .map(relativo);
@@ -42,7 +42,7 @@ test('stack: src/ no tiene package.json ni scripts cargados desde internet', () 
 // P2 · Marca: colores solo desde variables CSS
 // Deuda conocida al empezar el TFI: el CSS heredado tiene colores
 // escritos a mano. El test impide que la deuda crezca; la tarea de
-// llevarla a 0 está en docs/08-TAREAS.md (Etapa 7).
+// llevarla a 0 está en documentacion/08-TAREAS.md (Etapa 7).
 // ---------------------------------------------------------------
 const DEUDA_COLORES_CSS = 54;
 
@@ -130,9 +130,9 @@ test('accesibilidad: todas las páginas declaran lang="es"', () => {
 // P8 · Uso responsable de la IA: el arnés y los registros existen
 // ---------------------------------------------------------------
 test('ia responsable: existen la constitución, el registro de prompts, la declaración y las fichas', () => {
-    for (const archivo of ['docs/CONSTITUCION.md', 'docs/PROMPTS.md', 'docs/DECLARACION-IA.md', 'multimedia/FICHAS-IA.md', 'AGENTS.md', 'memory.md']) {
+    for (const archivo of ['documentacion/CONSTITUCION.md', 'documentacion/PROMPTS.md', 'documentacion/DECLARACION-IA.md', 'multimedia/FICHAS-IA.md', 'AGENTS.md', 'memory.md']) {
         assert.ok(fs.existsSync(path.join(RAIZ, archivo)), `Falta ${archivo}`);
     }
-    const constitucion = leer(path.join(RAIZ, 'docs', 'CONSTITUCION.md'));
+    const constitucion = leer(path.join(RAIZ, 'documentacion', 'CONSTITUCION.md'));
     assert.match(constitucion, /Uso responsable de la IA/);
 });

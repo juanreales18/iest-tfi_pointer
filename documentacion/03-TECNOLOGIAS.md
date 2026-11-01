@@ -13,7 +13,7 @@
 | Caché | Service Worker (`sw.js`) | El sistema carga rápido y se actualiza solo en cada publicación |
 | Librerías | `supabase.js` incluida en `js/vendor/` | Sin depender de un CDN externo |
 | Código | Git + GitHub | Historial de cambios y respaldo del proyecto |
-| Publicación | Netlify | Sitio estático con HTTPS, sin paso de compilación; publica la carpeta `src/` del repositorio de GitHub |
+| Publicación | Netlify | Sitio estático con HTTPS, sin paso de compilación; publica la carpeta `sistema/` del repositorio de GitHub |
 | Tests | `node:test` (incluido en Node.js) | Tests automáticos con `npm test`, sin instalar librerías |
 | IA | Claude Code + VS Code | Claude Code como agente (specs, plan, tareas y código); VS Code para leer y revisar cada cambio. Ver `MATRIZ-HERRAMIENTAS.md` |
 

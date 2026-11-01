@@ -21,16 +21,16 @@
 
 ## Logo
 
-El logo se guarda en `public/marca/`.
+El logo se guarda en `multimedia/marca/`.
 
 | Versión | Archivo | Uso |
 |---|---|---|
-| Horizontal (isotipo + nombre) | `public/marca/logo-horizontal.png` | Encabezado, login, documentos |
-| Isotipo | `public/marca/isotipo.png` | Favicon, barra lateral colapsada, avatar |
+| Horizontal (isotipo + nombre) | `multimedia/marca/logo-horizontal.png` | Encabezado, login, documentos |
+| Isotipo | `multimedia/marca/isotipo.png` | Favicon, barra lateral colapsada, avatar |
 
 **Concepto:** se conserva el recurso del TP N° 3, un cuadrado de esquinas redondeadas color amarillo `#F59E0B` con la inicial en carbón `#1F2937`, seguido del nombre **Pointer** en el mismo carbón. Es el mismo recurso visual de la barra lateral del sistema, así la marca y la pantalla son coherentes.
 
-> **Pendiente:** reemplazar el logo de Re-Kiosco por el de Pointer en `public/marca/` (lo diseña el autor en Canva). Hasta entonces no se usa ningún logo generado por la IA.
+> **Pendiente:** reemplazar el logo de Re-Kiosco por el de Pointer en `multimedia/marca/` (lo diseña el autor en Canva). Hasta entonces no se usa ningún logo generado por la IA.
 
 **Tipografía del logo:** Nourd (peso semibold). Se usa **solo dentro de la imagen del logo**, no como fuente de la interfaz.
 

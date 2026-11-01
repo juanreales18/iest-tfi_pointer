@@ -1,11 +1,11 @@
 ---
 name: revisar-seguridad
-description: Revisa un cambio de Pointer antes del commit buscando secretos, lógica sensible en el navegador, HTML inseguro y problemas de RLS. Usar antes de cualquier commit que toque src/js/, supabase/ o permisos.
+description: Revisa un cambio de Pointer antes del commit buscando secretos, lógica sensible en el navegador, HTML inseguro y problemas de RLS. Usar antes de cualquier commit que toque sistema/js/, base-de-datos/ o permisos.
 ---
 
 # Skill: revisar-seguridad
 
-Pointer maneja plata, stock y datos de clientes. El navegador **no es de confianza**: cualquiera puede abrir la consola y cambiar lo que se envía. Esta skill revisa un cambio contra `docs/10-SEGURIDAD.md` y el principio P5 de la constitución.
+Pointer maneja plata, stock y datos de clientes. El navegador **no es de confianza**: cualquiera puede abrir la consola y cambiar lo que se envía. Esta skill revisa un cambio contra `documentacion/10-SEGURIDAD.md` y el principio P5 de la constitución.
 
 ## Entrada
 
@@ -14,7 +14,7 @@ Los archivos que cambian en el commit: `git diff --cached --name-only` (o `git d
 ## Lista de control
 
 ### 1. Secretos (bloqueante)
-- Buscar en el diff: `service_role`, `eyJ` seguido de un token largo que **no** sea la clave pública ya conocida de `src/js/config.js`, `password =`, `secret`, `sk_`, archivos `.env`.
+- Buscar en el diff: `service_role`, `eyJ` seguido de un token largo que **no** sea la clave pública ya conocida de `sistema/js/config.js`, `password =`, `secret`, `sk_`, archivos `.env`.
 - Si aparece algo: **detener el commit** y avisar. No copiar el valor en el chat.
 
 ### 2. Lógica en el lugar correcto
@@ -26,7 +26,7 @@ Los archivos que cambian en el commit: `git diff --cached --name-only` (o `git d
 - Todo texto que viene del usuario o de la base y se mete en `innerHTML` pasa por `escapeHtml()`.
 - Los filtros de búsqueda que van a `.or()` de Supabase quitan comas, paréntesis y comodines (ver `palabrasBusqueda()`).
 
-### 4. Base de datos (si el cambio toca `supabase/`)
+### 4. Base de datos (si el cambio toca `base-de-datos/`)
 - Toda tabla nueva tiene `ENABLE ROW LEVEL SECURITY` y políticas por rol.
 - Toda función `SECURITY DEFINER` tiene `SET search_path TO 'public'` y verifica el rol (`is_dueno()` / `is_staff()`) al principio.
 - `REVOKE EXECUTE ... FROM PUBLIC, anon` en las funciones nuevas.

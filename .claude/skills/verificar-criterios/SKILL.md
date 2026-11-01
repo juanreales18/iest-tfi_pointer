@@ -13,7 +13,7 @@ Comprueba, con evidencia, si lo construido cumple lo que dice la spec. **Solo in
 
 ## Pasos
 
-1. **Leer** `docs/CONSTITUCION.md`, `specs/NNN-nombre/spec.md` y `tasks.md`.
+1. **Leer** `documentacion/CONSTITUCION.md`, `specs/NNN-nombre/spec.md` y `tasks.md`.
 2. **Correr los tests:** `npm test`. Anotá cuántos pasan y cuántos fallan. Si alguno falla, copiá el nombre del test y el mensaje.
 3. **Recorrer cada RF** de la spec y decidir uno de estos estados:
 
@@ -28,7 +28,7 @@ Comprueba, con evidencia, si lo construido cumple lo que dice la spec. **Solo in
 4. **Revisar la constitución** sobre los archivos que cambiaron en esta funcionalidad (`git diff --name-only` desde el primer commit de la spec):
    - P2: ¿algún color escrito a mano fuera de `:root`?
    - P3: ¿alguna regla de negocio calculada solo en el navegador?
-   - P5: ¿alguna clave o secreto? (si el cambio toca `src/js/` o `supabase/`, aplicá también la skill `revisar-seguridad`).
+   - P5: ¿alguna clave o secreto? (si el cambio toca `sistema/js/` o `base-de-datos/`, aplicá también la skill `revisar-seguridad`).
    - P7: ¿imágenes sin `alt`? ¿botones sin texto accesible?
 5. **Criterios de finalización:** marcá cada casilla de la spec como cumplida o no, con una línea de evidencia.
 6. **Escribir** `specs/NNN-nombre/verificacion.md` con la plantilla de abajo.
@@ -47,7 +47,7 @@ Fecha: AAAA-MM-DD · Verificado por: agente (skill verificar-criterios) · Revis
 ## Requisitos
 | RF | Estado | Evidencia | Si falla: ¿código o spec? |
 |---|---|---|---|
-| RF-NNN-01 | ✅ Cumple | test "…" en tests/…; src/js/…:LL | — |
+| RF-NNN-01 | ✅ Cumple | test "…" en tests/…; sistema/js/…:LL | — |
 
 ## Constitución
 | Principio | Resultado | Detalle |

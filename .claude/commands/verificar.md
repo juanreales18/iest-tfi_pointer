@@ -3,7 +3,7 @@ description: Verifica una funcionalidad contra su spec y escribe verificacion.md
 argument-hint: carpeta de la spec
 ---
 
-Verificá la funcionalidad de `$ARGUMENTS` siguiendo **`.agents/skills/verificar-criterios/SKILL.md`** paso a paso (leelo completo antes de empezar).
+Verificá la funcionalidad de `$ARGUMENTS` siguiendo **`.claude/skills/verificar-criterios/SKILL.md`** paso a paso (leelo completo antes de empezar).
 
 Al terminar, `$ARGUMENTS/verificacion.md` tiene que tener:
 
