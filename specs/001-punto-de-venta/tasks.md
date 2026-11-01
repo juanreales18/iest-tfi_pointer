@@ -16,7 +16,7 @@
 
 ## Etapa 1 · Lógica pura (`pos-logica.js`)
 
-- [ ] T01 · **Test:** esqueleto de `tests/pos-logica.test.js` y textos de `MENSAJES`
+- [x] T01 · **Test:** esqueleto de `tests/pos-logica.test.js` y textos de `MENSAJES`
   - **RF:** 01, 05, 09, 16, 18, 24, 39, 40, 43
   - **Archivos:** `tests/pos-logica.test.js` (nuevo)
   - **Hace:** carga del módulo con `try/catch`; un caso `todo` por cada texto de la spec, comparado letra por letra.
