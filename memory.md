@@ -5,7 +5,7 @@
 ## Estado actual
 
 - **Fase del TFI:** Actividad 1 (constitución y arnés) terminada en el repositorio. Sigue la Actividad 2.
-- **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada (núcleo de la venta + ticket, uso del empleado) y clarificada (17 hallazgos, RF-001-01 a RF-001-45; RF-001-46 y 47 por `/cambio`). `plan.md` y `tasks.md` (39 tareas) aprobados (2026-11-01). T01 a T04 hechas (`sistema/js/pos-logica.js` con `MENSAJES`, `clasificarEntrada` y `buscarPorCodigo`; tests del lector en verde); sigue la T05. Rama: `feature/punto-de-venta`.
+- **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada (núcleo de la venta + ticket, uso del empleado) y clarificada (17 hallazgos, RF-001-01 a RF-001-45; RF-001-46 y 47 por `/cambio`). `plan.md` y `tasks.md` (39 tareas) aprobados (2026-11-01). T01 a T05 hechas (`sistema/js/pos-logica.js` con `MENSAJES`, `clasificarEntrada` y `buscarPorCodigo`; tests del lector en verde; 15 casos `catálogo: …` de `filtrarCatalogo` como `todo`); sigue la T06. Rama: `feature/punto-de-venta`.
 - **Sistema:** en producción en Netlify (https://pointer-web001.netlify.app/) con Supabase como base de datos.
 - **Funcionando:** login y roles, punto de venta con lector, caja con arqueo, cancelar venta, productos, categorías, clientes con historial, proveedores, compras, gastos, reportes (con descuentos), usuarios por Edge Function, auditoría.
 - **Pendientes de seguridad:** ejecutar `base-de-datos/10-ocultar-costos.sql` en la base de producción; desactivar el registro público y activar la protección de contraseñas filtradas en Supabase Auth.

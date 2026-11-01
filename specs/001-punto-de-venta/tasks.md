@@ -43,7 +43,7 @@
   - **Listo cuando:** los casos de T03 pasan sin `todo`; `npm test` en verde.
   - **Commit:** `agrega la clasificación de escaneos y la búsqueda por código`
 
-- [ ] T05 · **Test:** `filtrarCatalogo`
+- [x] T05 · **Test:** `filtrarCatalogo`
   - **RF:** 06, 07, 46, 47
   - **Archivos:** `tests/pos-logica.test.js`
   - **Hace:** contiene el texto en nombre o código, sin distinguir mayúsculas ni marcas (tildes, ñ, diéresis), solo activos, tolera `codigo_barra: null`; espacios del principio y del final se ignoran; vacío o solo espacios → todos los activos; 2.000 productos de prueba en menos de 100 ms.
