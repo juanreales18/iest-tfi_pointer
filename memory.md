@@ -5,6 +5,7 @@
 ## Estado actual
 
 - **Fase del TFI:** Actividad 1 (constitución y arnés) terminada en el repositorio. Sigue la Actividad 2.
+- **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada (núcleo de la venta + ticket, uso del empleado). Sigue `/clarificar`.
 - **Sistema:** en producción en Netlify (https://pointer-web001.netlify.app/) con Supabase como base de datos.
 - **Funcionando:** login y roles, punto de venta con lector, caja con arqueo, cancelar venta, productos, categorías, clientes con historial, proveedores, compras, gastos, reportes (con descuentos), usuarios por Edge Function, auditoría.
 - **Pendientes de seguridad:** ejecutar `base-de-datos/10-ocultar-costos.sql` en la base de producción; desactivar el registro público y activar la protección de contraseñas filtradas en Supabase Auth.
