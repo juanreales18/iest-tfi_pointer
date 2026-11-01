@@ -9,7 +9,7 @@
 - **Tests primero sin romper P4:** la tarea del test agrega los casos con la opción `{ todo: true }` de `node --test`. Así quedan escritos y se ven fallar, pero `npm test` no queda en rojo. La tarea de código que sigue **saca el `todo`** y los pone en verde.
 - `tests/pos-logica.test.js` carga `sistema/js/pos-logica.js` con un `try/catch`: si el archivo todavía no existe, los casos `todo` fallan sin cortar el resto de los tests.
 - Antes de cada commit: `npm test` en verde (P4) y, si la tarea toca `sistema/js/` o `base-de-datos/`, la skill `revisar-seguridad`.
-- Toda tarea que cambia algo en `sistema/` sube `CACHE_VERSION` en `sistema/sw.js` (lección de `memory.md`).
+- `CACHE_VERSION` de `sistema/sw.js` se sube **una sola vez, en T37**, antes de publicar en Netlify (decisión del autor, 2026-11-01). Las tareas anteriores no la tocan; T20 igual agrega `/js/pos-logica.js` a la lista de `sw.js`.
 - Cada commit actualiza `memory.md` (estado de la tarea) en el mismo commit.
 - Se muestra el diff y se espera tu aprobación antes de cada commit.
 - Los números de «caso límite» son los de `spec.md`.
@@ -37,7 +37,7 @@
   - **Listo cuando:** los casos nuevos están como `todo` y `npm test` sigue en verde.
   - **Commit:** `agrega los tests del lector de código de barras`
 
-- [ ] T04 · **Código:** `clasificarEntrada` y `buscarPorCodigo`
+- [x] T04 · **Código:** `clasificarEntrada` y `buscarPorCodigo`
   - **RF:** 03, 04, 05, 45
   - **Archivos:** `sistema/js/pos-logica.js`, `tests/pos-logica.test.js`
   - **Listo cuando:** los casos de T03 pasan sin `todo`; `npm test` en verde.
@@ -148,60 +148,60 @@
 - [ ] T20 · **Código:** carga de `pos-logica.js` y caché
   - **RF:** todos (riesgo «si `pos-logica.js` no carga, `pos.js` falla»)
   - **Archivos:** `sistema/pos.html`, `sistema/sw.js`, `tests/punto-de-venta.test.js`
-  - **Hace:** `<script src="js/pos-logica.js">` antes de `js/pos.js`; agrega el archivo a la lista de `sw.js` y sube `CACHE_VERSION`.
+  - **Hace:** `<script src="js/pos-logica.js">` antes de `js/pos.js`; agrega el archivo a la lista de `sw.js` (`CACHE_VERSION` no se toca: se sube en T37).
   - **Listo cuando:** los casos de `pos.html` y `sw.js` pasan sin `todo`; `npm test` en verde; la pantalla abre en local sin errores en la consola y `window.PosLogica` existe.
   - **Commit:** `carga pos-logica.js en el punto de venta`
 
 - [ ] T21 · **Código:** lector y búsqueda usan `PosLogica`
   - **RF:** 03, 04, 05, 06, 45
-  - **Archivos:** `sistema/js/pos.js` (`setupSearch`, `filtrarProductos`), `sistema/sw.js`
+  - **Archivos:** `sistema/js/pos.js` (`setupSearch`, `filtrarProductos`)
   - **Hace:** guarda la hora de cada tecla; usa `clasificarEntrada`, `buscarPorCodigo` y `filtrarCatalogo`; deja de aceptar el nombre exacto como código; el texto escrito queda en el buscador sin aviso.
   - **Listo cuando:** `npm test` en verde; en local, un escaneo simulado (pegar código + Enter rápido) agrega el producto, un código inexistente muestra «No encontramos ese producto (código: …)» y un texto escrito a mano filtra sin aviso.
   - **Commit:** `usa pos-logica en el lector y la búsqueda del punto de venta`
 
 - [ ] T22 · **Código:** carrito usa `validarAgregado` y `validarCantidad`
   - **RF:** 01, 07, 08, 09, 38, 40
-  - **Archivos:** `sistema/js/pos.js` (`agregarAlCarrito`, `crearTarjetaProducto`, `cambiarCantidad`), `sistema/sw.js`
+  - **Archivos:** `sistema/js/pos.js` (`agregarAlCarrito`, `crearTarjetaProducto`, `cambiarCantidad`)
   - **Listo cuando:** `npm test` en verde; en local, con caja cerrada sale «Abrí la caja para empezar a vender»; una cantidad 0 o 2.5 vuelve a la anterior y no quita el producto; un producto con stock 0 no entra por lector.
   - **Commit:** `usa pos-logica en el carrito del punto de venta`
 
 - [ ] T23 · **Código:** total con `calcularTotales` y fuera `precio_costo`
   - **RF:** 10, 11, 14, 42
-  - **Archivos:** `sistema/js/pos.js` (`calcularTotales`, `cargarProductos`, carrito), `sistema/sw.js`, `tests/punto-de-venta.test.js`
+  - **Archivos:** `sistema/js/pos.js` (`calcularTotales`, `cargarProductos`, carrito), `tests/punto-de-venta.test.js`
   - **Listo cuando:** el caso «`pos.js` no contiene `precio_costo`» pasa sin `todo`; `npm test` en verde; en local el total coincide con el que da `calcularTotales` en el test.
   - **Commit:** `calcula el total con pos-logica y saca el costo del punto de venta`
 
 - [ ] T24 · **Código:** monto recibido y aviso de vuelto alto
   - **RF:** 17, 18, 33, 43, 44
-  - **Archivos:** `sistema/js/pos.js` (`calcularVuelto`, campo del monto), `sistema/pos.html` (lugar del aviso), `sistema/sw.js`
+  - **Archivos:** `sistema/js/pos.js` (`calcularVuelto`, campo del monto), `sistema/pos.html` (lugar del aviso)
   - **Hace:** usa `interpretarMonto`; bandera «falta confirmar» que se borra si cambia el monto; Enter en el monto equivale a «Cobrar».
   - **Listo cuando:** `npm test` en verde; en local, «0» muestra el mensaje de monto insuficiente, el vuelto alto pide confirmar y Enter en el monto cobra.
   - **Commit:** `usa pos-logica en el monto recibido y avisa el vuelto alto`
 
 - [ ] T25 · **Código:** botón «Cobrar» y clave anti-duplicados
   - **RF:** 02, 12, 16, 23, 25, 29
-  - **Archivos:** `sistema/js/pos.js` (`procesarVenta`, `nuevaVenta`, estado del botón), `sistema/sw.js`
+  - **Archivos:** `sistema/js/pos.js` (`procesarVenta`, `nuevaVenta`, estado del botón)
   - **Hace:** usa `puedeCobrar` (D8), muestra el mensaje sin método, usa `firmaVenta` y `claveIdempotencia` (D7).
   - **Listo cuando:** `npm test` en verde; en local, «Cobrar» sin método muestra el mensaje de RF-001-16 y un doble clic no hace dos pedidos (pestaña Red).
   - **Commit:** `usa pos-logica en el botón cobrar y la clave anti-duplicados`
 
 - [ ] T26 · **Código:** envío de `p_total_esperado` y manejo de errores
   - **RF:** 24, 26, 34, 35, 36, 37, 39
-  - **Archivos:** `sistema/js/pos.js` (`procesarVenta`), `sistema/sw.js`, `tests/punto-de-venta.test.js`
+  - **Archivos:** `sistema/js/pos.js` (`procesarVenta`), `tests/punto-de-venta.test.js`
   - **Hace:** envía `p_total_esperado`; muestra `mensajeDeError`; con `esTotalCambiado` recarga productos, llama a `actualizarPreciosCarrito` y recalcula. El carrito nunca se borra por un error.
   - **Listo cuando:** el caso de `p_total_esperado` pasa sin `todo`; `tests/punto-de-venta.test.js` no tiene `todo` de la pantalla; `npm test` en verde; en local, con la red cortada sale el mensaje de sin conexión y el carrito sigue.
   - **Commit:** `envía el total esperado y muestra los errores al cobrar`
 
 - [ ] T27 · **Código:** venta repetida, ticket y teclado
   - **RF:** 27, 30, 32
-  - **Archivos:** `sistema/js/pos.js` (`procesarVenta`, `mostrarTicket`, `setupKeyboard`), `sistema/sw.js`
+  - **Archivos:** `sistema/js/pos.js` (`procesarVenta`, `mostrarTicket`, `setupKeyboard`)
   - **Hace:** con `repetida` muestra el ticket con los datos y la fecha de la base y no registra auditoría; Escape cierra el ticket si está abierto y, si no, limpia la búsqueda.
   - **Listo cuando:** `npm test` en verde; en local, Escape cierra el ticket abierto; el ticket muestra la fecha que devuelve la base (se comprueba del todo después de T35).
   - **Commit:** `muestra la venta repetida con su fecha y cierra el ticket con escape`
 
 - [ ] T28 · **Código:** estilos del punto de venta
   - **RF:** 30, 31, 43
-  - **Archivos:** `sistema/css/pos.css`, `sistema/sw.js`
+  - **Archivos:** `sistema/css/pos.css`
   - **Hace:** vuelto resaltado; foco visible en botones de método, «Cobrar» y ticket; revisión del ancho a 360 px. Solo variables de marca.
   - **Listo cuando:** `npm test` en verde (incluye `marca: sin colores escritos a mano`); a 360 px no hay barra horizontal; con Tab se ve el foco en cada botón.
   - **Commit:** `ajusta los estilos del punto de venta para foco y celular`
@@ -269,7 +269,7 @@
 - [ ] T37 · **Publicación** de `sistema/` en Netlify
   - **RF:** todos los de la pantalla
   - **Archivos:** `sistema/sw.js`, `memory.md`
-  - **Hace:** sube `CACHE_VERSION` una última vez y se publica según lo que decida el autor (fusión a `main` o publicación manual).
+  - **Hace:** sube `CACHE_VERSION` una sola vez y se publica según lo que decida el autor (fusión a `main` o publicación manual).
   - **Listo cuando:** https://pointer-web001.netlify.app/ carga la versión nueva (`CACHE_VERSION` nueva en `sw.js` publicado) y una venta de prueba sale bien.
   - **Commit:** `publica la versión nueva del punto de venta`
 

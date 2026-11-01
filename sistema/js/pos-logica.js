@@ -25,7 +25,30 @@
         stockDisponible:      (stock) => `Stock disponible: ${stock}`,                      // RF-001-09
     });
 
-    const PosLogica = { MENSAJES };
+    // =========================================================
+    // LECTOR DE CODIGO DE BARRAS
+    // Escaneo = 3+ caracteres, todos con menos de 50 ms entre
+    // tecla y tecla (RF-001-03, RF-001-45)
+    // =========================================================
+    const MINIMO_CARACTERES_ESCANEO = 3;
+    const MAXIMO_MS_ESCANEO = 50; // 50 justos ya es texto escrito
+
+    // intervalosMs: ms entre una tecla y la siguiente
+    function clasificarEntrada(texto, intervalosMs) {
+        if (typeof texto !== 'string' || texto.length < MINIMO_CARACTERES_ESCANEO) return 'texto';
+        if (!Array.isArray(intervalosMs) || intervalosMs.length === 0) return 'texto';
+        const todosRapidos = intervalosMs.every((ms) => ms < MAXIMO_MS_ESCANEO);
+        return todosRapidos ? 'escaneo' : 'texto';
+    }
+
+    // Solo el codigo_barra exacto de un producto activo; el nombre no cuenta
+    function buscarPorCodigo(productos, texto) {
+        if (typeof texto !== 'string' || texto === '') return null;
+        const encontrado = productos.find((p) => p.activo === true && p.codigo_barra === texto);
+        return encontrado || null;
+    }
+
+    const PosLogica = { MENSAJES, clasificarEntrada, buscarPorCodigo };
 
     // =========================================================
     // SALIDA: Node (tests) o navegador (pos.js) (D1)
