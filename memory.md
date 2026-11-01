@@ -5,7 +5,7 @@
 ## Estado actual
 
 - **Fase del TFI:** Actividad 1 (constitución y arnés) terminada en el repositorio. Sigue la Actividad 2.
-- **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada (núcleo de la venta + ticket, uso del empleado) y clarificada (17 hallazgos, RF-001-01 a RF-001-45). `plan.md` y `tasks.md` (39 tareas) aprobados (2026-11-01). T01 a T04 hechas (`sistema/js/pos-logica.js` con `MENSAJES`, `clasificarEntrada` y `buscarPorCodigo`; tests del lector en verde); sigue la T05. Rama: `feature/punto-de-venta`.
+- **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada (núcleo de la venta + ticket, uso del empleado) y clarificada (17 hallazgos, RF-001-01 a RF-001-45; RF-001-46 y 47 por `/cambio`). `plan.md` y `tasks.md` (39 tareas) aprobados (2026-11-01). T01 a T04 hechas (`sistema/js/pos-logica.js` con `MENSAJES`, `clasificarEntrada` y `buscarPorCodigo`; tests del lector en verde); sigue la T05. Rama: `feature/punto-de-venta`.
 - **Sistema:** en producción en Netlify (https://pointer-web001.netlify.app/) con Supabase como base de datos.
 - **Funcionando:** login y roles, punto de venta con lector, caja con arqueo, cancelar venta, productos, categorías, clientes con historial, proveedores, compras, gastos, reportes (con descuentos), usuarios por Edge Function, auditoría.
 - **Pendientes de seguridad:** ejecutar `base-de-datos/10-ocultar-costos.sql` en la base de producción; desactivar el registro público y activar la protección de contraseñas filtradas en Supabase Auth.
@@ -31,6 +31,7 @@
 | 2026-11 | La tarea del test commitea sus casos con `{ todo: true }` y la tarea del código los saca | Tests primero sin dejar `npm test` en rojo (P4) |
 | 2026-11 | Cómo se publica en Netlify (T37) se decide al llegar a esa tarea | Pedido del autor |
 | 2026-11 | En la spec 001, `CACHE_VERSION` se sube una sola vez, en T37, antes de publicar | Subirla en cada tarea no sirve si no se publica; al final queda todo en orden |
+| 2026-11 | El buscador del POS ignora mayúsculas, tildes, ñ y diéresis y los espacios de los bordes; vacío muestra todos los activos (RF-001-06, 46, 47) | Decisión del autor en T05 (`/cambio`). El lector (`buscarPorCodigo`) sigue comparando exacto |
 
 ## Lecciones (errores que no hay que repetir)
 

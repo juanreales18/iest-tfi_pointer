@@ -1,6 +1,6 @@
 # Spec 001 · Punto de venta
 
-> **Estado:** aprobada por el autor · **Fecha:** 2026-10-31 · **Actualizada con la clarificación:** 2026-11-01
+> **Estado:** aprobada por el autor · **Fecha:** 2026-10-31 · **Actualizada con la clarificación:** 2026-11-01 · **Último cambio:** 2026-11-01 (ver «Historial de cambios»)
 > **Alcance acordado:** núcleo de la venta + ticket, desde el uso del **empleado** en el mostrador.
 
 ## Contexto
@@ -37,7 +37,9 @@ En el kiosco se atiende rápido y con fila: el empleado no puede hacer cuentas a
 | RF-001-04 | Cuando llegue un escaneo, o el empleado presione Enter con un texto escrito, igual al `codigo_barra` de un producto que ya está en el carrito, el sistema deberá sumar 1 a su cantidad. | Evento | Alta |
 | RF-001-05 | Si un escaneo no coincide con el `codigo_barra` de ningún producto activo, entonces el sistema deberá mostrar «No encontramos ese producto (código: <código>)» sin cambiar el carrito. | No deseado | Alta |
 | RF-001-45 | Si el empleado presiona Enter con un texto escrito que no coincide con ningún `codigo_barra`, entonces el sistema deberá dejar el texto en el buscador y mostrar la lista filtrada de RF-001-06, sin aviso de error. | No deseado | Alta |
-| RF-001-06 | Cuando el empleado escriba en el buscador, el sistema deberá mostrar en menos de 1 segundo (con 2.000 productos cargados, en la PC del mostrador) los productos activos cuyo nombre o código contengan el texto, sin distinguir mayúsculas. | Evento | Alta |
+| RF-001-06 | Cuando el empleado escriba en el buscador, el sistema deberá mostrar en menos de 1 segundo (con 2.000 productos cargados, en la PC del mostrador) los productos activos cuyo nombre o código contengan el texto, sin distinguir mayúsculas ni marcas sobre las letras («cafe» encuentra «Café», «nandu» encuentra «Ñandú» y «pinguino» encuentra «Pingüino»). | Evento | Alta |
+| RF-001-46 | Cuando el empleado escriba en el buscador, el sistema deberá filtrar la lista sin tener en cuenta los espacios del principio y del final del texto. | Evento | Alta |
+| RF-001-47 | Mientras el buscador esté vacío o tenga solo espacios, el sistema deberá mostrar todos los productos activos. | Estado | Alta |
 | RF-001-07 | Cuando el empleado elija un producto de la lista, el sistema deberá agregarlo al carrito con las mismas reglas de RF-001-03 y RF-001-04. | Evento | Alta |
 | RF-001-08 | Si un producto tiene stock 0, entonces el sistema deberá mostrarlo con la etiqueta «Sin stock» y no deberá agregarlo al carrito. | No deseado | Alta |
 | RF-001-40 | Si un producto tiene `precio_venta` igual a 0, entonces el sistema deberá no agregarlo al carrito y mostrar «Este producto no tiene precio. Avisale al dueño.». | No deseado | Alta |
@@ -181,7 +183,7 @@ Los mensajes de descuentos y de «No autorizado» no son parte de esta tabla: lo
 | RF02 · Roles `dueno` y `empleado` | RF-001-14 |
 | RF03 · Abrir y cerrar la caja | RF-001-01, RF-001-02, RF-001-21, RF-001-22 |
 | RF04 · Venta escaneando el código de barras | RF-001-03 a RF-001-05, RF-001-08 a RF-001-13, RF-001-19, RF-001-20, RF-001-23 a RF-001-26, RF-001-29, RF-001-32, RF-001-34 a RF-001-38, RF-001-40 a RF-001-42 |
-| RF05 · Buscar un producto por nombre o código | RF-001-06, RF-001-07, RF-001-45 |
+| RF05 · Buscar un producto por nombre o código | RF-001-06, RF-001-07, RF-001-45 a RF-001-47 |
 | RF06 · Método de pago y vuelto | RF-001-15 a RF-001-18, RF-001-33, RF-001-43, RF-001-44 |
 | RF07 · Imprimir el ticket | RF-001-27, RF-001-28 |
 | RF15 · Auditoría | (fuera de esta spec; lo registra la base) |
@@ -199,3 +201,9 @@ Lo que hoy no cumple la spec (sirve de entrada para `/planificar`):
 - Faltan: cantidad inválida (RF-001-38), sesión vencida (RF-001-39), precio 0 (RF-001-40), venta repetida (RF-001-32) y confirmación de vuelto alto (RF-001-43, RF-001-44).
 
 El detalle de cada decisión está en `clarificacion.md`.
+
+## Historial de cambios
+
+| Fecha | Cambio | Motivo |
+|---|---|---|
+| 2026-11-01 | RF-001-06 no distingue marcas sobre las letras (tildes, ñ y diéresis). Nuevos RF-001-46 (se ignoran los espacios del principio y del final) y RF-001-47 (buscador vacío o solo con espacios → todos los activos). Solo afectan a la lista del buscador: la comparación exacta con `codigo_barra` de RF-001-03 a RF-001-05 no cambia. | Al escribir los tests de `filtrarCatalogo` (T05) apareció que la spec no decía qué pasa con el texto vacío, las tildes ni los espacios. Decisión del autor. |

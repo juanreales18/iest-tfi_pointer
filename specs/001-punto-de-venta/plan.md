@@ -67,7 +67,7 @@ Pasos del script, en orden:
 |---|---|---|
 | `clasificarEntrada(texto, intervalosMs)` | Si un Enter es **escaneo** (3+ caracteres, todos con menos de 50 ms entre teclas) o **texto escrito**. | 03, 04, 05, 45 |
 | `buscarPorCodigo(productos, texto)` | Producto activo con `codigo_barra` **exactamente** igual. El nombre no cuenta. | 03, 04, 05, 45 |
-| `filtrarCatalogo(productos, texto)` | Activos cuyo nombre o código contienen el texto, sin distinguir mayúsculas. | 06, 07 |
+| `filtrarCatalogo(productos, texto)` | Activos cuyo nombre o código contienen el texto, sin distinguir mayúsculas ni marcas sobre las letras (tildes, ñ, diéresis) y sin los espacios del principio y del final. Texto vacío o solo espacios: todos los activos. Tolera `codigo_barra: null`. | 06, 07, 46, 47 |
 | `validarAgregado(producto, carrito, cajaAbierta)` | Si se puede sumar una unidad y, si no, qué mensaje mostrar (caja cerrada, sin stock, precio 0, stock superado). | 01, 03, 04, 08, 09, 40 |
 | `validarCantidad(texto, anterior, stock)` | Cantidad nueva válida, o volver a la anterior (0, vacío, negativo, decimal, más que el stock). | 09, 38 |
 | `calcularTotales(carrito, descuentoPct, impuestoPct)` | Subtotal, impuesto y total en centavos, con el redondeo de la base (D2). | 10, 11, 42 |
@@ -102,6 +102,7 @@ Pasos del script, en orden:
 - **RF-001-05** · Mismas funciones; el aviso «No encontramos ese producto (código: …)» sale solo si `clasificarEntrada` dice escaneo. Test: `pos-logica.test.js`. P6.
 - **RF-001-45** · `pos.js` (`setupSearch`): un texto escrito que no es código queda en el buscador y se filtra la lista, sin aviso (hoy en algunos casos se borra). Test: `pos-logica.test.js` (texto lento → «texto»; sin coincidencia → sin mensaje) y caso límite 15. P6.
 - **RF-001-06** · `pos-logica.js` (`filtrarCatalogo`), `pos.js` (`filtrarProductos`). Test: `pos-logica.test.js` (contiene, sin mayúsculas, solo activos, 2.000 productos en menos de 100 ms) + prueba manual en la PC del mostrador con la pantalla completa. P7.
+- **RF-001-46 / RF-001-47** · `pos-logica.js` (`filtrarCatalogo` recorta los espacios del texto; vacío devuelve todos los activos), `pos.js` (`filtrarProductos`). La normalización (minúsculas y sin marcas) se aplica al texto y a cada nombre y código antes de comparar. No cambia `buscarPorCodigo`, que sigue comparando exacto. Test: `pos-logica.test.js`. P4.
 - **RF-001-07** · `pos.js` (`crearTarjetaProducto` usa `validarAgregado`). Test: `pos-logica.test.js` (mismas reglas que 03/04). P4.
 - **RF-001-08** · `pos-logica.js` (`validarAgregado`): hoy un producto **nuevo** con stock 0 entra al carrito si llega por el lector. La tarjeta sigue mostrando «Sin stock». Test: `pos-logica.test.js`. P3 (la base igual lo rechaza al cobrar).
 - **RF-001-40** · `pos-logica.js` (`validarAgregado`, `MENSAJES`). Test: `pos-logica.test.js` (caso límite 11). P5.
@@ -162,6 +163,8 @@ Pasos del script, en orden:
 | 05 | Alta | `pos-logica.js`, `pos.js` | `pos-logica.test.js` |
 | 45 | Alta | `pos-logica.js`, `pos.js` | `pos-logica.test.js` |
 | 06 | Alta | `pos-logica.js`, `pos.js` | `pos-logica.test.js` + manual en la PC del mostrador |
+| 46 | Alta | `pos-logica.js`, `pos.js` | `pos-logica.test.js` |
+| 47 | Alta | `pos-logica.js`, `pos.js` | `pos-logica.test.js` |
 | 07 | Alta | `pos.js` | `pos-logica.test.js` |
 | 08 | Alta | `pos-logica.js`, `pos.js` | `pos-logica.test.js` |
 | 40 | Alta | `pos-logica.js`, `pos.js` | `pos-logica.test.js` |

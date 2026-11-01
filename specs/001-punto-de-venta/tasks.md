@@ -44,14 +44,14 @@
   - **Commit:** `agrega la clasificación de escaneos y la búsqueda por código`
 
 - [ ] T05 · **Test:** `filtrarCatalogo`
-  - **RF:** 06, 07
+  - **RF:** 06, 07, 46, 47
   - **Archivos:** `tests/pos-logica.test.js`
-  - **Hace:** contiene el texto en nombre o código, sin distinguir mayúsculas, solo activos; 2.000 productos de prueba en menos de 100 ms.
+  - **Hace:** contiene el texto en nombre o código, sin distinguir mayúsculas ni marcas (tildes, ñ, diéresis), solo activos, tolera `codigo_barra: null`; espacios del principio y del final se ignoran; vacío o solo espacios → todos los activos; 2.000 productos de prueba en menos de 100 ms.
   - **Listo cuando:** casos nuevos como `todo`; `npm test` en verde.
   - **Commit:** `agrega los tests del filtro del catálogo`
 
 - [ ] T06 · **Código:** `filtrarCatalogo`
-  - **RF:** 06, 07
+  - **RF:** 06, 07, 46, 47
   - **Archivos:** `sistema/js/pos-logica.js`, `tests/pos-logica.test.js`
   - **Listo cuando:** los casos de T05 (incluido el de rendimiento) pasan sin `todo`; `npm test` en verde.
   - **Commit:** `agrega el filtro del catálogo del punto de venta`
@@ -153,7 +153,7 @@
   - **Commit:** `carga pos-logica.js en el punto de venta`
 
 - [ ] T21 · **Código:** lector y búsqueda usan `PosLogica`
-  - **RF:** 03, 04, 05, 06, 45
+  - **RF:** 03, 04, 05, 06, 45, 46, 47
   - **Archivos:** `sistema/js/pos.js` (`setupSearch`, `filtrarProductos`)
   - **Hace:** guarda la hora de cada tecla; usa `clasificarEntrada`, `buscarPorCodigo` y `filtrarCatalogo`; deja de aceptar el nombre exacto como código; el texto escrito queda en el buscador sin aviso.
   - **Listo cuando:** `npm test` en verde; en local, un escaneo simulado (pegar código + Enter rápido) agrega el producto, un código inexistente muestra «No encontramos ese producto (código: …)» y un texto escrito a mano filtra sin aviso.
@@ -281,7 +281,7 @@
   - **Commit:** `registra la ocultación de costos en producción`
 
 - [ ] T39 · **Verificación** de la funcionalidad
-  - **RF:** todos (01 a 45)
+  - **RF:** todos (01 a 47)
   - **Archivos:** `specs/001-punto-de-venta/verificacion.md` (nuevo), `memory.md`
   - **Hace:** `/verificar` con la skill `verificar-criterios`; pruebas manuales del plan (teclado, 360 px, impresión, ticket, red cortada, lector real, empleado sin costos, rendimiento en la PC del mostrador).
   - **Listo cuando:** cada RF figura como cumple / no cumple / prueba manual pendiente, con el test que lo cubre; `npm test` en verde.
@@ -296,6 +296,7 @@
 | 03, 04 | T03, T07 | T04, T08, T21 |
 | 05 | T01, T03 | T02, T04, T21 |
 | 06 | T05 | T06, T21 |
+| 46, 47 | T05 | T06, T21 |
 | 07 | T05 | T06, T22 |
 | 08 | T07 | T08, T22 |
 | 09 | T01, T07, T09 | T02, T08, T10, T22 |
