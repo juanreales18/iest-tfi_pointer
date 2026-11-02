@@ -6,7 +6,7 @@
 
 - **Fase del TFI:** Actividad 1 (constitución y arnés) terminada en el repositorio. Sigue la Actividad 2.
 - **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada y clarificada; el 2026-11-01 se redujo por `/cambio` al **núcleo del cobro: 15 RF activos** (03, 04, 05, 06, 07, 09, 10, 11, 12, 14, 16, 19, 24, 26, 42); los otros 30 están en «Mejoras futuras» con su motivo. `plan.md` y `tasks.md` reorganizados: 15 tareas, test y código juntos. La base no cambia en esta spec. T01 a T15 hechas: `sistema/js/pos-logica.js` está cargado en `pos.html` y `sw.js`, y `pos.js` lo usa en el lector, la búsqueda, el carrito, el total, «Cobrar» y los errores; ya no hay `precio_costo` en `pos.js` ni ningún `todo` en los tests. T11 a T13 se probaron en Chrome real con Supabase simulado en local (sin credenciales y sin tocar producción): en T15 el autor repitió las pruebas en `pointer-demo` con la base real y lector físico. Comprobado en Chrome: el error de red llega como `TypeError: Failed to fetch` con `code` vacío (red cortada, servidor caído y DNS). Con «Efectivo» activo queda elegido al abrir y no se puede desmarcar: el mensaje sin método solo aparece si no hay «Efectivo». La T14 quedó publicada a mano en `pointer-demo` (`CACHE_VERSION` 2026-11-02T15-45-00); pedir `precio_costo` a la API da 403. La verificación da 15 de 15 RF y 9 de 9 criterios (`verificacion.md`). Spec 001 cerrada por el autor el 2026-11-02 y fusionada a `main`.
-- **Spec 002 (caja y arqueo):** `specs/002-caja-arqueo/spec.md` aprobada y clarificada por el autor el 2026-11-02, con 8 RF y 12 hallazgos respondidos (`clarificacion.md`). Sigue `/planificar`. Todavía no se cambió código ni base. La viabilidad de ampliar `cajas_guard` salió de leer el código: falta comprobarla contra la base real con `tests/sql/`, que todavía no existe.
+- **Spec 002 (caja y arqueo):** `specs/002-caja-arqueo/spec.md` aprobada y clarificada por el autor el 2026-11-02, con 8 RF y 12 hallazgos respondidos (`clarificacion.md`). `plan.md` aprobado el 2026-11-02. Sigue `/tareas`. Todavía no se cambió código ni base. La viabilidad de ampliar `cajas_guard` salió de leer el código: falta comprobarla contra la base real (paso 1 del plan) y con `tests/sql/`, que todavía no existe.
 - **Sistema:** publicado en Netlify (https://pointer-demo.netlify.app/) con Supabase como base de datos. El sitio `pointer-web001` y la base «Kiosco Web» son de un cliente: no se tocan.
 - **Funcionando:** login y roles, punto de venta con lector, caja con arqueo, cancelar venta, productos, categorías, clientes con historial, proveedores, compras, gastos, reportes (con descuentos), usuarios por Edge Function, auditoría.
 - **Pendientes de seguridad:** desactivar el registro público y activar la protección de contraseñas filtradas en Supabase Auth.
@@ -45,6 +45,11 @@
 | 2026-11 | `tests/sql/` simula cada rol con `SET LOCAL ROLE authenticated` y `request.jwt.claims`, buscando los ids con una consulta | H-03: en el panel, `current_user` es `postgres` y el guard no aplica sus reglas |
 | 2026-11 | Los montos de caja siguen en `type="number"`; la validación también recibe `validity.badInput` | H-04: un texto inválido llega vacío y cerraría la caja sin arqueo |
 | 2026-11 | El cierre de caja ya no hace la lectura previa al `update`; el movimiento usa la fila devuelta | H-05: sin internet, esa lectura mostraba «La caja ya fue cerrada». RF-002-07 cubre dos cierres a la vez |
+| 2026-11 | Con la caja abierta, `cajas_guard` también le rechaza al dueño los cambios de `usuario_id` y `fecha_apertura` («La caja ya está abierta») | D3 del plan 002: abrir desde una pantalla vieja con el mismo monto no cambia los saldos y RF-002-03 no lo frenaría |
+| 2026-11 | Con el resumen de cierre abierto, el foco va al título y no a «Listo»; en el POS, el lector y los atajos no actúan | D5 del plan 002: el Enter del lector cerraría el resumen sin que nadie lo lea |
+| 2026-11 | Si la caja ya está cerrada al abrir el modal de cierre, se avisa y el modal no se abre | D6 del plan 002: una caja cerrada conserva su saldo y se mostraría como esperado |
+| 2026-11 | `tests/sql/caja-guard.sql` termina siempre en un error a propósito con los resultados, en lugar de un `ROLLBACK` escrito | D7 del plan 002: deshace todo aunque falle en el medio. Falta comprobar en el panel que el texto se ve |
+| 2026-11 | Se publica primero la migración de `cajas_guard` y después el sitio | Plan 002: la pantalla nueva con el guard viejo mostraría siempre «Cerrada sin arqueo» |
 
 ## Lecciones (errores que no hay que repetir)
 
@@ -61,3 +66,4 @@
 - Proyecto Supabase de Pointer: `ebsiqjiioqzpzdsonkit` (las claves están en el panel, nunca acá).
 - Publicación: a mano en Netlify, sitio `pointer-demo`, carpeta `sistema/`. El sitio no está conectado a GitHub: un push no publica.
 - La estructura completa de la base está en `base-de-datos/00-estructura.sql`.
+- Cada corrida de `tests/sql/` que prueba `crear_venta` deja un salto en la numeración de ventas: el `ROLLBACK` no devuelve la secuencia. Se acepta en `pointer-demo`.
