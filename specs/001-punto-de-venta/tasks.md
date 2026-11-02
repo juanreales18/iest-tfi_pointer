@@ -53,7 +53,7 @@ T01 a T05 se hicieron con la regla anterior (una tarea para el test y otra para 
   - **Listo cuando:** los casos nuevos pasan; `npm test` en verde.
   - **Commit:** `agrega el cálculo del total en centavos`
 
-- [ ] T09 · `puedeCobrar` (test + código)
+- [x] T09 · `puedeCobrar` (test + código)
   - **RF:** 12, 16
   - **Archivos:** `sistema/js/pos-logica.js`, `tests/pos-logica.test.js`
   - **Hace:** deshabilitado con carrito vacío; habilitado con productos aunque no haya método elegido (D8).

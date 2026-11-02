@@ -408,3 +408,37 @@ test('totales: calcularTotales no cambia el carrito', () => {
     PosLogica.calcularTotales(carrito, 10, 21);
     assert.deepEqual(carrito, copia);
 });
+
+// ---------------------------------------------------------------
+// COBRAR: puedeCobrar (T09)
+// Solo mira el carrito. El método de pago no cuenta (D8) y la caja
+// cerrada se sigue controlando en pos.js (se confirma en T13).
+// ---------------------------------------------------------------
+const LINEA = { id: 1, precio: 100, cantidad: 1 };
+
+test('cobrar: RF-001-12 · con el carrito vacío no se puede cobrar', () => {
+    assert.equal(PosLogica.puedeCobrar({ carrito: [] }), false);
+});
+
+test('cobrar: RF-001-12 · con productos en el carrito se puede cobrar', () => {
+    assert.equal(PosLogica.puedeCobrar({ carrito: [LINEA] }), true);
+});
+
+test('cobrar: RF-001-12 · el carrito vacío no se puede cobrar aunque haya método', () => {
+    assert.equal(PosLogica.puedeCobrar({ carrito: [], metodoPagoId: 1 }), false);
+});
+
+test('cobrar: RF-001-16 · sin método elegido se puede tocar Cobrar (D8)', () => {
+    assert.equal(PosLogica.puedeCobrar({ carrito: [LINEA], metodoPagoId: null }), true);
+});
+
+test('cobrar: la caja no entra en la regla de puedeCobrar', () => {
+    assert.equal(PosLogica.puedeCobrar({ carrito: [LINEA], cajaAbierta: false }), true);
+});
+
+test('cobrar: puedeCobrar no cambia el estado', () => {
+    const estado = { carrito: [LINEA], metodoPagoId: null };
+    const copia = structuredClone(estado);
+    PosLogica.puedeCobrar(estado);
+    assert.deepEqual(estado, copia);
+});

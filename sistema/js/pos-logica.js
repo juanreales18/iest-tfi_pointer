@@ -112,6 +112,16 @@
         return { subtotal, descuento, neto, impuesto, total: neto + impuesto };
     }
 
+    // =========================================================
+    // BOTON COBRAR
+    // Solo mira el carrito (RF-001-12). Sin metodo sigue habilitado
+    // para que se vea el mensaje de RF-001-16 (D8). La caja cerrada
+    // la controla pos.js
+    // =========================================================
+    function puedeCobrar(estado) {
+        return estado.carrito.length > 0;
+    }
+
     const PosLogica = {
         MENSAJES,
         clasificarEntrada,
@@ -120,6 +130,7 @@
         validarAgregado,
         validarCantidad,
         calcularTotales,
+        puedeCobrar,
     };
 
     // =========================================================
