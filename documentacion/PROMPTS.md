@@ -43,4 +43,9 @@
 - **Cómo se detectó:** el agente avisó de la diferencia entre el sitio y el repositorio; el autor preguntó de qué cuenta salía esa base y aclaró que era de un cliente.
 - **Cómo se corrigió:** no se cambió nada en esa base y se retiró la recomendación. La spec 001 y `memory.md` ahora nombran el sitio y la base de Pointer; el autor comprobó los permisos desde su panel.
 
+### E-07 · Consulta sin paréntesis en la T01 de la spec 002
+- **Qué hizo mal:** escribió `'public.cajas_guard'::regprocedure` en `tasks.md` y en el chat sin haberla probado. Ese tipo exige los paréntesis de la función, así que PostgreSQL respondió `expected a left parenthesis`.
+- **Cómo se detectó:** el autor ejecutó la consulta en el panel y pegó el error. No se cambió ningún dato.
+- **Cómo se corrigió:** la consulta pasó a `'public.cajas_guard()'::regprocedure` en `tasks.md`, en el mismo commit de la T01.
+
 > Durante la Actividad 2 se agregan los errores nuevos con el mismo formato.

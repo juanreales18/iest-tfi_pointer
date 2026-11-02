@@ -17,10 +17,10 @@
 
 ## Etapa 0 · Comprobación de viabilidad
 
-- [ ] T01 · **Autor:** comparar la función real con `00-estructura.sql`
+- [x] T01 · **Autor:** comparar la función real con `00-estructura.sql`
   - **RF:** 03, 05, 06, 07 (paso 1 del orden de trabajo del plan)
   - **Archivos:** `memory.md`
-  - **Hace:** el autor lee en el panel la definición de `cajas_guard` (`select pg_get_functiondef('public.cajas_guard'::regprocedure);`, solo lectura) y la compara con la sección 7.7 de `00-estructura.sql`. Guarda esa definición: es la versión para volver atrás.
+  - **Hace:** el autor lee en el panel la definición de `cajas_guard` (`select pg_get_functiondef('public.cajas_guard()'::regprocedure);`, solo lectura) y la compara con la sección 7.7 de `00-estructura.sql`. Guarda esa definición: es la versión para volver atrás.
   - **Listo cuando:** `memory.md` dice si coinciden. Si difieren, se frena acá y se ajusta el plan antes de seguir.
   - **Commit:** `registra la comprobación de cajas_guard contra la base real`
 
