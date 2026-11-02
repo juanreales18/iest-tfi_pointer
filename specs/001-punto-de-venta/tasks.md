@@ -60,7 +60,7 @@ T01 a T05 se hicieron con la regla anterior (una tarea para el test y otra para 
   - **Listo cuando:** los casos nuevos pasan; `npm test` en verde.
   - **Commit:** `agrega la regla del botón cobrar`
 
-- [ ] T10 · `mensajeDeError` (test + código)
+- [x] T10 · `mensajeDeError` (test + código)
   - **RF:** 24, 26
   - **Archivos:** `sistema/js/pos-logica.js`, `tests/pos-logica.test.js`
   - **Hace:** sin conexión → el texto de RF-001-24; cualquier otro rechazo → el texto que devuelve la base, tal cual.

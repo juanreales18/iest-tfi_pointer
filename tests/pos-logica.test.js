@@ -442,3 +442,58 @@ test('cobrar: puedeCobrar no cambia el estado', () => {
     PosLogica.puedeCobrar(estado);
     assert.deepEqual(estado, copia);
 });
+
+// ---------------------------------------------------------------
+// ERRORES AL COBRAR: mensajeDeError (T10)
+// Sin conexión: el texto de RF-001-24. Un rechazo de la base trae
+// code (P0001 en los RAISE EXCEPTION de crear_venta) y su texto pasa
+// tal cual. Un pedido que no llegó no trae code y trae el texto del
+// navegador, distinto en cada uno.
+// ---------------------------------------------------------------
+const SIN_CONEXION = 'Sin conexión a internet. La venta no se registró: volvé a intentar cuando vuelva la conexión.';
+
+test('errores: RF-001-24 · sin conexión devuelve el mensaje de la spec', () => {
+    assert.equal(PosLogica.mensajeDeError({ message: 'Failed to fetch' }, false), SIN_CONEXION);
+});
+
+test('errores: RF-001-24 · sin conexión y sin detalle del error devuelve el mismo mensaje', () => {
+    assert.equal(PosLogica.mensajeDeError(null, false), SIN_CONEXION);
+});
+
+for (const texto of [
+    'Failed to fetch',
+    'TypeError: Failed to fetch',
+    'NetworkError when attempting to fetch resource.',
+    'Load failed',
+]) {
+    test(`errores: RF-001-24 · el pedido no llegó aunque el navegador diga en línea: «${texto}»`, () => {
+        assert.equal(PosLogica.mensajeDeError({ message: texto, code: '' }, true), SIN_CONEXION);
+    });
+}
+
+for (const texto of [
+    'Stock insuficiente de "Alfajor triple" (disponible: 2)', // caso límite 4
+    'La caja esta cerrada',                                   // caso límite 5
+    'El producto "Alfajor triple" no esta activo',            // caso límite 6
+]) {
+    test(`errores: RF-001-26 · el rechazo de la base pasa tal cual: «${texto}»`, () => {
+        assert.equal(PosLogica.mensajeDeError({ message: texto, code: 'P0001' }, true), texto);
+    });
+}
+
+test('errores: RF-001-26 · un producto con «network» en el nombre no parece un corte de red', () => {
+    const texto = 'El producto "Cable Network 5m" no esta activo';
+    assert.equal(PosLogica.mensajeDeError({ message: texto, code: 'P0001' }, true), texto);
+});
+
+test('errores: RF-001-26 · sin texto del error no devuelve vacío', () => {
+    assert.equal(PosLogica.mensajeDeError({ message: '' }, true), 'No se pudo procesar la venta');
+    assert.equal(PosLogica.mensajeDeError(null, true), 'No se pudo procesar la venta');
+});
+
+test('errores: mensajeDeError no cambia el error', () => {
+    const error = { message: 'La caja esta cerrada', code: 'P0001' };
+    const copia = structuredClone(error);
+    PosLogica.mensajeDeError(error, true);
+    assert.deepEqual(error, copia);
+});

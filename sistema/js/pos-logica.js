@@ -122,6 +122,22 @@
         return estado.carrito.length > 0;
     }
 
+    // =========================================================
+    // ERRORES AL COBRAR
+    // navigator.onLine puede decir en linea aunque el pedido no
+    // llegue: eso tambien es sin conexion (RF-001-24). Un rechazo
+    // de la base trae code y su texto pasa tal cual (RF-001-26),
+    // aunque un producto se llame «Cable Network»
+    // =========================================================
+    const ERROR_DE_RED = /Failed to fetch|NetworkError|Load failed|network/i;
+
+    function mensajeDeError(error, enLinea) {
+        const texto = error?.message || '';
+        const noLlego = !error?.code && ERROR_DE_RED.test(texto);
+        if (!enLinea || noLlego) return MENSAJES.sinConexion;
+        return texto || 'No se pudo procesar la venta';
+    }
+
     const PosLogica = {
         MENSAJES,
         clasificarEntrada,
@@ -131,6 +147,7 @@
         validarCantidad,
         calcularTotales,
         puedeCobrar,
+        mensajeDeError,
     };
 
     // =========================================================
