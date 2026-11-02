@@ -42,9 +42,23 @@
         return { valido: true, monto };
     }
 
+    // =========================================================
+    // CONTADO
+    // Es opcional: vacio cierra sin arqueo (null) y 0 es un contado.
+    // Vacio con entradaInvalida no cuenta como vacio (caso limite 11)
+    // =========================================================
+    function validarContado(valor, entradaInvalida) {
+        if (!entradaInvalida && String(valor ?? '').trim() === '') {
+            return { valido: true, contado: null };
+        }
+        const resultado = validarMontoApertura(valor, entradaInvalida);
+        return resultado.valido ? { valido: true, contado: resultado.monto } : resultado;
+    }
+
     const CajaLogica = {
         MENSAJES,
         validarMontoApertura,
+        validarContado,
     };
 
     // =========================================================

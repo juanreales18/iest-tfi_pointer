@@ -73,3 +73,38 @@ for (const [caso, valor, entradaInvalida] of APERTURAS_INVALIDAS) {
         );
     });
 }
+
+// ---------------------------------------------------------------
+// CONTADO: validarContado (RF-002-02, casos límite 1, 2 y 11)
+// ---------------------------------------------------------------
+test('contado: caso límite 1 · 0 es un contado, no «sin contado»', () => {
+    assert.deepEqual(CajaLogica.validarContado('0', false), { valido: true, contado: 0 });
+});
+
+test('contado: un monto positivo se devuelve como número', () => {
+    assert.deepEqual(CajaLogica.validarContado('1450', false), { valido: true, contado: 1450 });
+    assert.deepEqual(CajaLogica.validarContado('1450.50', false), { valido: true, contado: 1450.5 });
+});
+
+test('contado: caso límite 2 · vacío es «sin contado»', () => {
+    assert.deepEqual(CajaLogica.validarContado('', false), { valido: true, contado: null });
+    assert.deepEqual(CajaLogica.validarContado('   ', false), { valido: true, contado: null });
+    assert.deepEqual(CajaLogica.validarContado(undefined, false), { valido: true, contado: null });
+});
+
+const CONTADOS_INVALIDOS = [
+    ['caso límite 11 · vacío con entrada inválida no es «sin contado»', '', true],
+    ['entrada inválida aunque haya un valor', '100', true],
+    ['negativo', '-1', false],
+    ['texto', 'abc', false],
+    ['infinito', 'Infinity', false],
+];
+
+for (const [caso, valor, entradaInvalida] of CONTADOS_INVALIDOS) {
+    test(`contado: RF-002-02 · ${caso}`, () => {
+        assert.deepEqual(
+            CajaLogica.validarContado(valor, entradaInvalida),
+            { valido: false, mensaje: 'Ingresá un monto de 0 o más' }
+        );
+    });
+}

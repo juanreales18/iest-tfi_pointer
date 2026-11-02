@@ -40,7 +40,7 @@
   - **Listo cuando:** pasan los casos vacío, `0`, `1000`, `-1` y `entradaInvalida = true`; `npm test` en verde.
   - **Commit:** `agrega la validación del monto de apertura`
 
-- [ ] T04 · `validarContado` (test + código)
+- [x] T04 · `validarContado` (test + código)
   - **RF:** 02
   - **Archivos:** `sistema/js/caja-logica.js`, `tests/caja-logica.test.js`
   - **Hace:** vacío y válido es «sin contado» (`null`); `0` es un contado; `entradaInvalida` o negativo devuelven el mensaje de RF-002-02.
