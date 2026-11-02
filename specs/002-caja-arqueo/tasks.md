@@ -26,7 +26,7 @@
 
 ## Etapa 1 · Lógica pura (`caja-logica.js`)
 
-- [ ] T02 · Esqueleto de `caja-logica.js` y `MENSAJES` (test + código)
+- [x] T02 · Esqueleto de `caja-logica.js` y `MENSAJES` (test + código)
   - **RF:** 02, 03, 07, 08
   - **Archivos:** `sistema/js/caja-logica.js` (nuevo), `tests/caja-logica.test.js` (nuevo)
   - **Hace:** doble salida igual que `pos-logica.js` (`window.CajaLogica` y `module.exports`). `MENSAJES` con los textos de la spec, comprobados letra por letra (D9).
