@@ -74,11 +74,27 @@
         return (centavosContados - centavosEsperados) / 100;
     }
 
+    // =========================================================
+    // RESULTADO DEL ARQUEO
+    // El signo queda en el texto: el valor se muestra sin signo.
+    // null es «sin arqueo»; 0 es un arqueo que dio justo
+    // =========================================================
+    function describirDiferencia(diferencia) {
+        const centavos = aCentavos(diferencia);
+        if (centavos === null) return { texto: MENSAJES.sinArqueo, valor: null };
+        if (centavos === 0) return { texto: MENSAJES.sinDiferencia, valor: 0 };
+        return {
+            texto: centavos > 0 ? MENSAJES.sobrante : MENSAJES.faltante,
+            valor: Math.abs(centavos) / 100,
+        };
+    }
+
     const CajaLogica = {
         MENSAJES,
         validarMontoApertura,
         validarContado,
         calcularVistaPrevia,
+        describirDiferencia,
     };
 
     // =========================================================

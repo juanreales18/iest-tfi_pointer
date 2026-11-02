@@ -146,3 +146,32 @@ test('vista previa: caso límite 10 · sin esperado no calcula nada, nunca como 
     assert.equal(CajaLogica.calcularVistaPrevia('', 1450), null);
     assert.equal(CajaLogica.calcularVistaPrevia(NaN, 1450), null);
 });
+
+// ---------------------------------------------------------------
+// RESULTADO: describirDiferencia (RF-002-08)
+// ---------------------------------------------------------------
+test('resultado: RF-002-08 · positiva es «Sobrante», con el valor', () => {
+    assert.deepEqual(CajaLogica.describirDiferencia(50), { texto: 'Sobrante', valor: 50 });
+});
+
+test('resultado: RF-002-08 · negativa es «Faltante», con el valor sin signo', () => {
+    assert.deepEqual(CajaLogica.describirDiferencia(-50), { texto: 'Faltante', valor: 50 });
+});
+
+test('resultado: RF-002-08 · 0 es «Sin diferencia», no «Cerrada sin arqueo»', () => {
+    assert.deepEqual(CajaLogica.describirDiferencia(0), { texto: 'Sin diferencia', valor: 0 });
+});
+
+test('resultado: caso límite 2 · sin diferencia guardada es «Cerrada sin arqueo»', () => {
+    assert.deepEqual(CajaLogica.describirDiferencia(null), { texto: 'Cerrada sin arqueo', valor: null });
+    assert.deepEqual(CajaLogica.describirDiferencia(undefined), { texto: 'Cerrada sin arqueo', valor: null });
+});
+
+test('resultado: acepta la diferencia como texto, como puede llegar un numeric', () => {
+    assert.deepEqual(CajaLogica.describirDiferencia('-50.00'), { texto: 'Faltante', valor: 50 });
+    assert.deepEqual(CajaLogica.describirDiferencia('0.00'), { texto: 'Sin diferencia', valor: 0 });
+});
+
+test('resultado: conserva los centavos', () => {
+    assert.deepEqual(CajaLogica.describirDiferencia(-0.2), { texto: 'Faltante', valor: 0.2 });
+});

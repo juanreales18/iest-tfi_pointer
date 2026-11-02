@@ -54,7 +54,7 @@
   - **Listo cuando:** pasan esperado 1500 con contado 1450 (−50), contado 0, sin contado, sin esperado y un caso con decimales que falla si se resta en coma flotante; `npm test` en verde.
   - **Commit:** `agrega la vista previa de la diferencia`
 
-- [ ] T06 · `describirDiferencia` (test + código)
+- [x] T06 · `describirDiferencia` (test + código)
   - **RF:** 08
   - **Archivos:** `sistema/js/caja-logica.js`, `tests/caja-logica.test.js`
   - **Hace:** «Sobrante», «Faltante» o «Sin diferencia» con el valor sin signo; `null` da «Cerrada sin arqueo».
