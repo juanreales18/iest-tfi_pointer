@@ -13,7 +13,7 @@
 | Caché | Service Worker (`sw.js`) | El sistema carga rápido y se actualiza solo en cada publicación |
 | Librerías | `supabase.js` incluida en `js/vendor/` | Sin depender de un CDN externo |
 | Código | Git + GitHub | Historial de cambios y respaldo del proyecto |
-| Publicación | Netlify | Sitio estático con HTTPS, sin paso de compilación; publica la carpeta `sistema/` del repositorio de GitHub |
+| Publicación | Netlify | Sitio estático con HTTPS, sin paso de compilación; la carpeta `sistema/` se sube a mano |
 | Tests | `node:test` (incluido en Node.js) | Tests automáticos con `npm test`, sin instalar librerías |
 | IA | Claude Code + VS Code | Claude Code como agente (specs, plan, tareas y código); VS Code para leer y revisar cada cambio. Ver `MATRIZ-HERRAMIENTAS.md` |
 
@@ -28,9 +28,8 @@ Netlify  ──  archivos estáticos (HTML, CSS, JS)
         │  clave pública (anon) + sesión del usuario
         ▼
 Supabase  ──  Auth + PostgREST + PostgreSQL con RLS
-        ▲
-        │  git push
-GitHub (repositorio)  ──►  Netlify publica en cada push
+
+Publicación: la carpeta `sistema/` se sube a mano a Netlify. GitHub solo guarda el código: un push no publica.
 ```
 
 Las reglas de seguridad **no dependen del navegador**: las aplica la base de datos con RLS.
@@ -51,7 +50,7 @@ El sistema ya estaba construido y en uso antes del Trabajo Final Integrador, y c
 - **Pocas pantallas y mucha lógica en la base:** las reglas críticas (totales, stock, caja, permisos) viven en PostgreSQL con RLS y funciones; React no agregaría seguridad.
 - **Sin paso de compilación:** el kiosquero o el técnico puede publicar una corrección subiendo archivos, sin Node.js en la PC del mostrador.
 - **PostgreSQL igual que en clase:** Supabase *es* PostgreSQL, así que el modelo de datos, SQL y RLS son los mismos.
-- **Netlify en lugar de Vercel:** cumple la misma función (sitio estático con HTTPS y despliegue desde GitHub) y el proyecto ya estaba publicado ahí.
+- **Netlify en lugar de Vercel:** cumple la misma función (sitio estático con HTTPS) y el proyecto ya estaba publicado ahí.
 
 Migrar a Next.js significaría reescribir un sistema que funciona sin ganar ninguna funcionalidad pedida en las specs.
 

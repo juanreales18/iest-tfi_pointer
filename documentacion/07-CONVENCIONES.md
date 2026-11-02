@@ -39,7 +39,7 @@ cierra las vistas v_* para usuarios anónimos
 
 | Rama | Uso |
 |---|---|
-| `main` | Versión publicada en Netlify |
+| `main` | Última versión terminada y probada. Se publica a mano en Netlify |
 | `feature/nombre` | Una funcionalidad nueva, por ejemplo `feature/caja` |
 | `fix/nombre` | Corrección de un error |
 
