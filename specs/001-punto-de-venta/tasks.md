@@ -69,7 +69,7 @@ T01 a T05 se hicieron con la regla anterior (una tarea para el test y otra para 
 
 ## Etapa 2 · Pantalla (`pos.js`, `pos.html`, `sw.js`)
 
-- [ ] T11 · Tests de los archivos de la pantalla y carga de `pos-logica.js`
+- [x] T11 · Tests de los archivos de la pantalla y carga de `pos-logica.js`
   - **RF:** 14, 19
   - **Archivos:** `tests/punto-de-venta.test.js` (nuevo), `sistema/pos.html`, `sistema/sw.js`
   - **Hace:** tests: `pos.html` carga `pos-logica.js` antes de `pos.js`; `sw.js` lista `/js/pos-logica.js`; `pos.js` solo llama a `rpc('crear_venta')`; `pos.js` no contiene `precio_costo` (este va como `todo` hasta T13). Código: el `<script>` en `pos.html` y la entrada en `sw.js` (sin tocar `CACHE_VERSION`).

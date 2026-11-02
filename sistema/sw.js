@@ -27,6 +27,7 @@ const ASSETS = [
     '/js/app.js',
     '/js/products.js',
     '/js/reports.js',
+    '/js/pos-logica.js',
     '/js/pos.js',
 ];
 
