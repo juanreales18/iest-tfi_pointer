@@ -5,7 +5,7 @@
 ## Estado actual
 
 - **Fase del TFI:** Actividad 1 (constitución y arnés) terminada en el repositorio. Sigue la Actividad 2.
-- **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada (núcleo de la venta + ticket, uso del empleado) y clarificada (17 hallazgos, RF-001-01 a RF-001-45; RF-001-46 y 47 por `/cambio`). `plan.md` y `tasks.md` (39 tareas) aprobados (2026-11-01). T01 a T05 hechas (`sistema/js/pos-logica.js` con `MENSAJES`, `clasificarEntrada` y `buscarPorCodigo`; tests del lector en verde; 15 casos `catálogo: …` de `filtrarCatalogo` como `todo`); sigue la T06. Rama: `feature/punto-de-venta`.
+- **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada y clarificada; el 2026-11-01 se redujo por `/cambio` al **núcleo del cobro: 15 RF activos** (03, 04, 05, 06, 07, 09, 10, 11, 12, 14, 16, 19, 24, 26, 42); los otros 30 están en «Mejoras futuras» con su motivo. `plan.md` y `tasks.md` reorganizados: 15 tareas, T01 a T05 hechas y 10 activas (T06 a T15), test y código juntos. La base no cambia en esta spec. T01 a T05 hechas (`sistema/js/pos-logica.js` con `MENSAJES`, `clasificarEntrada` y `buscarPorCodigo`; 15 casos `catálogo: …` como `todo`); sigue la T06. Rama: `feature/punto-de-venta`.
 - **Sistema:** en producción en Netlify (https://pointer-web001.netlify.app/) con Supabase como base de datos.
 - **Funcionando:** login y roles, punto de venta con lector, caja con arqueo, cancelar venta, productos, categorías, clientes con historial, proveedores, compras, gastos, reportes (con descuentos), usuarios por Edge Function, auditoría.
 - **Pendientes de seguridad:** ejecutar `base-de-datos/10-ocultar-costos.sql` en la base de producción; desactivar el registro público y activar la protección de contraseñas filtradas en Supabase Auth.
@@ -25,13 +25,14 @@
 | 2026-10 | Estructura simple del repositorio: `documentacion/`, `specs/`, `sistema/`, `base-de-datos/`, `multimedia/`, `tests/` y `.claude/` | La estructura del PDF era un ejemplo; esta es más fácil de recorrer y explicar |
 | 2026-10 | El comando del plan se llama `/planificar` | `/plan` ya existe en Claude Code (activa el modo plan) |
 | 2026-11 | La lógica del POS que decide va en `sistema/js/pos-logica.js` (funciones puras) | `pos.js` vive dentro de `DOMContentLoaded` y no se puede probar con `node --test` |
-| 2026-11 | Los RF que resuelve la base se prueban con `tests/sql/`, que corre el autor en el panel con `ROLLBACK` | Un test automático contra la base necesitaría claves (P5) |
-| 2026-11 | La clave anti-duplicados depende solo de productos, cantidades y método de pago | RF-001-25 / H-01: no duplicar una venta si se toca otra cosa después de un corte |
+| 2026-11 | Los RF que resuelve la base se prueban con `tests/sql/`, que corre el autor en el panel con `ROLLBACK` | Un test automático contra la base necesitaría claves (P5). En la spec 001 quedó para las mejoras futuras |
+| 2026-11 | La clave anti-duplicados depende solo de productos, cantidades y método de pago | RF-001-25 / H-01. Pasó a mejoras futuras de la spec 001; se aplica cuando vuelva |
 | 2026-11 | «Cobrar» no se deshabilita por falta de método de pago | Así se ve el mensaje de RF-001-16 |
-| 2026-11 | La tarea del test commitea sus casos con `{ todo: true }` y la tarea del código los saca | Tests primero sin dejar `npm test` en rojo (P4) |
-| 2026-11 | Cómo se publica en Netlify (T37) se decide al llegar a esa tarea | Pedido del autor |
-| 2026-11 | En la spec 001, `CACHE_VERSION` se sube una sola vez, en T37, antes de publicar | Subirla en cada tarea no sirve si no se publica; al final queda todo en orden |
-| 2026-11 | El buscador del POS ignora mayúsculas, tildes, ñ y diéresis y los espacios de los bordes; vacío muestra todos los activos (RF-001-06, 46, 47) | Decisión del autor en T05 (`/cambio`). El lector (`buscarPorCodigo`) sigue comparando exacto |
+| 2026-11 | Spec 001 reducida al núcleo del cobro (15 RF); sin cambios en la base | Pedido del autor (`/cambio`): cerrar primero un núcleo chico y comprobable |
+| 2026-11 | Cada tarea trae su test y su código juntos (test primero, commit en verde); ya no se separan con `{ todo: true }` | Pedido del autor al reorganizar `tasks.md`. Reemplaza la regla anterior de los `todo` |
+| 2026-11 | Cómo se publica en Netlify (T14) se decide al llegar a esa tarea | Pedido del autor |
+| 2026-11 | En la spec 001, `CACHE_VERSION` se sube una sola vez, en T14, antes de publicar | Subirla en cada tarea no sirve si no se publica; al final queda todo en orden |
+| 2026-11 | El buscador del POS ignora mayúsculas, tildes, ñ y diéresis y los espacios de los bordes; vacío muestra todos los activos (RF-001-06, que ahora incluye a 46 y 47) | Decisión del autor en T05 (`/cambio`). El lector (`buscarPorCodigo`) sigue comparando exacto |
 
 ## Lecciones (errores que no hay que repetir)
 
