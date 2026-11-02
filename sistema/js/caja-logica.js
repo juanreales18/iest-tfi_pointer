@@ -108,6 +108,24 @@
         };
     }
 
+    // =========================================================
+    // ERRORES DE APERTURA Y CIERRE
+    // Los dos rechazos de la base dicen que la pantalla quedo vieja:
+    // hay que volver a leer. Un error de red no dice nada de la caja,
+    // asi que no se vuelve a leer y lo escrito queda (caso limite 10).
+    // accion: 'abrir' o 'cerrar'
+    // =========================================================
+    function interpretarErrorCaja(error, accion) {
+        const texto = error?.message;
+        if (texto === MENSAJES.cajaYaAbierta || texto === MENSAJES.cajaYaCerrada) {
+            return { mensaje: texto, releer: true };
+        }
+        return {
+            mensaje: accion === 'abrir' ? MENSAJES.noSePudoAbrir : MENSAJES.noSePudoCerrar,
+            releer: false,
+        };
+    }
+
     const CajaLogica = {
         MENSAJES,
         validarMontoApertura,
@@ -115,6 +133,7 @@
         calcularVistaPrevia,
         describirDiferencia,
         armarResumenCierre,
+        interpretarErrorCaja,
     };
 
     // =========================================================

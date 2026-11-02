@@ -228,3 +228,53 @@ test('resumen: convierte a número los numeric que llegan como texto', () => {
         valor: 0,
     });
 });
+
+// ---------------------------------------------------------------
+// ERRORES: interpretarErrorCaja (RF-002-03, RF-002-07)
+// Los rechazos de la base muestran su texto y piden volver a leer.
+// Lo demás da el error genérico y deja la pantalla como está
+// ---------------------------------------------------------------
+test('errores: RF-002-03 · el rechazo de caja abierta muestra su texto y pide volver a leer', () => {
+    assert.deepEqual(
+        CajaLogica.interpretarErrorCaja({ message: 'La caja ya está abierta', code: 'P0001' }, 'abrir'),
+        { mensaje: 'La caja ya está abierta', releer: true }
+    );
+});
+
+test('errores: RF-002-07 · el rechazo de caja cerrada muestra su texto y pide volver a leer', () => {
+    assert.deepEqual(
+        CajaLogica.interpretarErrorCaja({ message: 'La caja ya fue cerrada', code: 'P0001' }, 'cerrar'),
+        { mensaje: 'La caja ya fue cerrada', releer: true }
+    );
+});
+
+test('errores: un rechazo se reconoce aunque venga de la otra acción', () => {
+    assert.deepEqual(
+        CajaLogica.interpretarErrorCaja({ message: 'La caja ya fue cerrada' }, 'abrir'),
+        { mensaje: 'La caja ya fue cerrada', releer: true }
+    );
+});
+
+const ERRORES_GENERICOS = [
+    ['caso límite 10 · error de red', { message: 'TypeError: Failed to fetch', code: '' }],
+    ['error desconocido de la base', { message: 'new row violates check constraint', code: '23514' }],
+    ['rechazo del guard viejo', { message: 'Apertura de caja invalida', code: 'P0001' }],
+    ['error sin texto', {}],
+    ['sin error', null],
+];
+
+for (const [caso, error] of ERRORES_GENERICOS) {
+    test(`errores: ${caso} al abrir da el genérico, sin volver a leer`, () => {
+        assert.deepEqual(
+            CajaLogica.interpretarErrorCaja(error, 'abrir'),
+            { mensaje: 'No se pudo abrir la caja', releer: false }
+        );
+    });
+
+    test(`errores: ${caso} al cerrar da el genérico, sin volver a leer`, () => {
+        assert.deepEqual(
+            CajaLogica.interpretarErrorCaja(error, 'cerrar'),
+            { mensaje: 'No se pudo cerrar la caja', releer: false }
+        );
+    });
+}

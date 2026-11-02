@@ -68,7 +68,7 @@
   - **Listo cuando:** la fila del criterio de finalización da esperado 1500, contado 1450 y «Faltante» de 50; una fila con `diferencia` distinta de la resta muestra la de la fila; sin contado da el esperado y «Cerrada sin arqueo» (caso límite 2); `npm test` en verde.
   - **Commit:** `agrega el resumen de cierre de caja`
 
-- [ ] T08 · `interpretarErrorCaja` (test + código)
+- [x] T08 · `interpretarErrorCaja` (test + código)
   - **RF:** 03, 07
   - **Archivos:** `sistema/js/caja-logica.js`, `tests/caja-logica.test.js`
   - **Hace:** reconoce los dos rechazos de la base: devuelve su texto y pide volver a leer la caja. Cualquier otro error, también el de red, da «No se pudo abrir la caja» o «No se pudo cerrar la caja», sin volver a leer.
