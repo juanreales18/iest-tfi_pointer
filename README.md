@@ -53,7 +53,7 @@ npm test
 
 ## Publicar
 
-En Netlify, el sitio se conecta a este repositorio con **Base directory: `sistema`**, sin comando de compilación (la configuración y las cabeceras de seguridad están en `sistema/netlify.toml`). La base se crea con `base-de-datos/00-estructura.sql` (ver los pasos finales dentro del archivo).
+En Netlify, la carpeta `sistema` se sube a mano al sitio `pointer-demo`, sin comando de compilación (la configuración y las cabeceras de seguridad están en `sistema/netlify.toml`). La base se crea con `base-de-datos/00-estructura.sql` (ver los pasos finales dentro del archivo).
 
 ## Seguridad
 

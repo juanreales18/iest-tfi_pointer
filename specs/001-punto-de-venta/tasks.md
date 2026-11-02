@@ -94,10 +94,10 @@ T01 a T05 se hicieron con la regla anterior (una tarea para el test y otra para 
 
 ## Etapa 3 · Producción y verificación
 
-- [ ] T14 · **Autor:** publicar en `pointer-demo`
+- [x] T14 · **Autor:** publicar en `pointer-demo`
   - **RF:** 14 (y todos los de la pantalla)
   - **Archivos:** `sistema/sw.js`, `memory.md`
-  - **Hace:** se sube `CACHE_VERSION` una sola vez y se publica `sistema/` en `pointer-demo`, de la forma que decida el autor. `10-ocultar-costos.sql` no se ejecuta: el autor ya comprobó (2026-11-02) que la base de Pointer oculta el costo. `pointer-web001` no se toca: usa la base de un cliente.
+  - **Hace:** se sube `CACHE_VERSION` una sola vez y se publica `sistema/` a mano en `pointer-demo`. `10-ocultar-costos.sql` no se ejecuta: el autor ya comprobó (2026-11-02) que la base de Pointer oculta el costo. `pointer-web001` no se toca: usa la base de un cliente.
   - **Listo cuando:** https://pointer-demo.netlify.app/ carga la versión nueva; con sesión de empleado, `precio_costo` no aparece en la pestaña Red ni en un pedido directo a la API.
   - **Commit:** `publica el núcleo del punto de venta en pointer-demo`
 
