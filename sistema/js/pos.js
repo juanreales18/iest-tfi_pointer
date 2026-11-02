@@ -268,7 +268,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 id:            prod.id,
                 nombre:        prod.nombre,
                 precio:        parseFloat(prod.precio_venta),
-                precio_costo:  parseFloat(prod.precio_costo || 0),
                 stock:         prod.stock_actual,
                 cantidad:      validacion.cantidad,
             });
@@ -318,7 +317,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         toggleVisible(empty, POS.carrito.length === 0);
         if (btnClear)  btnClear.disabled  = POS.carrito.length === 0;
-        if (btnCobrar) btnCobrar.disabled = POS.carrito.length === 0 || !POS.cajaAbierta || !POS.metodoPagoId;
+        if (btnCobrar) btnCobrar.disabled = !PosLogica.puedeCobrar(POS) || !POS.cajaAbierta;
 
         // Limpiar items anteriores (no el empty state)
         list.querySelectorAll('.cart-item').forEach(el => el.remove());
@@ -409,11 +408,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const sym    = POS.config.simbolo_moneda || '$';
         const ivaPct = parseFloat(POS.config.impuesto_porcentaje) || 0;
 
-        const subtotalBruto = POS.carrito.reduce((s, i) => s + (i.precio * i.cantidad), 0);
-        const descuentoMonto = (subtotalBruto * POS.descuentoPct) / 100;
-        const subtotalNeto   = subtotalBruto - descuentoMonto;
-        const impuestoMonto  = (subtotalNeto * ivaPct) / 100;
-        const total          = subtotalNeto + impuestoMonto;
+        // PosLogica devuelve centavos: de aca en adelante todo va en pesos
+        const centavos = PosLogica.calcularTotales(POS.carrito, POS.descuentoPct, ivaPct);
+        const subtotalBruto  = centavos.subtotal / 100;
+        const descuentoMonto = centavos.descuento / 100;
+        const subtotalNeto   = centavos.neto / 100;
+        const impuestoMonto  = centavos.impuesto / 100;
+        const total          = centavos.total / 100;
 
         setText('#pos-subtotal',  formatCurrency(subtotalBruto, sym));
         setText('#pos-descuento', `-${formatCurrency(descuentoMonto, sym)}`);
@@ -428,7 +429,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const totalLabel = document.getElementById('btn-cobrar-total');
         if (totalLabel) totalLabel.textContent = formatCurrency(total, sym);
         if (btnCobrar) {
-            btnCobrar.disabled = POS.carrito.length === 0 || !POS.cajaAbierta || !POS.metodoPagoId;
+            btnCobrar.disabled = !PosLogica.puedeCobrar(POS) || !POS.cajaAbierta;
         }
 
         // Recalcular vuelto
@@ -669,7 +670,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function procesarVenta() {
         if (!POS.carrito.length) { toastWarning('El carrito esta vacio'); return; }
         if (!POS.cajaAbierta)    { toastWarning('La caja esta cerrada'); return; }
-        if (!POS.metodoPagoId)   { toastWarning('Selecciona un metodo de pago'); return; }
+        if (!POS.metodoPagoId)   { toastWarning(PosLogica.MENSAJES.sinMetodo); return; }
 
         const totales   = calcularTotales();
         const recibido  = parseFloat(document.getElementById('monto-recibido')?.value) || totales.total;
@@ -710,7 +711,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 p_idempotency_key: POS.idemKey,
             });
 
-            if (ventaError) throw new Error(ventaError.message || 'No se pudo registrar la venta');
+            // Entero: mensajeDeError necesita el code para no confundir un rechazo con un corte de red
+            if (ventaError) throw ventaError;
 
             // Los importes oficiales son los que devuelve el servidor
             const venta = { id: res.id, numero_venta: res.numero_venta };
@@ -734,11 +736,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch(err) {
             // Sin internet: la venta NO se registro. Se puede reintentar sin riesgo de duplicar
             // porque se conserva la misma clave de idempotencia mientras el carrito no cambie.
-            const msgErr = String(err?.message || '');
-            const sinRed = !navigator.onLine || /Failed to fetch|NetworkError|Load failed|network/i.test(msgErr);
-            toastError(sinRed
-                ? 'Sin conexion a internet. La venta no se registro: volve a intentar cuando vuelva la conexion.'
-                : (msgErr || 'No se pudo procesar la venta'));
+            toastError(PosLogica.mensajeDeError(err, navigator.onLine));
             if (btnCobrar) {
                 btnCobrar.disabled = false;
                 btnCobrar.innerHTML = `

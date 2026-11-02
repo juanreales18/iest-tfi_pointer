@@ -83,7 +83,7 @@ T01 a T05 se hicieron con la regla anterior (una tarea para el test y otra para 
   - **Listo cuando:** `npm test` en verde; en local, un escaneo simulado (pegar código + Enter rápido) agrega el producto, un código inexistente muestra «No encontramos ese producto (código: …)», «cafe» encuentra «Café» y pasar el stock muestra «Stock disponible: N».
   - **Commit:** `usa pos-logica en el lector, la búsqueda y el carrito`
 
-- [ ] T13 · `pos.js`: total, «Cobrar» y errores con `PosLogica`; fuera `precio_costo`
+- [x] T13 · `pos.js`: total, «Cobrar» y errores con `PosLogica`; fuera `precio_costo`
   - **RF:** 12, 14, 16, 24, 26, 42
   - **Archivos:** `sistema/js/pos.js` (`calcularTotales`, `cargarProductos`, `procesarVenta`, estado del botón), `tests/punto-de-venta.test.js`
   - **Hace:** usa `calcularTotales`, `puedeCobrar` y `mensajeDeError`; «Cobrar» sin método muestra «Elegí un método de pago»; el carrito nunca se borra por un error; saca `precio_costo` del carrito y de la consulta.
