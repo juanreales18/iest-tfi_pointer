@@ -108,3 +108,41 @@ for (const [caso, valor, entradaInvalida] of CONTADOS_INVALIDOS) {
         );
     });
 }
+
+// ---------------------------------------------------------------
+// VISTA PREVIA: calcularVistaPrevia (RF-002-04)
+// Solo informa: la diferencia que vale la calcula la base (P3)
+// ---------------------------------------------------------------
+test('vista previa: RF-002-04 · esperado 1500 y contado 1450 da -50', () => {
+    assert.equal(CajaLogica.calcularVistaPrevia(1500, 1450), -50);
+});
+
+test('vista previa: RF-002-04 · sobrante y sin diferencia', () => {
+    assert.equal(CajaLogica.calcularVistaPrevia(1500, 1600), 100);
+    assert.equal(CajaLogica.calcularVistaPrevia(1500, 1500), 0);
+});
+
+test('vista previa: caso límite 1 · contado 0 da todo lo esperado en negativo', () => {
+    assert.equal(CajaLogica.calcularVistaPrevia(1500, 0), -1500);
+});
+
+test('vista previa: resta en centavos, sin errores de coma flotante', () => {
+    assert.notEqual(0.1 - 0.3, -0.2);
+    assert.equal(CajaLogica.calcularVistaPrevia(0.3, 0.1), -0.2);
+});
+
+test('vista previa: acepta el esperado como texto, como puede llegar un numeric', () => {
+    assert.equal(CajaLogica.calcularVistaPrevia('1500.00', 1450), -50);
+});
+
+test('vista previa: RF-002-04 · sin contado no calcula nada', () => {
+    assert.equal(CajaLogica.calcularVistaPrevia(1500, null), null);
+    assert.equal(CajaLogica.calcularVistaPrevia(1500, undefined), null);
+});
+
+test('vista previa: caso límite 10 · sin esperado no calcula nada, nunca como si fuera 0', () => {
+    assert.equal(CajaLogica.calcularVistaPrevia(null, 1450), null);
+    assert.equal(CajaLogica.calcularVistaPrevia(undefined, 1450), null);
+    assert.equal(CajaLogica.calcularVistaPrevia('', 1450), null);
+    assert.equal(CajaLogica.calcularVistaPrevia(NaN, 1450), null);
+});

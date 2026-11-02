@@ -55,10 +55,30 @@
         return resultado.valido ? { valido: true, contado: resultado.monto } : resultado;
     }
 
+    // =========================================================
+    // VISTA PREVIA
+    // Solo informa: la diferencia que vale la calcula la base (P3).
+    // En centavos enteros. Sin esperado no hay diferencia: Number('')
+    // y Number(null) dan 0 y mostrarian un resultado falso (caso limite 10)
+    // =========================================================
+    function aCentavos(valor) {
+        if (valor === null || valor === undefined || valor === '') return null;
+        const pesos = Number(valor);
+        return Number.isFinite(pesos) ? Math.round(pesos * 100) : null;
+    }
+
+    function calcularVistaPrevia(esperado, contado) {
+        const centavosEsperados = aCentavos(esperado);
+        const centavosContados = aCentavos(contado);
+        if (centavosEsperados === null || centavosContados === null) return null;
+        return (centavosContados - centavosEsperados) / 100;
+    }
+
     const CajaLogica = {
         MENSAJES,
         validarMontoApertura,
         validarContado,
+        calcularVistaPrevia,
     };
 
     // =========================================================

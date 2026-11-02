@@ -47,7 +47,7 @@
   - **Listo cuando:** pasan los casos límite 1 ($0), 2 (vacío) y 11 (vacío con `entradaInvalida = true` no cuenta como «sin contado»); `npm test` en verde.
   - **Commit:** `agrega la validación del efectivo contado`
 
-- [ ] T05 · `calcularVistaPrevia` (test + código)
+- [x] T05 · `calcularVistaPrevia` (test + código)
   - **RF:** 04
   - **Archivos:** `sistema/js/caja-logica.js`, `tests/caja-logica.test.js`
   - **Hace:** la diferencia en centavos enteros. Sin contado o sin esperado no devuelve nada, nunca $0.
