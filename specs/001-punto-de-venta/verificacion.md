@@ -64,4 +64,4 @@ Ninguna. El autor informó el 2026-11-02 que hizo el flujo completo con lector, 
 
 ## Conclusión
 
-15 de 15 RF cumplen y ninguno da «No cumple». Criterios de finalización: 9 de 9. El cierre de la funcionalidad lo decide el autor.
+15 de 15 RF cumplen y ninguno da «No cumple». Criterios de finalización: 9 de 9. El autor cerró la spec el 2026-11-02.

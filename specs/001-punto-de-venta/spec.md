@@ -1,6 +1,6 @@
 # Spec 001 · Punto de venta
 
-> **Estado:** aprobada por el autor · **Fecha:** 2026-10-31 · **Actualizada con la clarificación:** 2026-11-01 · **Último cambio:** 2026-11-02 (ver «Historial de cambios»)
+> **Estado:** cerrada por el autor (2026-11-02, ver `verificacion.md`) · **Fecha:** 2026-10-31 · **Actualizada con la clarificación:** 2026-11-01 · **Último cambio:** 2026-11-02 (ver «Historial de cambios»)
 > **Alcance acordado:** núcleo del cobro (buscar o escanear, carrito, total, cobrar y errores básicos al cobrar), desde el uso del **empleado** en el mostrador. Lo demás quedó en «Fuera de alcance (mejoras futuras)».
 
 ## Contexto
@@ -109,15 +109,15 @@ Estos RF estaban en la spec y se sacaron del alcance el 2026-11-01 para cerrar p
 
 ## Criterios de finalización
 
-- [ ] Cada RF activo tiene al menos un test automático o una prueba manual descrita en `verificacion.md`.
-- [ ] `npm test` termina en verde.
-- [ ] No existe `.from('ventas').insert` ni `.from('detalle_ventas').insert` en `sistema/`.
-- [ ] Con el lector real: escanear 3 productos (uno repetido), cobrar y ver en la base la venta con el total que mostró la pantalla.
-- [ ] Cortar la red al tocar «Cobrar»: sale el mensaje de RF-001-24 y el carrito sigue en pantalla.
-- [ ] Con la sesión de un `empleado`, `precio_costo` no aparece en la pantalla ni en las respuestas de red del POS.
-- [ ] En `pointer-demo`, con la sesión de un `empleado`, pedir `precio_costo` de `productos` directo a la API devuelve un error de permiso.
-- [ ] Los mensajes de esta spec aparecen en voseo, con tildes y tal cual están escritos acá.
-- [ ] `CACHE_VERSION` de `sistema/sw.js` subió si cambió algo de `sistema/`.
+- [x] Cada RF activo tiene al menos un test automático o una prueba manual descrita en `verificacion.md`.
+- [x] `npm test` termina en verde.
+- [x] No existe `.from('ventas').insert` ni `.from('detalle_ventas').insert` en `sistema/`.
+- [x] Con el lector real: escanear 3 productos (uno repetido), cobrar y ver en la base la venta con el total que mostró la pantalla.
+- [x] Cortar la red al tocar «Cobrar»: sale el mensaje de RF-001-24 y el carrito sigue en pantalla.
+- [x] Con la sesión de un `empleado`, `precio_costo` no aparece en la pantalla ni en las respuestas de red del POS.
+- [x] En `pointer-demo`, con la sesión de un `empleado`, pedir `precio_costo` de `productos` directo a la API devuelve un error de permiso.
+- [x] Los mensajes de esta spec aparecen en voseo, con tildes y tal cual están escritos acá.
+- [x] `CACHE_VERSION` de `sistema/sw.js` subió si cambió algo de `sistema/`.
 
 ## RF del kit relacionados
 
@@ -148,3 +148,4 @@ El detalle de cada decisión está en `clarificacion.md`.
 | 2026-11-01 | RF-001-06 no distingue marcas sobre las letras (tildes, ñ y diéresis). Nuevos RF-001-46 (se ignoran los espacios del principio y del final) y RF-001-47 (buscador vacío o solo con espacios → todos los activos). Solo afectan a la lista del buscador: la comparación exacta con `codigo_barra` de RF-001-03 a RF-001-05 no cambia. | Al escribir los tests de `filtrarCatalogo` (T05) apareció que la spec no decía qué pasa con el texto vacío, las tildes ni los espacios. Decisión del autor. |
 | 2026-11-01 | Alcance reducido al núcleo del cobro: quedan 15 RF activos (03, 04, 05, 06, 07, 09, 10, 11, 12, 14, 16, 19, 24, 26, 42). RF-001-46 y 47 pasan a ser parte del texto de RF-001-06. Los otros 30 RF pasan a «Mejoras futuras» con su motivo; se saca la tabla «Mensajes de `crear_venta`» (era de RF-001-34). Ningún RF activo pide cambios en la base. | Pedido del autor (`/cambio`): cerrar primero un núcleo chico y comprobable. |
 | 2026-11-02 | El destino de esta spec es `pointer-demo` con la base `ebsiqjiioqzpzdsonkit`. La dependencia y el criterio de `10-ocultar-costos.sql` pasan a pedir que el costo esté oculto en esa base; el script no hace falta. Los RF no cambian. | Al leer el script para T14 apareció que `pointer-web001` usa otra base. El autor confirmó que ese sitio y esa base son de un cliente, y comprobó en el panel que la base de Pointer ya oculta el costo. |
+| 2026-11-02 | Spec cerrada: criterios de finalización marcados. | Decisión del autor con `verificacion.md`: 15 de 15 RF y 9 de 9 criterios. |
