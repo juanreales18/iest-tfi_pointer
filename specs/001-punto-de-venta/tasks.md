@@ -101,7 +101,7 @@ T01 a T05 se hicieron con la regla anterior (una tarea para el test y otra para 
   - **Listo cuando:** https://pointer-demo.netlify.app/ carga la versión nueva; con sesión de empleado, `precio_costo` no aparece en la pestaña Red ni en un pedido directo a la API.
   - **Commit:** `publica el núcleo del punto de venta en pointer-demo`
 
-- [ ] T15 · **Verificación** de la funcionalidad
+- [x] T15 · **Verificación** de la funcionalidad
   - **RF:** los 15 activos
   - **Archivos:** `specs/001-punto-de-venta/verificacion.md` (nuevo), `memory.md`
   - **Hace:** `/verificar` con la skill `verificar-criterios`; pruebas manuales en `pointer-demo`: lector real, red cortada, rechazos de la base (casos límite 4, 5 y 6), empleado sin costos y rendimiento en la PC del mostrador.
