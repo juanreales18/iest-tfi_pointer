@@ -185,26 +185,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const empty = document.getElementById('pos-empty');
         if (!grid) return;
 
-        let lista = POS.productos;
+        // Filtro busqueda
+        let lista = PosLogica.filtrarCatalogo(POS.productos, query);
 
         // Filtro categoria
         if (POS.categoriaActiva !== 'all') {
             lista = lista.filter(p => p.categoria_id === POS.categoriaActiva);
-        }
-
-        // Filtro busqueda
-        if (query) {
-            const q = query.toLowerCase().trim();
-            lista = lista.filter(p =>
-                p.nombre.toLowerCase().includes(q) ||
-                (p.codigo_barra && p.codigo_barra.includes(q))
-            );
-            // Busqueda exacta por codigo: agregar automaticamente si hay un solo resultado
-            if (lista.length === 1 && lista[0].codigo_barra === query.trim()) {
-                agregarAlCarrito(lista[0]);
-                document.getElementById('pos-search').value = '';
-                return cargarProductos();
-            }
         }
 
         grid.innerHTML = '';
@@ -247,7 +233,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!sinStock) {
             card.addEventListener('click', () => {
-                agregarAlCarrito(prod);
+                if (!agregarAlCarrito(prod)) return;
                 // Animar la tarjeta
                 card.style.transform = 'scale(0.94)';
                 setTimeout(() => card.style.transform = '', 150);
@@ -264,17 +250,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     function agregarAlCarrito(prod) {
         if (!POS.cajaAbierta) {
             toastWarning('Debes abrir la caja antes de vender');
-            return;
+            return false;
+        }
+
+        const validacion = PosLogica.validarAgregado(prod, POS.carrito);
+        if (!validacion.ok) {
+            toastWarning(validacion.mensaje);
+            return false;
         }
 
         const existente = POS.carrito.find(i => i.id === prod.id);
 
         if (existente) {
-            if (existente.cantidad >= prod.stock_actual) {
-                toastWarning('No hay mas stock disponible');
-                return;
-            }
-            existente.cantidad++;
+            existente.cantidad = validacion.cantidad;
         } else {
             POS.carrito.push({
                 id:            prod.id,
@@ -282,13 +270,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 precio:        parseFloat(prod.precio_venta),
                 precio_costo:  parseFloat(prod.precio_costo || 0),
                 stock:         prod.stock_actual,
-                cantidad:      1,
+                cantidad:      validacion.cantidad,
             });
         }
 
         renderCarrito();
         calcularTotales();
         actualizarBadgesProductos();
+        return true;
     }
 
     function quitarDelCarrito(prodId) {
@@ -307,11 +296,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             quitarDelCarrito(prodId);
             return;
         }
-        if (qty > item.stock) {
-            toastWarning(`Stock disponible: ${item.stock}`);
+        // Si se rechaza, renderCarrito (lo llama quien cambia la cantidad) vuelve a mostrar la anterior
+        const validacion = PosLogica.validarCantidad(qty, item.cantidad, item.stock);
+        if (!validacion.ok) {
+            toastWarning(validacion.mensaje);
             return;
         }
-        item.cantidad = qty;
+        item.cantidad = validacion.cantidad;
         calcularTotales();
         actualizarBadgesProductos();
     }
@@ -473,9 +464,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         // (< 50ms entre teclas) y terminan con Enter.
         // Detectamos eso para distinguirlo del tipeo manual.
         let scanBuffer    = '';
+        let scanIntervalos = [];  // ms entre una tecla y la siguiente
         let lastKeyTime   = 0;
         const SCAN_SPEED  = 50;   // ms entre teclas del lector
-        const SCAN_MIN    = 3;    // minimo de caracteres para considerar escaneo
 
         document.addEventListener('keydown', (e) => {
             // Ignorar si el foco esta en otro input que no sea la busqueda
@@ -493,76 +484,49 @@ document.addEventListener('DOMContentLoaded', async () => {
             lastKeyTime = ahora;
 
             if (e.key === 'Enter') {
-                const codigo = scanBuffer.trim();
+                if (scanBuffer) scanIntervalos.push(delta);
+                const esEscaneo = PosLogica.clasificarEntrada(scanBuffer, scanIntervalos) === 'escaneo';
+                // Escaneo: lo que trajo el lector. Texto escrito: lo que quedo en el buscador
+                const texto = esEscaneo ? scanBuffer : input.value.trim();
                 scanBuffer = '';
+                scanIntervalos = [];
 
-                if (codigo.length >= SCAN_MIN) {
-                    // Buscar producto por codigo de barras exacto
-                    const prod = POS.productos.find(p => p.codigo_barra === codigo);
+                // Buscar producto por codigo de barras exacto
+                const prod = PosLogica.buscarPorCodigo(POS.productos, texto);
 
-                    if (prod) {
-                        // Lector encontro el producto: agregar al carrito
-                        e.preventDefault();
-                        input.value = '';
-                        filtrarProductos('');
-                        agregarAlCarrito(prod);
-                        flashScanner('success');
-                        return;
-                    }
-
-                    // No encontrado por codigo: buscar por nombre exacto
-                    const porNombre = POS.productos.filter(p =>
-                        p.nombre.toLowerCase() === codigo.toLowerCase()
-                    );
-                    if (porNombre.length === 1) {
-                        e.preventDefault();
-                        input.value = '';
-                        filtrarProductos('');
-                        agregarAlCarrito(porNombre[0]);
-                        flashScanner('success');
-                        return;
-                    }
-
-                    // No encontrado: mostrar aviso
-                    if (delta < SCAN_SPEED * 3) {
-                        // Solo si fue un escaneo rapido (no tipeo manual + Enter)
-                        flashScanner('error');
-                        toastWarning(`Producto no encontrado: ${codigo}`);
-                        input.value = '';
-                        filtrarProductos('');
-                        return;
-                    }
+                if (prod) {
+                    e.preventDefault();
+                    input.value = '';
+                    filtrarProductos('');
+                    flashScanner(agregarAlCarrito(prod) ? 'success' : 'error');
+                    return;
                 }
 
-                // Enter manual con texto en el input: buscar y agregar si hay uno solo
-                const query = input.value.trim();
-                if (query) {
-                    const found = POS.productos.filter(p =>
-                        p.codigo_barra === query ||
-                        p.nombre.toLowerCase() === query.toLowerCase()
-                    );
-                    if (found.length === 1) {
-                        agregarAlCarrito(found[0]);
-                        input.value = '';
-                        filtrarProductos('');
-                    }
+                // No encontrado: el aviso es solo para el lector; el texto escrito queda como busqueda
+                if (esEscaneo) {
+                    e.preventDefault();
+                    flashScanner('error');
+                    toastWarning(PosLogica.MENSAJES.productoNoEncontrado(texto));
+                    input.value = '';
+                    filtrarProductos('');
                 }
                 return;
             }
 
-            // Acumular en buffer si viene rapido (lector) o si el foco esta en el input
-            if (delta < SCAN_SPEED || document.activeElement === input) {
-                if (document.activeElement !== input) {
-                    // Lector escribiendo fuera del input: redirigir al input
-                    input.focus();
-                    scanBuffer += e.key;
-                    input.value = scanBuffer;
-                } else {
-                    scanBuffer += e.key;
-                }
-            } else {
-                // Tipeo lento: reiniciar buffer
+            // Tipeo lento: reiniciar buffer. Asi un escaneo no se pega a lo que ya estaba escrito
+            if (!scanBuffer || delta >= SCAN_SPEED) {
                 scanBuffer = e.key;
+                scanIntervalos = [];
+                return;
+            }
+
+            scanBuffer += e.key;
+            scanIntervalos.push(delta);
+
+            if (document.activeElement !== input) {
+                // Lector escribiendo fuera del input: redirigir al input
+                input.focus();
+                input.value = scanBuffer;
             }
         });
 

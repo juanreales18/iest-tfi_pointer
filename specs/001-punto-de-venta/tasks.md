@@ -76,7 +76,7 @@ T01 a T05 se hicieron con la regla anterior (una tarea para el test y otra para 
   - **Listo cuando:** `npm test` en verde con solo el caso de `precio_costo` como `todo`; la pantalla abre en local sin errores en la consola y `window.PosLogica` existe.
   - **Commit:** `carga pos-logica.js en el punto de venta`
 
-- [ ] T12 · `pos.js`: lector, búsqueda y carrito usan `PosLogica`
+- [x] T12 · `pos.js`: lector, búsqueda y carrito usan `PosLogica`
   - **RF:** 03, 04, 05, 06, 07, 09, 10, 11
   - **Archivos:** `sistema/js/pos.js` (`setupSearch`, `filtrarProductos`, `agregarAlCarrito`, `crearTarjetaProducto`, `cambiarCantidad`)
   - **Hace:** guarda la hora de cada tecla; usa `clasificarEntrada`, `buscarPorCodigo`, `filtrarCatalogo`, `validarAgregado` y `validarCantidad`; deja de aceptar el nombre exacto como código; mensajes de `MENSAJES`.
