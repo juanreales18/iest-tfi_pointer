@@ -1,6 +1,6 @@
 # Spec 002 · Caja y arqueo
 
-> **Estado:** aprobada y clarificada por el autor; plan aprobado, falta `/tareas` · **Fecha:** 2026-11-02
+> **Estado:** aprobada y clarificada por el autor; plan y tareas aprobados, falta implementar · **Fecha:** 2026-11-02
 > **Alcance acordado:** abrir la caja con un monto inicial y cerrarla mostrando la diferencia entre lo esperado y lo contado (solo efectivo), en la sección Caja y en el punto de venta. Lo demás quedó en «Fuera de alcance (mejoras futuras)».
 
 ## Contexto
