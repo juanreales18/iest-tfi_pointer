@@ -67,7 +67,33 @@
         ));
     }
 
-    const PosLogica = { MENSAJES, clasificarEntrada, buscarPorCodigo, filtrarCatalogo };
+    // =========================================================
+    // STOCK DEL CARRITO
+    // Devuelven { ok, cantidad, mensaje }: cantidad es la que
+    // tiene que quedar; mensaje es null si ok es true (RF-001-09)
+    // =========================================================
+    function validarCantidad(cantidad, anterior, stock) {
+        if (cantidad > stock) {
+            return { ok: false, cantidad: anterior, mensaje: MENSAJES.stockDisponible(stock) };
+        }
+        return { ok: true, cantidad, mensaje: null };
+    }
+
+    // Nuevo = cantidad 1; ya en el carrito = +1 (RF-001-03, RF-001-04, RF-001-07)
+    function validarAgregado(producto, carrito) {
+        const linea = carrito.find((item) => item.id === producto.id);
+        const anterior = linea ? linea.cantidad : 0;
+        return validarCantidad(anterior + 1, anterior, producto.stock_actual);
+    }
+
+    const PosLogica = {
+        MENSAJES,
+        clasificarEntrada,
+        buscarPorCodigo,
+        filtrarCatalogo,
+        validarAgregado,
+        validarCantidad,
+    };
 
     // =========================================================
     // SALIDA: Node (tests) o navegador (pos.js) (D1)

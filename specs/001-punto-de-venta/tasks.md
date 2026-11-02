@@ -39,7 +39,7 @@ T01 a T05 se hicieron con la regla anterior (una tarea para el test y otra para 
   - **Listo cuando:** los 15 casos `catálogo: …` (incluido el de rendimiento) pasan sin `todo`; `tests/pos-logica.test.js` no tiene ningún `todo`; `npm test` en verde.
   - **Commit:** `agrega el filtro del catálogo del punto de venta`
 
-- [ ] T07 · `validarAgregado` y `validarCantidad` (test + código)
+- [x] T07 · `validarAgregado` y `validarCantidad` (test + código)
   - **RF:** 03, 04, 07, 09
   - **Archivos:** `sistema/js/pos-logica.js`, `tests/pos-logica.test.js`
   - **Hace:** producto nuevo → cantidad 1; ya en el carrito → +1; stock superado o stock 0 → cantidad anterior y «Stock disponible: N» (caso límite 3); cambio de cantidad que supera el stock → la anterior con el mismo mensaje.

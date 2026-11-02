@@ -250,3 +250,79 @@ test('catálogo: RF-001-06 · con 2.000 productos filtra en menos de 100 ms', ()
         assert.ok(duracion < 100, `«${texto}» tardó ${duracion.toFixed(1)} ms`);
     }
 });
+
+// ---------------------------------------------------------------
+// STOCK: validarAgregado y validarCantidad (T07)
+// Las dos devuelven { ok, cantidad, mensaje }: cantidad es la que
+// tiene que quedar en el carrito; mensaje es null si ok es true.
+// ---------------------------------------------------------------
+const ALFAJOR = { id: 1, nombre: 'Alfajor triple', codigo_barra: '7790001', activo: true, stock_actual: 3 };
+const GASEOSA = { id: 2, nombre: 'Gaseosa 500', codigo_barra: '7790002', activo: true, stock_actual: 5 };
+const AGOTADO = { id: 3, nombre: 'Chicle menta', codigo_barra: '7790003', activo: true, stock_actual: 0 };
+
+test('stock: RF-001-03 · un producto nuevo entra con cantidad 1', () => {
+    assert.deepEqual(PosLogica.validarAgregado(ALFAJOR, []), { ok: true, cantidad: 1, mensaje: null });
+});
+
+test('stock: RF-001-04 · un producto que ya está en el carrito suma 1', () => {
+    const carrito = [{ id: 1, cantidad: 1 }];
+    assert.deepEqual(PosLogica.validarAgregado(ALFAJOR, carrito), { ok: true, cantidad: 2, mensaje: null });
+});
+
+test('stock: RF-001-07 · elegir de la lista sigue las mismas reglas', () => {
+    const [elegido] = PosLogica.filtrarCatalogo([ALFAJOR, GASEOSA], 'alfajor');
+    assert.deepEqual(PosLogica.validarAgregado(elegido, []), { ok: true, cantidad: 1, mensaje: null });
+    assert.deepEqual(PosLogica.validarAgregado(elegido, [{ id: 1, cantidad: 1 }]), { ok: true, cantidad: 2, mensaje: null });
+});
+
+test('stock: RF-001-09 · se puede agregar la última unidad', () => {
+    const carrito = [{ id: 1, cantidad: 2 }];
+    assert.deepEqual(PosLogica.validarAgregado(ALFAJOR, carrito), { ok: true, cantidad: 3, mensaje: null });
+});
+
+test('stock: RF-001-09 · superar el stock deja la cantidad anterior y avisa', () => {
+    const carrito = [{ id: 1, cantidad: 3 }];
+    assert.deepEqual(PosLogica.validarAgregado(ALFAJOR, carrito), { ok: false, cantidad: 3, mensaje: 'Stock disponible: 3' });
+});
+
+test('stock: caso límite 3 · un producto con stock 0 no entra al carrito', () => {
+    assert.deepEqual(PosLogica.validarAgregado(AGOTADO, []), { ok: false, cantidad: 0, mensaje: 'Stock disponible: 0' });
+});
+
+test('stock: caso límite 2 · dos escaneos seguidos dejan la cantidad en 2', () => {
+    const carrito = [];
+    const primero = PosLogica.validarAgregado(ALFAJOR, carrito);
+    carrito.push({ id: ALFAJOR.id, cantidad: primero.cantidad });
+    const segundo = PosLogica.validarAgregado(ALFAJOR, carrito);
+    assert.equal(segundo.cantidad, 2);
+});
+
+test('stock: RF-001-04 · otro producto del carrito no cuenta', () => {
+    const carrito = [{ id: 2, cantidad: 4 }];
+    assert.deepEqual(PosLogica.validarAgregado(ALFAJOR, carrito), { ok: true, cantidad: 1, mensaje: null });
+});
+
+test('stock: validarAgregado no cambia el carrito ni el producto', () => {
+    const carrito = [{ id: 1, cantidad: 1 }];
+    const copiaCarrito = structuredClone(carrito);
+    const copiaProducto = structuredClone(ALFAJOR);
+    PosLogica.validarAgregado(ALFAJOR, carrito);
+    assert.deepEqual(carrito, copiaCarrito);
+    assert.deepEqual(ALFAJOR, copiaProducto);
+});
+
+test('stock: RF-001-09 · una cantidad dentro del stock se acepta', () => {
+    assert.deepEqual(PosLogica.validarCantidad(2, 1, 3), { ok: true, cantidad: 2, mensaje: null });
+});
+
+test('stock: RF-001-09 · una cantidad igual al stock se acepta', () => {
+    assert.deepEqual(PosLogica.validarCantidad(3, 1, 3), { ok: true, cantidad: 3, mensaje: null });
+});
+
+test('stock: RF-001-09 · una cantidad que supera el stock vuelve a la anterior y avisa', () => {
+    assert.deepEqual(PosLogica.validarCantidad(4, 2, 3), { ok: false, cantidad: 2, mensaje: 'Stock disponible: 3' });
+});
+
+test('stock: RF-001-09 · con stock 0 vuelve a la anterior y avisa', () => {
+    assert.deepEqual(PosLogica.validarCantidad(2, 1, 0), { ok: false, cantidad: 1, mensaje: 'Stock disponible: 0' });
+});
