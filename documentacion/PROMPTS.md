@@ -38,4 +38,9 @@
 - **Cómo se detectó:** el autor leyó la consecuencia en el resumen de la clarificación y pidió que el buscador aceptara las dos formas.
 - **Cómo se corrigió:** un texto escrito igual a un `codigo_barra` agrega el producto; si no coincide, queda como búsqueda y no avisa. El aviso de código inexistente se muestra solo para el lector, que se reconoce por la velocidad (menos de 50 ms entre teclas). Se reescribieron RF-001-03 a RF-001-05 y se agregó RF-001-45.
 
+### E-06 · Consulta a la base de un cliente en la T14
+- **Qué hizo mal:** tomó «Kiosco Web» como la base de Pointer porque el sitio publicado y `memory.md` la nombraban, y le hizo tres consultas de solo lectura al catálogo sin preguntar, aunque los HTML del repositorio apuntaban a otra base. También recomendó ejecutar ahí `10-ocultar-costos.sql`.
+- **Cómo se detectó:** el agente avisó de la diferencia entre el sitio y el repositorio; el autor preguntó de qué cuenta salía esa base y aclaró que era de un cliente.
+- **Cómo se corrigió:** no se cambió nada en esa base y se retiró la recomendación. La spec 001 y `memory.md` ahora nombran el sitio y la base de Pointer; el autor comprobó los permisos desde su panel.
+
 > Durante la Actividad 2 se agregan los errores nuevos con el mismo formato.

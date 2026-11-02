@@ -1,6 +1,6 @@
 # Plan 001 · Punto de venta
 
-> **Estado:** aprobado por el autor · **Fecha:** 2026-11-01 · **Actualizado:** 2026-11-01 (alcance reducido al núcleo del cobro, ver el historial de `spec.md`)
+> **Estado:** aprobado por el autor · **Fecha:** 2026-11-01 · **Actualizado:** 2026-11-02 (alcance reducido al núcleo del cobro, ver el historial de `spec.md`)
 > **Entrada:** `spec.md` (15 RF activos) y `clarificacion.md`.
 > **Fuentes leídas:** `documentacion/CONSTITUCION.md`, `04-ARQUITECTURA.md`, `05-DATOS.md`, `10-SEGURIDAD.md`, `crear_venta` en `base-de-datos/00-estructura.sql`, `sistema/js/pos.js`, `sistema/pos.html`, `sistema/sw.js` y `tests/constitucion.test.js`.
 > Este plan **no tiene código**: dice qué archivo cambia, qué función se crea o se modifica y cómo se prueba.
@@ -28,7 +28,7 @@ D3 a D7, D10 y D11 eran de RF que pasaron a mejoras futuras; se retoman cuando v
 
 ## 3. Cambios en la base de datos
 
-Ninguno. **Dependencia de la spec:** `base-de-datos/10-ocultar-costos.sql` lo ejecuta el autor en producción (RF-001-14). El plan no lo modifica.
+Ninguno. **Dependencia de la spec:** en la base de Pointer, el empleado no puede leer `precio_costo` (RF-001-14). El autor lo comprobó el 2026-11-02, así que no hace falta ejecutar `base-de-datos/10-ocultar-costos.sql`.
 
 ## 4. Cambios en `sistema/`
 
@@ -78,7 +78,7 @@ Como ahora cada tarea trae su test y su código juntos, ya no hace falta la regl
 
 - **RF-001-10 / RF-001-11** · `pos-logica.js` (`calcularTotales`), `pos.js` (`cambiarCantidad`, `quitarDelCarrito`). Test: `pos-logica.test.js`.
 - **RF-001-42** · `pos-logica.js` (`calcularTotales`, D2). Test: `pos-logica.test.js` (medio centavo, impuesto 0 y 21 %).
-- **RF-001-14** · `pos.js` (sacar `precio_costo` del carrito y de la consulta). Test: `punto-de-venta.test.js` + prueba manual con sesión de empleado. Dependencia: `10-ocultar-costos.sql`. P5.
+- **RF-001-14** · `pos.js` (sacar `precio_costo` del carrito y de la consulta). Test: `punto-de-venta.test.js` + prueba manual con sesión de empleado. Dependencia: costo oculto en la base de Pointer (comprobado el 2026-11-02). P5.
 
 ### Cobro
 
@@ -102,7 +102,7 @@ Como ahora cada tarea trae su test y su código juntos, ya no hace falta la regl
 | 09 | `pos-logica.js`, `pos.js` | `pos-logica.test.js` |
 | 10, 11 | `pos-logica.js`, `pos.js` | `pos-logica.test.js` |
 | 42 | `pos-logica.js`, `pos.js` | `pos-logica.test.js` |
-| 14 | `pos.js` (+ `10-ocultar-costos.sql` en producción) | `punto-de-venta.test.js` + manual con sesión de empleado |
+| 14 | `pos.js` (+ costo oculto en la base de Pointer, ya comprobado) | `punto-de-venta.test.js` + manual con sesión de empleado |
 | 12 | `pos-logica.js`, `pos.js` | `pos-logica.test.js` |
 | 16 | `pos-logica.js`, `pos.js` | `pos-logica.test.js` |
 | 19 | `pos.js` (sin cambios) | `constitucion.test.js`, `punto-de-venta.test.js` |
@@ -114,8 +114,8 @@ Como ahora cada tarea trae su test y su código juntos, ya no hace falta la regl
 1. `pos-logica.js`: cada función con su test, primero el test (AGENTS.md).
 2. `punto-de-venta.test.js` y la carga de `pos-logica.js` en `pos.html` y `sw.js`.
 3. `pos.js` usando `PosLogica`.
-4. **El autor** ejecuta `10-ocultar-costos.sql` en producción si todavía no se hizo.
-5. Publicar `sistema/` en Netlify con `CACHE_VERSION` nueva (la forma se decide al llegar).
+4. **El autor** comprueba que la base de Pointer oculta el costo. Hecho el 2026-11-02: no hace falta ejecutar `10-ocultar-costos.sql`.
+5. Publicar `sistema/` en `pointer-demo` con `CACHE_VERSION` nueva (la forma se decide al llegar). `pointer-web001` no se toca: usa la base de un cliente.
 6. `/verificar` y `verificacion.md`, con las pruebas manuales.
 
 Cada paso está partido en `tasks.md`, con un commit por tarea, `npm test` en verde (P4) y la skill `revisar-seguridad` antes de cada commit que toque `sistema/js/`.

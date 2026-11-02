@@ -9,7 +9,7 @@
 
 | Qué | Dónde |
 |---|---|
-| Sistema publicado | https://pointer-web001.netlify.app/ |
+| Sistema publicado | https://pointer-demo.netlify.app/ |
 | Video promocional | *(se agrega en la Actividad 4)* |
 | Video demo | *(se agrega en la Actividad 4)* |
 

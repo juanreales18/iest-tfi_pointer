@@ -5,10 +5,10 @@
 ## Estado actual
 
 - **Fase del TFI:** Actividad 1 (constitución y arnés) terminada en el repositorio. Sigue la Actividad 2.
-- **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada y clarificada; el 2026-11-01 se redujo por `/cambio` al **núcleo del cobro: 15 RF activos** (03, 04, 05, 06, 07, 09, 10, 11, 12, 14, 16, 19, 24, 26, 42); los otros 30 están en «Mejoras futuras» con su motivo. `plan.md` y `tasks.md` reorganizados: 15 tareas, test y código juntos. La base no cambia en esta spec. T01 a T13 hechas: `sistema/js/pos-logica.js` está cargado en `pos.html` y `sw.js`, y `pos.js` lo usa en el lector, la búsqueda, el carrito, el total, «Cobrar» y los errores; ya no hay `precio_costo` en `pos.js` ni ningún `todo` en los tests. T11 a T13 se probaron en Chrome real con Supabase simulado en local (sin credenciales y sin tocar producción): falta repetir con la base real y lector físico (T15). Comprobado en Chrome: el error de red llega como `TypeError: Failed to fetch` con `code` vacío (red cortada, servidor caído y DNS). Con «Efectivo» activo queda elegido al abrir y no se puede desmarcar: el mensaje sin método solo aparece si no hay «Efectivo». Sigue la T14. Rama: `feature/punto-de-venta`.
-- **Sistema:** en producción en Netlify (https://pointer-web001.netlify.app/) con Supabase como base de datos.
+- **Actividad 2:** `specs/001-punto-de-venta/spec.md` aprobada y clarificada; el 2026-11-01 se redujo por `/cambio` al **núcleo del cobro: 15 RF activos** (03, 04, 05, 06, 07, 09, 10, 11, 12, 14, 16, 19, 24, 26, 42); los otros 30 están en «Mejoras futuras» con su motivo. `plan.md` y `tasks.md` reorganizados: 15 tareas, test y código juntos. La base no cambia en esta spec. T01 a T13 hechas: `sistema/js/pos-logica.js` está cargado en `pos.html` y `sw.js`, y `pos.js` lo usa en el lector, la búsqueda, el carrito, el total, «Cobrar» y los errores; ya no hay `precio_costo` en `pos.js` ni ningún `todo` en los tests. T11 a T13 se probaron en Chrome real con Supabase simulado en local (sin credenciales y sin tocar producción): falta repetir con la base real y lector físico (T15). Comprobado en Chrome: el error de red llega como `TypeError: Failed to fetch` con `code` vacío (red cortada, servidor caído y DNS). Con «Efectivo» activo queda elegido al abrir y no se puede desmarcar: el mensaje sin método solo aparece si no hay «Efectivo». Sigue la T14: publicar en `pointer-demo`. Rama: `feature/punto-de-venta`.
+- **Sistema:** publicado en Netlify (https://pointer-demo.netlify.app/) con Supabase como base de datos. El sitio `pointer-web001` y la base «Kiosco Web» son de un cliente: no se tocan.
 - **Funcionando:** login y roles, punto de venta con lector, caja con arqueo, cancelar venta, productos, categorías, clientes con historial, proveedores, compras, gastos, reportes (con descuentos), usuarios por Edge Function, auditoría.
-- **Pendientes de seguridad:** ejecutar `base-de-datos/10-ocultar-costos.sql` en la base de producción; desactivar el registro público y activar la protección de contraseñas filtradas en Supabase Auth.
+- **Pendientes de seguridad:** desactivar el registro público y activar la protección de contraseñas filtradas en Supabase Auth.
 
 ## Decisiones tomadas (no volver a discutir)
 
@@ -36,6 +36,7 @@
 | 2026-11 | Una tarjeta con stock 0 sigue sin recibir clics ni avisar: muestra «Sin stock». «Stock disponible: 0» sale solo por lector | Decisión del autor en T12. El caso límite 3 habla del lector; avisar en la lista pediría cambiar `pos.css` con `/cambio` |
 | 2026-11 | `puedeCobrar` solo mira el carrito; el control de caja cerrada se mantiene en `pos.js` y se confirma en T13 | Decisión del autor en T09: sigue el plan (RF-001-12) |
 | 2026-11 | `mensajeDeError` también toma como sin conexión un pedido que no llegó (sin `code` y con texto de red), aunque `enLinea` sea `true`; sin texto devuelve «No se pudo procesar la venta» | T10: `navigator.onLine` no alcanza para detectar un corte, y `pos.js` ya hacía las dos cosas |
+| 2026-11 | El sitio de Pointer es `pointer-demo` y su base, `ebsiqjiioqzpzdsonkit`; `10-ocultar-costos.sql` no se ejecuta porque esa base ya oculta el costo | Lo confirmó el autor y lo comprobó en el panel. `pointer-web001` y «Kiosco Web» son de un cliente |
 
 ## Lecciones (errores que no hay que repetir)
 
@@ -45,9 +46,10 @@
 - Un `update` bloqueado por RLS **no devuelve error**: agregar `.select('id')` y comprobar que volvió una fila.
 - La hoja de estilos general oculta los modales al imprimir: el ticket se imprime desde un área propia fuera del modal.
 - Antes de publicar cambios de `sistema/`, subir `CACHE_VERSION` en `sistema/sw.js` o los navegadores siguen con la versión vieja.
+- Antes de consultar una base o publicar en un sitio, comprobar que sea el de Pointer (`sistema/pos.html` dice cuál es la base): en las mismas cuentas hay un sitio y una base de un cliente.
 
 ## Datos útiles (sin secretos)
 
-- Proyecto Supabase: "Kiosco Web" (las claves están en el panel, nunca acá).
-- Publicación: Netlify, carpeta `sistema/`.
+- Proyecto Supabase de Pointer: `ebsiqjiioqzpzdsonkit` (las claves están en el panel, nunca acá).
+- Publicación: Netlify, sitio `pointer-demo`, carpeta `sistema/`.
 - La estructura completa de la base está en `base-de-datos/00-estructura.sql`.

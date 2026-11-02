@@ -1,7 +1,7 @@
 # Tareas 001 · Punto de venta
 
 > **Estado:** aprobado por el autor · **Fecha:** 2026-11-01 · **Reorganizado:** 2026-11-01 (alcance reducido a 15 RF; test y código juntos; 10 tareas activas)
-> **Entrada:** `plan.md` (actualizado 2026-11-01). Rama: `feature/punto-de-venta`.
+> **Entrada:** `plan.md` (actualizado 2026-11-02). Rama: `feature/punto-de-venta`.
 > Cada tarea dura menos de 30 minutos y termina en **un commit** con el mensaje propuesto.
 
 ## Reglas para todas las tareas
@@ -94,17 +94,17 @@ T01 a T05 se hicieron con la regla anterior (una tarea para el test y otra para 
 
 ## Etapa 3 · Producción y verificación
 
-- [ ] T14 · **Autor:** ocultar costos y publicar
+- [ ] T14 · **Autor:** publicar en `pointer-demo`
   - **RF:** 14 (y todos los de la pantalla)
   - **Archivos:** `sistema/sw.js`, `memory.md`
-  - **Hace:** el autor ejecuta `10-ocultar-costos.sql` en producción si todavía no se hizo; se sube `CACHE_VERSION` una sola vez y se publica según lo que decida el autor (fusión a `main` o publicación manual).
-  - **Listo cuando:** https://pointer-web001.netlify.app/ carga la versión nueva; con sesión de empleado, `precio_costo` no aparece en la pestaña Red ni en un pedido directo a la API; `memory.md` saca el pendiente de seguridad.
-  - **Commit:** `publica el núcleo del punto de venta y registra la ocultación de costos`
+  - **Hace:** se sube `CACHE_VERSION` una sola vez y se publica `sistema/` en `pointer-demo`, de la forma que decida el autor. `10-ocultar-costos.sql` no se ejecuta: el autor ya comprobó (2026-11-02) que la base de Pointer oculta el costo. `pointer-web001` no se toca: usa la base de un cliente.
+  - **Listo cuando:** https://pointer-demo.netlify.app/ carga la versión nueva; con sesión de empleado, `precio_costo` no aparece en la pestaña Red ni en un pedido directo a la API.
+  - **Commit:** `publica el núcleo del punto de venta en pointer-demo`
 
 - [ ] T15 · **Verificación** de la funcionalidad
   - **RF:** los 15 activos
   - **Archivos:** `specs/001-punto-de-venta/verificacion.md` (nuevo), `memory.md`
-  - **Hace:** `/verificar` con la skill `verificar-criterios`; pruebas manuales: lector real, red cortada, rechazos de la base (casos límite 4, 5 y 6), empleado sin costos y rendimiento en la PC del mostrador.
+  - **Hace:** `/verificar` con la skill `verificar-criterios`; pruebas manuales en `pointer-demo`: lector real, red cortada, rechazos de la base (casos límite 4, 5 y 6), empleado sin costos y rendimiento en la PC del mostrador.
   - **Listo cuando:** cada RF activo figura como cumple / no cumple / prueba manual pendiente, con el test que lo cubre; `npm test` en verde.
   - **Commit:** `agrega la verificación del punto de venta`
 

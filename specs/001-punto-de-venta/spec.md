@@ -1,6 +1,6 @@
 # Spec 001 · Punto de venta
 
-> **Estado:** aprobada por el autor · **Fecha:** 2026-10-31 · **Actualizada con la clarificación:** 2026-11-01 · **Último cambio:** 2026-11-01 (ver «Historial de cambios»)
+> **Estado:** aprobada por el autor · **Fecha:** 2026-10-31 · **Actualizada con la clarificación:** 2026-11-01 · **Último cambio:** 2026-11-02 (ver «Historial de cambios»)
 > **Alcance acordado:** núcleo del cobro (buscar o escanear, carrito, total, cobrar y errores básicos al cobrar), desde el uso del **empleado** en el mostrador. Lo demás quedó en «Fuera de alcance (mejoras futuras)».
 
 ## Contexto
@@ -104,7 +104,8 @@ Estos RF estaban en la spec y se sacaron del alcance el 2026-11-01 para cerrar p
 
 ## Dependencias
 
-- **`base-de-datos/10-ocultar-costos.sql` ejecutado en producción.** Sin ese script, RF-001-14 se cumple en la pantalla pero no en la API. Lo ejecuta el autor desde el panel de Supabase (cambia permisos de la base).
+- **Costo oculto en la base de Pointer (`ebsiqjiioqzpzdsonkit`).** Sin eso, RF-001-14 se cumple en la pantalla pero no en la API. El autor lo comprobó en el panel el 2026-11-02 (`costo_visible = false`, `precio_visible = true`, sin la política `detalle_ventas_select_empleado`), así que no hace falta ejecutar `base-de-datos/10-ocultar-costos.sql`.
+- **El sitio de Pointer es `pointer-demo`.** Ahí se publica y se prueba. `pointer-web001` y su base son de un cliente: quedan fuera de esta spec y no se tocan.
 
 ## Criterios de finalización
 
@@ -114,7 +115,7 @@ Estos RF estaban en la spec y se sacaron del alcance el 2026-11-01 para cerrar p
 - [ ] Con el lector real: escanear 3 productos (uno repetido), cobrar y ver en la base la venta con el total que mostró la pantalla.
 - [ ] Cortar la red al tocar «Cobrar»: sale el mensaje de RF-001-24 y el carrito sigue en pantalla.
 - [ ] Con la sesión de un `empleado`, `precio_costo` no aparece en la pantalla ni en las respuestas de red del POS.
-- [ ] `10-ocultar-costos.sql` está ejecutado en producción: con la sesión de un `empleado`, pedir `precio_costo` de `productos` directo a la API devuelve un error de permiso.
+- [ ] En `pointer-demo`, con la sesión de un `empleado`, pedir `precio_costo` de `productos` directo a la API devuelve un error de permiso.
 - [ ] Los mensajes de esta spec aparecen en voseo, con tildes y tal cual están escritos acá.
 - [ ] `CACHE_VERSION` de `sistema/sw.js` subió si cambió algo de `sistema/`.
 
@@ -146,3 +147,4 @@ El detalle de cada decisión está en `clarificacion.md`.
 |---|---|---|
 | 2026-11-01 | RF-001-06 no distingue marcas sobre las letras (tildes, ñ y diéresis). Nuevos RF-001-46 (se ignoran los espacios del principio y del final) y RF-001-47 (buscador vacío o solo con espacios → todos los activos). Solo afectan a la lista del buscador: la comparación exacta con `codigo_barra` de RF-001-03 a RF-001-05 no cambia. | Al escribir los tests de `filtrarCatalogo` (T05) apareció que la spec no decía qué pasa con el texto vacío, las tildes ni los espacios. Decisión del autor. |
 | 2026-11-01 | Alcance reducido al núcleo del cobro: quedan 15 RF activos (03, 04, 05, 06, 07, 09, 10, 11, 12, 14, 16, 19, 24, 26, 42). RF-001-46 y 47 pasan a ser parte del texto de RF-001-06. Los otros 30 RF pasan a «Mejoras futuras» con su motivo; se saca la tabla «Mensajes de `crear_venta`» (era de RF-001-34). Ningún RF activo pide cambios en la base. | Pedido del autor (`/cambio`): cerrar primero un núcleo chico y comprobable. |
+| 2026-11-02 | El destino de esta spec es `pointer-demo` con la base `ebsiqjiioqzpzdsonkit`. La dependencia y el criterio de `10-ocultar-costos.sql` pasan a pedir que el costo esté oculto en esa base; el script no hace falta. Los RF no cambian. | Al leer el script para T14 apareció que `pointer-web001` usa otra base. El autor confirmó que ese sitio y esa base son de un cliente, y comprobó en el panel que la base de Pointer ya oculta el costo. |
