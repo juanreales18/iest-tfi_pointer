@@ -46,7 +46,7 @@ T01 a T05 se hicieron con la regla anterior (una tarea para el test y otra para 
   - **Listo cuando:** los casos nuevos pasan; `npm test` en verde.
   - **Commit:** `agrega la validación de stock al agregar y cambiar cantidades`
 
-- [ ] T08 · `calcularTotales` (test + código)
+- [x] T08 · `calcularTotales` (test + código)
   - **RF:** 10, 11, 42
   - **Archivos:** `sistema/js/pos-logica.js`, `tests/pos-logica.test.js`
   - **Hace:** subtotal, impuesto y total en centavos enteros con redondeo «mitad lejos del cero», igual que `round(…, 2)` de PostgreSQL; casos con medio centavo; impuesto 0 y 21 %; cambiar y quitar productos recalcula.

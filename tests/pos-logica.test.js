@@ -326,3 +326,85 @@ test('stock: RF-001-09 · una cantidad que supera el stock vuelve a la anterior 
 test('stock: RF-001-09 · con stock 0 vuelve a la anterior y avisa', () => {
     assert.deepEqual(PosLogica.validarCantidad(2, 1, 0), { ok: false, cantidad: 1, mensaje: 'Stock disponible: 0' });
 });
+
+// ---------------------------------------------------------------
+// TOTALES: calcularTotales (T08)
+// Recibe el carrito con precios en pesos y devuelve todo en centavos
+// enteros. Sigue a crear_venta: descuento e impuesto se redondean por
+// separado, con la mitad lejos del cero; el total no se vuelve a redondear.
+// ---------------------------------------------------------------
+test('totales: RF-001-42 · un carrito vacío da todo en 0', () => {
+    assert.deepEqual(PosLogica.calcularTotales([], 0, 0), { subtotal: 0, descuento: 0, neto: 0, impuesto: 0, total: 0 });
+});
+
+test('totales: RF-001-42 · con impuesto 0 el total es la suma de los precios', () => {
+    const carrito = [{ id: 1, precio: 100, cantidad: 2 }, { id: 2, precio: 50.5, cantidad: 1 }];
+    assert.deepEqual(PosLogica.calcularTotales(carrito, 0, 0), { subtotal: 25050, descuento: 0, neto: 25050, impuesto: 0, total: 25050 });
+});
+
+test('totales: RF-001-42 · con impuesto 21 % lo suma encima del precio', () => {
+    const carrito = [{ id: 1, precio: 100, cantidad: 1 }];
+    assert.deepEqual(PosLogica.calcularTotales(carrito, 0, 21), { subtotal: 10000, descuento: 0, neto: 10000, impuesto: 2100, total: 12100 });
+});
+
+test('totales: RF-001-42 · medio centavo de impuesto se redondea hacia arriba', () => {
+    // 2,50 × 21 % = 0,525
+    const carrito = [{ id: 1, precio: 2.5, cantidad: 1 }];
+    assert.deepEqual(PosLogica.calcularTotales(carrito, 0, 21), { subtotal: 250, descuento: 0, neto: 250, impuesto: 53, total: 303 });
+});
+
+test('totales: RF-001-42 · menos de medio centavo se redondea hacia abajo', () => {
+    // 2,49 × 21 % = 0,5229
+    const carrito = [{ id: 1, precio: 2.49, cantidad: 1 }];
+    assert.equal(PosLogica.calcularTotales(carrito, 0, 21).impuesto, 52);
+});
+
+test('totales: RF-001-42 · los decimales de JavaScript no corren el medio centavo', () => {
+    // 50,00 × 1,13 % = 0,565; multiplicado en decimales da 56
+    const carrito = [{ id: 1, precio: 50, cantidad: 1 }];
+    assert.equal(PosLogica.calcularTotales(carrito, 0, 1.13).impuesto, 57);
+});
+
+test('totales: RF-001-42 · los precios no acumulan error de decimales', () => {
+    assert.equal(PosLogica.calcularTotales([{ id: 1, precio: 19.99, cantidad: 3 }], 0, 0).total, 5997);
+    assert.equal(PosLogica.calcularTotales([{ id: 1, precio: 1.1, cantidad: 3 }], 0, 0).total, 330);
+    const carrito = [{ id: 1, precio: 0.1, cantidad: 1 }, { id: 2, precio: 0.2, cantidad: 1 }];
+    assert.equal(PosLogica.calcularTotales(carrito, 0, 0).total, 30);
+});
+
+test('totales: RF-001-42 · el impuesto se redondea sobre el total, no por línea', () => {
+    // 0,50 × 10 % = 5 centavos; línea por línea daría 3 + 3
+    const carrito = [{ id: 1, precio: 0.25, cantidad: 1 }, { id: 2, precio: 0.25, cantidad: 1 }];
+    assert.equal(PosLogica.calcularTotales(carrito, 0, 10).impuesto, 5);
+});
+
+test('totales: RF-001-42 · el impuesto se calcula sobre el neto, después del descuento', () => {
+    // Descuento: 2,50 × 21 % = 0,525 → 53. Impuesto: 1,97 × 21 % = 0,4137 → 41
+    const carrito = [{ id: 1, precio: 2.5, cantidad: 1 }];
+    assert.deepEqual(PosLogica.calcularTotales(carrito, 21, 21), { subtotal: 250, descuento: 53, neto: 197, impuesto: 41, total: 238 });
+});
+
+test('totales: RF-001-10 · cambiar la cantidad recalcula el total', () => {
+    const antes = [{ id: 1, precio: 100, cantidad: 1 }];
+    const despues = [{ id: 1, precio: 100, cantidad: 3 }];
+    assert.equal(PosLogica.calcularTotales(antes, 0, 21).total, 12100);
+    assert.equal(PosLogica.calcularTotales(despues, 0, 21).total, 36300);
+});
+
+test('totales: RF-001-11 · quitar un producto recalcula el total', () => {
+    const antes = [{ id: 1, precio: 100, cantidad: 1 }, { id: 2, precio: 50, cantidad: 2 }];
+    const despues = [{ id: 1, precio: 100, cantidad: 1 }];
+    assert.equal(PosLogica.calcularTotales(antes, 0, 0).total, 20000);
+    assert.equal(PosLogica.calcularTotales(despues, 0, 0).total, 10000);
+});
+
+test('totales: RF-001-11 · quitar el último producto deja el total en 0', () => {
+    assert.equal(PosLogica.calcularTotales([], 0, 21).total, 0);
+});
+
+test('totales: calcularTotales no cambia el carrito', () => {
+    const carrito = [{ id: 1, precio: 19.99, cantidad: 2 }];
+    const copia = structuredClone(carrito);
+    PosLogica.calcularTotales(carrito, 10, 21);
+    assert.deepEqual(carrito, copia);
+});

@@ -86,6 +86,32 @@
         return validarCantidad(anterior + 1, anterior, producto.stock_actual);
     }
 
+    // =========================================================
+    // TOTALES
+    // Solo para mostrar: el total oficial lo decide crear_venta (D2).
+    // Todo en centavos enteros, en el mismo orden que crear_venta.
+    // Precios y porcentajes nunca son negativos, asi que Math.round
+    // redondea igual que round(..., 2) de PostgreSQL
+    // =========================================================
+    function aCentavos(pesos) {
+        return Math.round(pesos * 100);
+    }
+
+    // El porcentaje pasa a centesimos enteros: multiplicado con
+    // decimales corre el medio centavo (1,13 % de 50,00 daria 56)
+    function porcentajeEnCentavos(centavos, porcentaje) {
+        return Math.round(centavos * Math.round(porcentaje * 100) / 10000);
+    }
+
+    // carrito: lineas con precio en pesos; devuelve todo en centavos
+    function calcularTotales(carrito, descuentoPct, impuestoPct) {
+        const subtotal = carrito.reduce((suma, item) => suma + aCentavos(item.precio) * item.cantidad, 0);
+        const descuento = porcentajeEnCentavos(subtotal, descuentoPct);
+        const neto = subtotal - descuento;
+        const impuesto = porcentajeEnCentavos(neto, impuestoPct);
+        return { subtotal, descuento, neto, impuesto, total: neto + impuesto };
+    }
+
     const PosLogica = {
         MENSAJES,
         clasificarEntrada,
@@ -93,6 +119,7 @@
         filtrarCatalogo,
         validarAgregado,
         validarCantidad,
+        calcularTotales,
     };
 
     // =========================================================
