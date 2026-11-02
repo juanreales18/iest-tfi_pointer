@@ -48,7 +48,26 @@
         return encontrado || null;
     }
 
-    const PosLogica = { MENSAJES, clasificarEntrada, buscarPorCodigo };
+    // =========================================================
+    // CATALOGO DEL BUSCADOR
+    // Sin mayusculas ni marcas sobre las letras: la ñ se compara
+    // como n y la ü como u (RF-001-06)
+    // =========================================================
+    function normalizarTexto(texto) {
+        if (typeof texto !== 'string') return ''; // codigo_barra puede ser null
+        return texto.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+    }
+
+    // Activos cuyo nombre o codigo contienen el texto; vacio = todos los activos
+    function filtrarCatalogo(productos, texto) {
+        const buscado = normalizarTexto(texto).trim();
+        return productos.filter((p) => p.activo === true && (
+            normalizarTexto(p.nombre).includes(buscado) ||
+            normalizarTexto(p.codigo_barra).includes(buscado)
+        ));
+    }
+
+    const PosLogica = { MENSAJES, clasificarEntrada, buscarPorCodigo, filtrarCatalogo };
 
     // =========================================================
     // SALIDA: Node (tests) o navegador (pos.js) (D1)

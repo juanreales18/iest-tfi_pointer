@@ -32,7 +32,7 @@ T01 a T05 se hicieron con la regla anterior (una tarea para el test y otra para 
 
 ## Etapa 1 · Lógica pura (`pos-logica.js`)
 
-- [ ] T06 · `filtrarCatalogo`
+- [x] T06 · `filtrarCatalogo`
   - **RF:** 06, 07
   - **Archivos:** `sistema/js/pos-logica.js`, `tests/pos-logica.test.js`
   - **Hace:** implementa el filtro (los tests ya están de T05) y les saca el `todo`.

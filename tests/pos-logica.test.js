@@ -1,6 +1,5 @@
 // Tests de sistema/js/pos-logica.js (specs/001-punto-de-venta).
 // Prueban la lógica del punto de venta sin navegador ni base.
-// Los casos con { todo: true } esperan el código de la tarea siguiente (tasks.md).
 // Se corren con: npm test
 'use strict';
 
@@ -8,7 +7,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
 
-// Si el archivo todavía no existe, los casos fallan como `todo` sin cortar el resto de los tests
+// Si el archivo no se puede cargar, los casos fallan sin cortar el resto de los tests
 function cargarPosLogica() {
     try {
         return require(path.join(__dirname, '..', 'sistema', 'js', 'pos-logica.js'));
@@ -167,75 +166,75 @@ function idsFiltrados(texto, productos = CATALOGO) {
     return PosLogica.filtrarCatalogo(productos, texto).map((p) => p.id);
 }
 
-test('catálogo: RF-001-06 · encuentra por una parte del nombre', { todo: true }, () => {
+test('catálogo: RF-001-06 · encuentra por una parte del nombre', () => {
     assert.deepEqual(idsFiltrados('fajor'), [1]);
 });
 
-test('catálogo: RF-001-06 · encuentra por una parte del código', { todo: true }, () => {
+test('catálogo: RF-001-06 · encuentra por una parte del código', () => {
     assert.deepEqual(idsFiltrados('0002'), [2]);
     assert.deepEqual(idsFiltrados('77900'), [1, 2, 5, 6, 7]);
 });
 
-test('catálogo: RF-001-06 · no distingue mayúsculas', { todo: true }, () => {
+test('catálogo: RF-001-06 · no distingue mayúsculas', () => {
     assert.deepEqual(idsFiltrados('ALFAJOR'), [1]);
     assert.deepEqual(idsFiltrados('gAsEoSa'), [2]);
 });
 
-test('catálogo: RF-001-06 · un producto inactivo no aparece aunque coincida', { todo: true }, () => {
+test('catálogo: RF-001-06 · un producto inactivo no aparece aunque coincida', () => {
     assert.deepEqual(idsFiltrados('chicle'), []);
     assert.deepEqual(idsFiltrados('7790004'), []);
 });
 
-test('catálogo: RF-001-06 · no distingue tildes', { todo: true }, () => {
+test('catálogo: RF-001-06 · no distingue tildes', () => {
     assert.deepEqual(idsFiltrados('cafe'), [5]);
     assert.deepEqual(idsFiltrados('CAFÉ'), [5]);
     assert.deepEqual(idsFiltrados('móli'), [5]);
 });
 
-test('catálogo: RF-001-06 · la ñ se compara como n', { todo: true }, () => {
+test('catálogo: RF-001-06 · la ñ se compara como n', () => {
     assert.deepEqual(idsFiltrados('nandu'), [6]);
     assert.deepEqual(idsFiltrados('ÑANDÚ'), [6]);
 });
 
-test('catálogo: RF-001-06 · la diéresis no cuenta', { todo: true }, () => {
+test('catálogo: RF-001-06 · la diéresis no cuenta', () => {
     assert.deepEqual(idsFiltrados('pinguino'), [7]);
 });
 
-test('catálogo: RF-001-06 · un producto sin código no rompe el filtro', { todo: true }, () => {
+test('catálogo: RF-001-06 · un producto sin código no rompe el filtro', () => {
     assert.deepEqual(idsFiltrados('caramelo'), [8]);
     assert.deepEqual(idsFiltrados('779'), [1, 2, 5, 6, 7]);
 });
 
-test('catálogo: caso límite 15 · sin coincidencia la lista queda vacía', { todo: true }, () => {
+test('catálogo: caso límite 15 · sin coincidencia la lista queda vacía', () => {
     assert.deepEqual(idsFiltrados('7799999'), []);
 });
 
-test('catálogo: RF-001-46 · los espacios del principio y del final no cuentan', { todo: true }, () => {
+test('catálogo: RF-001-46 · los espacios del principio y del final no cuentan', () => {
     assert.deepEqual(idsFiltrados('  alfajor  '), [1]);
     assert.deepEqual(idsFiltrados(' 0002 '), [2]);
 });
 
-test('catálogo: RF-001-46 · los espacios del medio sí cuentan', { todo: true }, () => {
+test('catálogo: RF-001-46 · los espacios del medio sí cuentan', () => {
     assert.deepEqual(idsFiltrados('alfajor triple'), [1]);
     assert.deepEqual(idsFiltrados('alfajortriple'), []);
 });
 
-test('catálogo: RF-001-47 · texto vacío muestra todos los activos', { todo: true }, () => {
+test('catálogo: RF-001-47 · texto vacío muestra todos los activos', () => {
     assert.deepEqual(idsFiltrados(''), ACTIVOS);
 });
 
-test('catálogo: RF-001-47 · texto con solo espacios muestra todos los activos', { todo: true }, () => {
+test('catálogo: RF-001-47 · texto con solo espacios muestra todos los activos', () => {
     assert.deepEqual(idsFiltrados('   '), ACTIVOS);
 });
 
-test('catálogo: RF-001-06 · filtrar no cambia la lista de productos', { todo: true }, () => {
+test('catálogo: RF-001-06 · filtrar no cambia la lista de productos', () => {
     const copia = structuredClone(CATALOGO);
     PosLogica.filtrarCatalogo(CATALOGO, 'cafe');
     PosLogica.filtrarCatalogo(CATALOGO, '');
     assert.deepEqual(CATALOGO, copia);
 });
 
-test('catálogo: RF-001-06 · con 2.000 productos filtra en menos de 100 ms', { todo: true }, () => {
+test('catálogo: RF-001-06 · con 2.000 productos filtra en menos de 100 ms', () => {
     // Uno de cada 10 sin código y uno de cada 7 inactivo, como en un kiosco real
     const productos = Array.from({ length: 2000 }, (_, i) => ({
         id: i + 1,
