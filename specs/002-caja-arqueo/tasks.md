@@ -61,7 +61,7 @@
   - **Listo cuando:** pasan los casos 50, −50, 0 y `null`, y `0` no se confunde con `null`; `npm test` en verde.
   - **Commit:** `agrega el texto del resultado del arqueo`
 
-- [ ] T07 · `armarResumenCierre` (test + código)
+- [x] T07 · `armarResumenCierre` (test + código)
   - **RF:** 05, 08
   - **Archivos:** `sistema/js/caja-logica.js`, `tests/caja-logica.test.js`
   - **Hace:** arma el resumen desde la fila que devuelve la base. No recalcula la diferencia. Convierte a número los `numeric` que llegan como texto.

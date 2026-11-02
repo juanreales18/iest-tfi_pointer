@@ -89,12 +89,32 @@
         };
     }
 
+    // =========================================================
+    // RESUMEN DE CIERRE
+    // Sale de la fila que devuelve la base, que puede diferir de la
+    // vista previa (caso limite 3): aca no se recalcula la diferencia
+    // =========================================================
+    function aPesos(valor) {
+        const centavos = aCentavos(valor);
+        return centavos === null ? null : centavos / 100;
+    }
+
+    function armarResumenCierre(fila) {
+        return {
+            esperado: aPesos(fila.saldo_actual),
+            contado: aPesos(fila.saldo_contado),
+            diferencia: aPesos(fila.diferencia),
+            ...describirDiferencia(fila.diferencia),
+        };
+    }
+
     const CajaLogica = {
         MENSAJES,
         validarMontoApertura,
         validarContado,
         calcularVistaPrevia,
         describirDiferencia,
+        armarResumenCierre,
     };
 
     // =========================================================

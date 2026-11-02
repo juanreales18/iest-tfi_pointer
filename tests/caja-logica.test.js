@@ -175,3 +175,56 @@ test('resultado: acepta la diferencia como texto, como puede llegar un numeric',
 test('resultado: conserva los centavos', () => {
     assert.deepEqual(CajaLogica.describirDiferencia(-0.2), { texto: 'Faltante', valor: 0.2 });
 });
+
+// ---------------------------------------------------------------
+// RESUMEN: armarResumenCierre (RF-002-05, RF-002-08)
+// Sale de la fila que devuelve la base: no recalcula nada
+// ---------------------------------------------------------------
+test('resumen: criterio de finalización · esperado 1500, contado 1450 y «Faltante» de 50', () => {
+    const fila = { saldo_actual: 1500, saldo_contado: 1450, diferencia: -50 };
+    assert.deepEqual(CajaLogica.armarResumenCierre(fila), {
+        esperado: 1500,
+        contado: 1450,
+        diferencia: -50,
+        texto: 'Faltante',
+        valor: 50,
+    });
+});
+
+test('resumen: RF-002-05 · muestra la diferencia de la fila, sin recalcularla', () => {
+    const fila = { saldo_actual: 1500, saldo_contado: 1450, diferencia: 25 };
+    const resumen = CajaLogica.armarResumenCierre(fila);
+    assert.equal(resumen.diferencia, 25);
+    assert.equal(resumen.texto, 'Sobrante');
+    assert.equal(resumen.valor, 25);
+});
+
+test('resumen: caso límite 2 · sin contado muestra el esperado y «Cerrada sin arqueo»', () => {
+    const fila = { saldo_actual: 1500, saldo_contado: null, diferencia: null };
+    assert.deepEqual(CajaLogica.armarResumenCierre(fila), {
+        esperado: 1500,
+        contado: null,
+        diferencia: null,
+        texto: 'Cerrada sin arqueo',
+        valor: null,
+    });
+});
+
+test('resumen: caso límite 1 · contado 0 es un arqueo, con todo lo esperado como «Faltante»', () => {
+    const fila = { saldo_actual: 1500, saldo_contado: 0, diferencia: -1500 };
+    const resumen = CajaLogica.armarResumenCierre(fila);
+    assert.equal(resumen.contado, 0);
+    assert.equal(resumen.texto, 'Faltante');
+    assert.equal(resumen.valor, 1500);
+});
+
+test('resumen: convierte a número los numeric que llegan como texto', () => {
+    const fila = { saldo_actual: '1500.00', saldo_contado: '1500.00', diferencia: '0.00' };
+    assert.deepEqual(CajaLogica.armarResumenCierre(fila), {
+        esperado: 1500,
+        contado: 1500,
+        diferencia: 0,
+        texto: 'Sin diferencia',
+        valor: 0,
+    });
+});
