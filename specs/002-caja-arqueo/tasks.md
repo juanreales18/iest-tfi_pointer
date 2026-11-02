@@ -33,7 +33,7 @@
   - **Listo cuando:** el test compara cada texto con el de la spec, incluidos «Ingresá un monto de 0 o más», «La caja ya está abierta» y «La caja ya fue cerrada»; `npm test` en verde.
   - **Commit:** `agrega caja-logica.js con los mensajes de la caja`
 
-- [ ] T03 · `validarMontoApertura` (test + código)
+- [x] T03 · `validarMontoApertura` (test + código)
   - **RF:** 01, 02
   - **Archivos:** `sistema/js/caja-logica.js`, `tests/caja-logica.test.js`
   - **Hace:** vacío, `entradaInvalida` o negativo devuelven el mensaje de RF-002-02; `0` y los positivos devuelven el monto. Usa `Number` y `Number.isFinite`, no `parseFloat(x) || 0`.

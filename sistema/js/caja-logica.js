@@ -27,8 +27,24 @@
         noSePudoAbrir:   'No se pudo abrir la caja',      // RF-002-03
     });
 
+    // =========================================================
+    // APERTURA
+    // entradaInvalida = validity.badInput del campo: con un texto
+    // invalido, type="number" entrega el valor vacio (H-04).
+    // Number y no parseFloat(x) || 0, que toma el vacio como 0
+    // =========================================================
+    function validarMontoApertura(valor, entradaInvalida) {
+        const texto = String(valor ?? '').trim();
+        const monto = Number(texto);
+        if (entradaInvalida || texto === '' || !Number.isFinite(monto) || monto < 0) {
+            return { valido: false, mensaje: MENSAJES.montoInvalido };
+        }
+        return { valido: true, monto };
+    }
+
     const CajaLogica = {
         MENSAJES,
+        validarMontoApertura,
     };
 
     // =========================================================

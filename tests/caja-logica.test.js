@@ -41,3 +41,35 @@ for (const [origen, clave, texto] of TEXTOS_FIJOS) {
         assert.equal(MENSAJES[clave], texto);
     });
 }
+
+// ---------------------------------------------------------------
+// APERTURA: validarMontoApertura (RF-002-01, RF-002-02)
+// ---------------------------------------------------------------
+test('apertura: RF-002-01 · 0 es un monto válido', () => {
+    assert.deepEqual(CajaLogica.validarMontoApertura('0', false), { valido: true, monto: 0 });
+});
+
+test('apertura: RF-002-01 · un monto positivo se devuelve como número', () => {
+    assert.deepEqual(CajaLogica.validarMontoApertura('1000', false), { valido: true, monto: 1000 });
+    assert.deepEqual(CajaLogica.validarMontoApertura('1000.50', false), { valido: true, monto: 1000.5 });
+});
+
+const APERTURAS_INVALIDAS = [
+    ['vacío', '', false],
+    ['solo espacios', '   ', false],
+    ['sin valor', undefined, false],
+    ['negativo', '-1', false],
+    ['texto', 'abc', false],
+    ['infinito', 'Infinity', false],
+    ['el campo avisa una entrada inválida', '', true],
+    ['entrada inválida aunque haya un valor', '100', true],
+];
+
+for (const [caso, valor, entradaInvalida] of APERTURAS_INVALIDAS) {
+    test(`apertura: RF-002-02 · ${caso} no abre la caja`, () => {
+        assert.deepEqual(
+            CajaLogica.validarMontoApertura(valor, entradaInvalida),
+            { valido: false, mensaje: 'Ingresá un monto de 0 o más' }
+        );
+    });
+}
