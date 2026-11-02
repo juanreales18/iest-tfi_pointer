@@ -77,7 +77,7 @@
 
 ## Etapa 2 · Base de datos
 
-- [ ] T09 · `caja-guard.sql`: armazón y apertura
+- [x] T09 · `caja-guard.sql`: armazón y apertura
   - **RF:** 01, 03, 06
   - **Archivos:** `tests/sql/caja-guard.sql` (nuevo), `tests/caja.test.js` (nuevo)
   - **Hace:** un solo bloque que termina siempre en un error a propósito con los resultados (D7). Simula cada rol con `SET LOCAL ROLE authenticated` y `request.jwt.claims`, con ids buscados por consulta. Cada prueba prepara el estado de la caja. Casos con los dos roles: apertura válida, doble apertura (también con el mismo monto) y apertura negativa. `caja.test.js` arranca comprobando que el script no trae ids escritos a mano (P5).
