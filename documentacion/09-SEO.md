@@ -44,7 +44,7 @@ Una ruta desconocida recibe `index.html`, así que su protección es la meta `ro
 | Imagen | Texto `alt` |
 |---|---|
 | `img/logo/logo-horizontal.png` | Pointer, sistema de gestión para kioscos |
-| `img/logo/isotipo.png` | Logo de Pointer: las letras Re sobre un cuadrado amarillo |
+| `img/logo/isotipo.png` | Isotipo de Pointer, una P en un cuadrado amarillo |
 | Imagen de producto | Nombre del producto |
 
 ## Lista de control
