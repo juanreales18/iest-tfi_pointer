@@ -121,7 +121,7 @@
 
 ## Etapa 3 · Pantallas
 
-- [ ] T15 · Carga de `caja-logica.js`
+- [x] T15 · Carga de `caja-logica.js`
   - **RF:** 01 a 08 (carga)
   - **Archivos:** `tests/caja.test.js`, `sistema/dashboard.html`, `sistema/pos.html`, `sistema/sw.js`
   - **Hace:** test: `caja-logica.js` se carga antes que `app.js` y `pos.js`, y está en `sw.js`. Código: los `<script>` y la línea de `sw.js`, sin subir `CACHE_VERSION`.

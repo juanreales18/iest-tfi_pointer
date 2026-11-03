@@ -7,6 +7,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const vm = require('node:vm');
 
 function leer(...partes) {
     try {
@@ -184,4 +185,31 @@ for (const prueba of PRUEBAS_POR_ROL) {
 
 test('caja-guard: RF-002-03 · prueba «caja abierta cambia contado»', () => {
     assert.ok(CAJA_GUARD_SIN_COMENTARIOS.includes("'caja abierta cambia contado'"));
+});
+
+// ---------------------------------------------------------------
+// Carga de caja-logica.js (D1)
+// ---------------------------------------------------------------
+function cargaAntes(html, archivo) {
+    const logica = html.indexOf('<script src="js/caja-logica.js"></script>');
+    const siguiente = html.indexOf(`<script src="js/${archivo}"></script>`);
+    return logica >= 0 && siguiente >= 0 && logica < siguiente;
+}
+
+test('carga: dashboard.html trae caja-logica.js antes que app.js', () => {
+    assert.ok(cargaAntes(leer('sistema', 'dashboard.html'), 'app.js'));
+});
+
+test('carga: pos.html trae caja-logica.js antes que pos.js', () => {
+    assert.ok(cargaAntes(leer('sistema', 'pos.html'), 'pos.js'));
+});
+
+test('carga: sw.js lista caja-logica.js', () => {
+    assert.match(leer('sistema', 'sw.js'), /['"]\/js\/caja-logica\.js['"]/);
+});
+
+test('carga: en el navegador deja CajaLogica en window', () => {
+    const ventana = {};
+    vm.runInNewContext(leer('sistema', 'js', 'caja-logica.js'), { window: ventana });
+    assert.equal(typeof ventana.CajaLogica.validarContado, 'function');
 });
