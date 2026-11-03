@@ -484,3 +484,26 @@ test('pos apertura: RF-002-03 · ante un rechazo vuelve a leer y destraba «Cobr
     assert.match(releer, /closePOSCajaModal\(\);\s+await cargarCaja\(\);\s+calcularTotales\(\);/);
     assert.doesNotMatch(ABRIR_EN_POS, /toastError\('No se pudo abrir la caja'\)/);
 });
+
+// ---------------------------------------------------------------
+// Punto de venta, pos.js: modal de cierre y vista previa (RF-002-04, D6)
+// ---------------------------------------------------------------
+const MODAL_EN_POS = POS_JS.slice(POS_JS.indexOf('async function openCajaModal'), POS_JS.indexOf('// Confirmar apertura'));
+
+test('pos cierre: RF-002-04 · la vista previa usa calcularVistaPrevia y no resta en la pantalla', () => {
+    assert.match(MODAL_EN_POS, /CajaLogica\.calcularVistaPrevia\(esperadoLeido \? lectura\.saldo_actual : null,/);
+    assert.doesNotMatch(MODAL_EN_POS, /parseFloat\(v\)/);
+});
+
+test('pos cierre: caso límite 10 · sin lectura avisa, y nunca muestra $0', () => {
+    assert.match(MODAL_EN_POS, /CajaLogica\.MENSAJES\.esperadoNoLeido/);
+    assert.doesNotMatch(MODAL_EN_POS, /saldo_actual \|\| 0/);
+});
+
+test('pos cierre: D6 · lee antes de abrir, y con la caja ya cerrada avisa y no abre el modal', () => {
+    const lectura = MODAL_EN_POS.indexOf(".select('saldo_actual, estado')");
+    const aviso = MODAL_EN_POS.indexOf("lectura?.estado === 'cerrada'");
+    const abre = MODAL_EN_POS.indexOf("overlay.classList.add('open')");
+    assert.ok(lectura >= 0 && lectura < aviso && aviso < abre);
+    assert.match(MODAL_EN_POS, /toastWarning\(CajaLogica\.MENSAJES\.cajaYaCerrada\);\s+await cargarCaja\(\);\s+calcularTotales\(\);\s+return;/);
+});

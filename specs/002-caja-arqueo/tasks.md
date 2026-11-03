@@ -170,7 +170,7 @@
   - **Listo cuando:** `npm test` en verde (`pos.js` registra el clic de la caja una sola vez y no usa `parseFloat` en `pos-saldo-apertura`); en local, después de varias cargas un clic abre el modal una vez, y vacío y `1e` muestran el mensaje.
   - **Commit:** `valida la apertura de caja en el punto de venta`
 
-- [ ] T22 · POS: modal de cierre y vista previa
+- [x] T22 · POS: modal de cierre y vista previa
   - **RF:** 04
   - **Archivos:** `sistema/js/pos.js` (`openCajaModal`), `tests/caja.test.js`
   - **Hace:** igual que T18, en `pos-esperado-hint`. Hoy, si la lectura falla, muestra $0 (`parseFloat(cj?.saldo_actual || 0)`). Caja ya cerrada: avisa y no abre el modal (D6).

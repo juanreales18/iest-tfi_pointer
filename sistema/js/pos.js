@@ -1022,7 +1022,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         alert?.addEventListener('click', openCajaModal);
     }
 
-    function openCajaModal() {
+    async function openCajaModal() {
         const overlay  = document.getElementById('modal-caja-overlay');
         const title    = document.getElementById('modal-caja-title');
         const body     = document.getElementById('modal-caja-body');
@@ -1031,6 +1031,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const sym = POS.config.simbolo_moneda || '$';
 
+        // Arqueo: el efectivo esperado se lee antes de abrir el modal
+        let lectura = null;
+        if (POS.cajaAbierta) {
+            const { data } = await window._supabase
+                .from('cajas').select('saldo_actual, estado').eq('id', POS.cajaId).single();
+            lectura = data;
+
+            // Una caja cerrada conserva su saldo: no se muestra como esperado (D6)
+            if (lectura?.estado === 'cerrada') {
+                toastWarning(CajaLogica.MENSAJES.cajaYaCerrada);
+                await cargarCaja();
+                calcularTotales();
+                return;
+            }
+        }
+
+        // Sin lectura no hay esperado: nunca $0 ni un saldo viejo (caso limite 10)
+        const esperadoLeido = Boolean(lectura);
+        const esperado      = esperadoLeido ? parseFloat(lectura.saldo_actual) : null;
+        const textoEsperado = esperadoLeido
+            ? `Efectivo esperado (fondo inicial + ventas en efectivo): ${formatCurrency(esperado)}`
+            : CajaLogica.MENSAJES.esperadoNoLeido;
+
         if (POS.cajaAbierta) {
             if (title) title.textContent = 'Cerrar caja';
             if (body) body.innerHTML = `
@@ -1038,7 +1061,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="form-group">
                     <label class="form-label">Efectivo contado en caja <span style="font-weight:400;color:var(--color-gray)">(opcional)</span></label>
                     <input type="number" id="pos-contado" class="form-input" placeholder="0.00" min="0" step="0.01">
-                    <span class="form-hint" id="pos-esperado-hint">Calculando efectivo esperado...</span>
+                    <span class="form-hint" id="pos-esperado-hint">${textoEsperado}</span>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Notas de cierre</label>
@@ -1073,27 +1096,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (e.target === overlay) closePOSCajaModal();
         }, { once: true });
 
-        // Arqueo: se muestra el efectivo esperado y la diferencia contra lo contado
-        if (POS.cajaAbierta) {
-            (async () => {
-                const hint = document.getElementById('pos-esperado-hint');
-                const { data: cj } = await window._supabase
-                    .from('cajas').select('saldo_actual').eq('id', POS.cajaId).single();
-                const esperado = parseFloat(cj?.saldo_actual || 0);
-                const mostrar = () => {
-                    const v = document.getElementById('pos-contado')?.value;
-                    if (!hint) return;
-                    if (v === '' || v == null) {
-                        hint.textContent = `Efectivo esperado (fondo inicial + ventas en efectivo): ${formatCurrency(esperado)}`;
-                    } else {
-                        const dif = Math.round((parseFloat(v) - esperado) * 100) / 100;
-                        hint.textContent = `Esperado: ${formatCurrency(esperado)} · Diferencia: ${dif > 0 ? '+' : ''}${formatCurrency(dif)}`;
-                    }
-                };
-                mostrar();
-                document.getElementById('pos-contado')?.addEventListener('input', mostrar);
-            })();
-        }
+        // Arqueo: la diferencia contra lo contado solo informa, la que vale la calcula la base
+        document.getElementById('pos-contado')?.addEventListener('input', () => {
+            const v    = document.getElementById('pos-contado').value;
+            const hint = document.getElementById('pos-esperado-hint');
+            if (!hint) return;
+            const dif = CajaLogica.calcularVistaPrevia(esperadoLeido ? lectura.saldo_actual : null, v);
+            hint.textContent = dif === null
+                ? textoEsperado
+                : `Esperado: ${formatCurrency(esperado)} · Diferencia: ${dif > 0 ? '+' : ''}${formatCurrency(dif)}`;
+        });
 
         // Confirmar apertura
         document.getElementById('pos-confirm-apertura')?.addEventListener('click', async () => {
