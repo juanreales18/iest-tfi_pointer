@@ -112,7 +112,7 @@
   - **Listo cuando:** `npm test` en verde; la función es igual en los dos archivos; el autor revisó el SQL. Todavía no se ejecuta.
   - **Commit:** `amplía cajas_guard para calcular la diferencia y frenar a los dos roles`
 
-- [ ] T14 · **Autor:** ejecutar la migración y repetir las pruebas
+- [x] T14 · **Autor:** ejecutar la migración y repetir las pruebas
   - **RF:** 01, 03, 05, 06, 07
   - **Archivos:** `memory.md`
   - **Hace:** el autor ejecuta `20-caja-arqueo.sql` en la base de Pointer y corre otra vez `caja-guard.sql`. Si ventas o cancelación fallan, vuelve a la versión guardada en T01 y se frena.
