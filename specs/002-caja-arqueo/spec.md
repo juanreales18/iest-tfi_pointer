@@ -1,6 +1,6 @@
 # Spec 002 · Caja y arqueo
 
-> **Estado:** aprobada y clarificada por el autor; plan y tareas aprobados, falta implementar · **Fecha:** 2026-11-02
+> **Estado:** terminada: implementada, publicada en `pointer-demo` y dada por terminada por el autor el 2026-11-03 · **Fecha:** 2026-11-02
 > **Alcance acordado:** abrir la caja con un monto inicial y cerrarla mostrando la diferencia entre lo esperado y lo contado (solo efectivo), en la sección Caja y en el punto de venta. Lo demás quedó en «Fuera de alcance (mejoras futuras)».
 
 ## Contexto
@@ -94,18 +94,18 @@ Al terminar el turno, el kiosco necesita saber si el efectivo del cajón coincid
 
 ## Criterios de finalización
 
-- [ ] Cada RF tiene al menos un test automático, un test en `tests/sql/` o una prueba manual descrita en `verificacion.md`.
-- [ ] `npm test` termina en verde, con los tests de `caja-logica.js` en `tests/`.
-- [ ] `tests/sql/` comprueba, con `ROLLBACK` y en la base de Pointer, que una diferencia inventada se descarta, que un negativo y un saldo inventado se rechazan con los dos roles y que una caja cerrada no cambia su arqueo ni sus saldos.
-- [ ] `tests/sql/` comprueba, con `ROLLBACK` y con el `cajas_guard` nuevo, que `crear_venta` y `cancelar_venta` funcionan con la caja abierta y que el `UPDATE cajas` de `90-reinicio-total.sql` sigue pasando.
-- [ ] En `pointer-demo`: abrir con $1.000, vender $500 en efectivo y $300 por transferencia, y cerrar con $1.450 contados. El resumen muestra esperado $1.500,00, contado $1.450,00 y «Faltante» de $50,00, y `cajas.diferencia` vale −50.
-- [ ] Lo mismo se comprueba abriendo y cerrando desde la sección Caja y desde el punto de venta.
-- [ ] Cerrar con el contado vacío muestra el esperado y «Cerrada sin arqueo», y deja `diferencia` en `null`.
-- [ ] En Chrome, escribir `1e` en el contado no cierra la caja y muestra «Ingresá un monto de 0 o más», desde la sección Caja y desde el punto de venta.
-- [ ] Abrir desde una segunda pantalla sin actualizar, con la caja ya abierta, no cambia el saldo.
-- [ ] Ninguna política de RLS cambió.
-- [ ] Los mensajes aparecen en voseo, con tildes y tal cual están escritos acá.
-- [ ] `caja-logica.js` está cargado en `dashboard.html`, `pos.html` y `sw.js`, y `CACHE_VERSION` subió.
+- [x] Cada RF tiene al menos un test automático, un test en `tests/sql/` o una prueba manual descrita en `verificacion.md`.
+- [x] `npm test` termina en verde, con los tests de `caja-logica.js` en `tests/`.
+- [x] `tests/sql/` comprueba, con `ROLLBACK` y en la base de Pointer, que una diferencia inventada se descarta, que un negativo y un saldo inventado se rechazan con los dos roles y que una caja cerrada no cambia su arqueo ni sus saldos.
+- [x] `tests/sql/` comprueba, con `ROLLBACK` y con el `cajas_guard` nuevo, que `crear_venta` y `cancelar_venta` funcionan con la caja abierta y que el `UPDATE cajas` de `90-reinicio-total.sql` sigue pasando.
+- [x] En `pointer-demo`: abrir con $1.000, vender $500 en efectivo y $300 por transferencia, y cerrar con $1.450 contados. El resumen muestra esperado $1.500,00, contado $1.450,00 y «Faltante» de $50,00, y `cajas.diferencia` vale −50.
+- [x] Lo mismo se comprueba abriendo y cerrando desde la sección Caja y desde el punto de venta.
+- [x] Cerrar con el contado vacío muestra el esperado y «Cerrada sin arqueo», y deja `diferencia` en `null`.
+- [x] En Chrome, escribir `1e` en el contado no cierra la caja y muestra «Ingresá un monto de 0 o más», desde la sección Caja y desde el punto de venta.
+- [x] Abrir desde una segunda pantalla sin actualizar, con la caja ya abierta, no cambia el saldo.
+- [x] Ninguna política de RLS cambió.
+- [x] Los mensajes aparecen en voseo, con tildes y tal cual están escritos acá.
+- [x] `caja-logica.js` está cargado en `dashboard.html`, `pos.html` y `sw.js`, y `CACHE_VERSION` subió.
 
 ## RF del kit relacionados
 

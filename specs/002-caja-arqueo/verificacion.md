@@ -1,10 +1,10 @@
 # Verificación · 002-caja-arqueo
 
-Fecha: 2026-11-03 · Verificado por: agente (skill verificar-criterios) · Revisado por: autor (pendiente)
+Fecha: 2026-11-03 · Verificado por: agente (skill verificar-criterios) · Revisado por: autor
 
-> **Estado:** faltan las pruebas manuales en `pointer-demo`. Este informe no da por terminada la funcionalidad: eso lo decide el autor.
+> **Estado:** el autor informó el 2026-11-03 que las 8 pruebas manuales dieron bien en `pointer-demo`. El autor dio por terminada la funcionalidad ese mismo día.
 >
-> **De dónde sale la evidencia:** `npm test` lo corrió el agente. Las corridas en la base y las pruebas en el navegador las hizo el autor, y el agente solo registra lo que informó. Las pruebas en el navegador fueron en local, con el rol dueño según lo que pudo comprobar el agente; en el sitio publicado solo se comprobó que `caja-logica.js` carga.
+> **De dónde sale la evidencia:** `npm test` lo corrió el agente. Las corridas en la base y las pruebas en el navegador las hizo el autor, y el agente solo registra lo que informó. El autor informó el resultado de las pruebas en conjunto, sin el detalle de cada una; el único dato de la base que el agente vio de esa tanda es una corrida de la prueba 1 (`saldo_actual` 1500, `saldo_contado` 1450, `diferencia` −50). El agente comprobó que el sitio publicado tiene `CACHE_VERSION` `kiosco-v-2026-11-03T01-45-00` y el contraste de la T28.
 
 ## Tests
 
@@ -22,13 +22,13 @@ Fecha: 2026-11-03 · Verificado por: agente (skill verificar-criterios) · Revis
 | RF | Estado | Evidencia | Si falla: ¿código o spec? |
 |---|---|---|---|
 | RF-002-01 | ✅ Cumple | `caja-guard.sql`: «apertura valida», «apertura valida con 0», «apertura con saldo inventado». Test `validarMontoApertura` en `tests/caja-logica.test.js`. `base-de-datos/20-caja-arqueo.sql:57` (paso 6); `sistema/js/app.js:617`; `sistema/js/pos.js:1123` | — |
-| RF-002-02 | ✅ Cumple | Tests «app apertura», «app cierre», «pos apertura» y «pos cierre» de `tests/caja.test.js`, y `tests/caja-logica.test.js`. `app.js:617` y `:808`; `pos.js:1123` y `:1187`. El autor vio el mensaje con `1e` en las dos pantallas; falta el campo vacío en el punto de venta (prueba 3) | — |
-| RF-002-03 | 🟡 Prueba manual pendiente | La base está comprobada: `caja-guard.sql`, «doble apertura con otro monto» y «con el mismo monto», con el texto exacto. Falta ver el mensaje en pantalla con dos pantallas (prueba 4). `app.js:645`; `pos.js:1147`; `20-caja-arqueo.sql:32` | — |
+| RF-002-02 | ✅ Cumple | Tests «app apertura», «app cierre», «pos apertura» y «pos cierre» de `tests/caja.test.js`, y `tests/caja-logica.test.js`. `app.js:617` y `:808`; `pos.js:1123` y `:1187`. El autor vio el mensaje con `1e` en las dos pantallas; el autor informó que dio bien en `pointer-demo` (prueba 3), con el campo vacío incluido | — |
+| RF-002-03 | ✅ Cumple | La base está comprobada: `caja-guard.sql`, «doble apertura con otro monto» y «con el mismo monto», con el texto exacto. El autor informó que dio bien en `pointer-demo` (prueba 4). `app.js:645`; `pos.js:1147`; `20-caja-arqueo.sql:32` | — |
 | RF-002-04 | ✅ Cumple | Tests «app cierre: RF-002-04» y «pos cierre: RF-002-04»; `calcularVistaPrevia` en `tests/caja-logica.test.js`. `app.js:794`; `pos.js:1112`. El autor lo comprobó en local, con y sin red, en las dos pantallas | — |
 | RF-002-05 | ✅ Cumple | `caja-guard.sql`: «cierre con diferencia inventada», «sin mandar diferencia», «con contado 0», «sin contado». `20-caja-arqueo.sql:64` (paso 7). Con cierres reales, el autor obtuvo 100,00 desde la sección Caja y −50,00 desde el punto de venta | — |
 | RF-002-06 | ✅ Cumple | `caja-guard.sql`: «apertura negativa», «cierre con contado negativo», «cierre con un saldo negativo anterior», con los dos roles. `20-caja-arqueo.sql:51` (paso 5) | — |
-| RF-002-07 | 🟡 Prueba manual pendiente | La base está comprobada: `caja-guard.sql`, «segundo cierre» y seis pruebas de «caja cerrada», con el texto exacto y con los dos roles. Falta ver el mensaje en pantalla con dos pantallas (prueba 5). `20-caja-arqueo.sql:21`; `app.js:833`; `pos.js:1209` | — |
-| RF-002-08 | 🟡 Prueba manual pendiente | Tests «app resumen» y «pos resumen»; `armarResumenCierre` y `describirDiferencia` en `tests/caja-logica.test.js`. `app.js:877` y `:901`; `pos.js:1261`. El autor lo comprobó en local con un escaneo simulado; falta el lector físico (prueba 6) | — |
+| RF-002-07 | ✅ Cumple | La base está comprobada: `caja-guard.sql`, «segundo cierre» y seis pruebas de «caja cerrada», con el texto exacto y con los dos roles. El autor informó que dio bien en `pointer-demo` (prueba 5). `20-caja-arqueo.sql:21`; `app.js:833`; `pos.js:1209` | — |
+| RF-002-08 | ✅ Cumple | Tests «app resumen» y «pos resumen»; `armarResumenCierre` y `describirDiferencia` en `tests/caja-logica.test.js`. `app.js:877` y `:901`; `pos.js:1261`. El autor lo comprobó en local con un escaneo simulado. El autor informó que dio bien en `pointer-demo` (prueba 6) | — |
 
 ## Constitución
 
@@ -40,14 +40,14 @@ Fecha: 2026-11-03 · Verificado por: agente (skill verificar-criterios) · Revis
 | P4 · Tests | ✅ | Los 8 RF son de prioridad alta y cada uno nombra su test. Cada commit se hizo con `npm test` en verde |
 | P5 · Seguridad | ✅ | Sin secretos en el diff: la única coincidencia es el patrón dentro de `tests/caja.test.js`. Sin cambios de RLS: ninguna línea con `POLICY` en el diff de `base-de-datos/` |
 | P6 · Idioma | ✅ con observación | Los textos de la spec están letra por letra. `Apertura de caja invalida` queda sin tilde en la base, igual que antes, y `interpretarErrorCaja` lo reemplaza: no se muestra |
-| P7 · Accesibilidad | ❌ Observación 1 y 2 | Ver abajo. Tampoco se probó el resumen a 360 px (prueba 8) |
-| P8 · Uso de la IA | 🟡 Observación 3 | El autor aprobó cada tarea. Faltan registros en `PROMPTS.md` |
+| P7 · Accesibilidad | ✅ con observación 2 | Contraste corregido en la T28 y publicado. El autor informó que el resumen dio bien a 360 px (prueba 8). Lighthouse no se corrió en esta funcionalidad |
+| P8 · Uso de la IA | ✅ | El autor aprobó cada tarea. Los errores de esta funcionalidad están en `PROMPTS.md`: E-07 a E-11 |
 
 ### Observaciones
 
-1. **Contraste del resultado (P7, del código):** contra el fondo blanco, `--color-success` da unos 2,5:1, por debajo del mínimo de 3:1 para texto grande. `--color-danger` da unos 3,8:1: alcanza para el importe, que es grande, pero no para el texto de 16 px, que pide 4,5:1. Afecta a «Sobrante» y «Faltante» en las dos pantallas. Calculado con los colores de `styles.css`, sin Lighthouse. Las palabras se leen igual distinguiendo el resultado, pero con poco contraste.
+1. **Contraste del resultado (P7, del código):** contra el fondo blanco, `--color-success` da unos 2,5:1, por debajo del mínimo de 3:1 para texto grande. `--color-danger` da unos 3,8:1: alcanza para el importe, que es grande, pero no para el texto de 16 px, que pide 4,5:1. Afecta a «Sobrante» y «Faltante» en las dos pantallas. Calculado con los colores de `styles.css`, sin Lighthouse. **Corregido en la T28:** texto oscuro sobre `--color-success-light` y `--color-danger-light`.
 2. **La X del modal de caja del punto de venta no tiene `aria-label` (P7, ya estaba):** `sistema/pos.html:255`. La spec 002 no la tocó; en el dashboard sí lo tiene.
-3. **Errores de la IA sin registrar (P8):** la comprobación pide que cada error de la IA quede en `PROMPTS.md`, y en esta funcionalidad solo está E-07. Faltan, por lo menos, dos: el script no tenía pruebas para los pasos 8 y 9 hasta la T13, y un test de la T19 falló por un espacio mal pedido. El agente los consideró fuera de lugar en la T25; leyendo P8, corresponde registrarlos.
+3. **Errores de la IA sin registrar (P8):** la comprobación pide que cada error de la IA quede en `PROMPTS.md`, y en esta funcionalidad solo está E-07. Faltan, por lo menos, dos: el script no tenía pruebas para los pasos 8 y 9 hasta la T13, y un test de la T19 falló por un espacio mal pedido. **Corregido:** E-08 a E-11.
 4. **Reapertura con un negativo guardado:** si una caja cerrada ya tiene `saldo_inicial` negativo, se puede reabrir con ese mismo valor, porque RF-002-06 y el paso 5 solo miran si el valor cambia. El guard viejo se lo frenaba al empleado. Hoy la base no tiene ese dato, y no es un incumplimiento de la spec.
 5. **Clic adentro y después afuera en el modal de caja del punto de venta (ya estaba):** el modal no se cierra, porque el primer clic consume el listener `{ once: true }`. Fuera del alcance de la spec 002.
 
@@ -57,18 +57,18 @@ Fecha: 2026-11-03 · Verificado por: agente (skill verificar-criterios) · Revis
 - [x] `npm test` termina en verde, con los tests de `caja-logica.js` en `tests/`. *265 de 265.*
 - [x] `tests/sql/` comprueba, en la base de Pointer, que una diferencia inventada se descarta, que un negativo y un saldo inventado se rechazan con los dos roles y que una caja cerrada no cambia. *T14. Se deshace con un error a propósito en lugar de un `ROLLBACK` escrito (D7).*
 - [x] `tests/sql/` comprueba, con el `cajas_guard` nuevo, que `crear_venta` y `cancelar_venta` funcionan con la caja abierta y que el `UPDATE cajas` de `90-reinicio-total.sql` sigue pasando. *T14; un test exige que el `UPDATE` sea igual al del archivo.*
-- [ ] En `pointer-demo`: abrir con $1.000, vender $500 en efectivo y $300 por transferencia, y cerrar con $1.450 contados. *Pendiente: prueba 1.*
-- [ ] Lo mismo, abriendo y cerrando desde la sección Caja y desde el punto de venta. *Pendiente: prueba 1.*
-- [ ] Cerrar con el contado vacío muestra el esperado y «Cerrada sin arqueo», y deja `diferencia` en `null`. *Visto en local en las dos pantallas; falta `pointer-demo`: prueba 2.*
-- [ ] En Chrome, `1e` en el contado no cierra la caja y muestra el mensaje, en las dos pantallas. *Visto en local; falta `pointer-demo`: prueba 3.*
-- [ ] Abrir desde una segunda pantalla sin actualizar no cambia el saldo. *Base comprobada; falta la pantalla: prueba 4.*
+- [x] En `pointer-demo`: abrir con $1.000, vender $500 en efectivo y $300 por transferencia, y cerrar con $1.450 contados. *Informado por el autor; el agente vio `diferencia` −50 en una corrida.*
+- [x] Lo mismo, abriendo y cerrando desde la sección Caja y desde el punto de venta. *Informado por el autor: prueba 1.*
+- [x] Cerrar con el contado vacío muestra el esperado y «Cerrada sin arqueo», y deja `diferencia` en `null`. *Informado por el autor: prueba 2.*
+- [x] En Chrome, `1e` en el contado no cierra la caja y muestra el mensaje, en las dos pantallas. *Informado por el autor: prueba 3.*
+- [x] Abrir desde una segunda pantalla sin actualizar no cambia el saldo. *Base comprobada; pantalla informada por el autor: prueba 4.*
 - [x] Ninguna política de RLS cambió. *Ninguna línea con `POLICY` en el diff de `base-de-datos/`, y un test lo exige en la migración.*
-- [ ] Los mensajes aparecen en voseo, con tildes y tal cual están escritos acá. *Los textos coinciden en el código; falta verlos todos en pantalla.*
+- [x] Los mensajes aparecen en voseo, con tildes y tal cual están escritos acá. *Los textos coinciden en el código, y el autor informó que las pruebas dieron bien.*
 - [x] `caja-logica.js` está cargado en `dashboard.html`, `pos.html` y `sw.js`, y `CACHE_VERSION` subió. *`dashboard.html:202`, `pos.html:272`, `sw.js:31`; el autor comprobó el sitio publicado.*
 
-## Pruebas manuales pendientes
+## Pruebas manuales
 
-Todas en https://pointer-demo.netlify.app/. Hacen falta un usuario dueño y uno empleado.
+El autor informó el 2026-11-03 que estas 8 dieron bien, en https://pointer-demo.netlify.app/, con un usuario dueño y uno empleado.
 
 1. **Flujo completo, con los dos roles y desde las dos pantallas:** abrir con $1.000, vender $500 en efectivo y $300 por transferencia, y cerrar con $1.450. El resumen muestra esperado $1.500,00, contado $1.450,00 y «Faltante» de $50,00, y `cajas.diferencia` vale −50.
 2. **Sin contado:** cerrar con el campo vacío. Muestra el esperado y «Cerrada sin arqueo», y `diferencia` queda en `null`.
@@ -81,4 +81,4 @@ Todas en https://pointer-demo.netlify.app/. Hacen falta un usuario dueño y uno 
 
 ## Conclusión
 
-5 de 8 RF cumplen, 3 tienen una prueba manual pendiente y ninguno está incumplido. Hay un problema de accesibilidad que resolver en el código (observación 1) y registros que faltan en `PROMPTS.md` (observación 3). Para decidir si termina la funcionalidad, faltan las 8 pruebas manuales y la decisión del autor sobre las observaciones.
+8 de 8 RF cumplen y no quedan pruebas pendientes. El contraste (observación 1) y los registros de `PROMPTS.md` (observación 3) están corregidos; las observaciones 2, 4 y 5 quedan como mejoras, fuera de esta spec. El autor la dio por terminada el 2026-11-03.
