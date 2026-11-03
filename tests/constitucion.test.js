@@ -94,7 +94,7 @@ test('marca: index.html y el aviso de bloqueo cargan las variables de styles.css
 const PAGINAS_SEO = {
     'login.html': ['Ingresar · Pointer', 'Sistema de ventas, stock y caja para kioscos. Ingresá con tu usuario.'],
     'dashboard.html': ['Pointer · Panel', 'Panel de gestión del kiosco.'],
-    'pos.html': ['Pointer · Panel', 'Panel de gestión del kiosco.'],
+    'pos.html': ['Pointer · Punto de venta', 'Panel de gestión del kiosco.'],
     'index.html': ['Pointer', 'Redirige a login o panel.'],
 };
 
@@ -116,6 +116,8 @@ test('nombre: el ícono de cada pantalla lleva la inicial de Pointer', () => {
 });
 
 test('seo: cada página tiene el título y la descripción de 09-SEO.md', () => {
+    const titulos = Object.values(PAGINAS_SEO).map(([titulo]) => titulo);
+    assert.equal(new Set(titulos).size, titulos.length, 'Hay títulos repetidos');
     for (const [pagina, [titulo, descripcion]] of Object.entries(PAGINAS_SEO)) {
         const html = leer(path.join(SRC, pagina));
         assert.ok(html.includes(`<title>${titulo}</title>`), `${pagina}: falta el título «${titulo}»`);

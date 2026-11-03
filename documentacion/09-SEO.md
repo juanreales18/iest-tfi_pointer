@@ -7,7 +7,8 @@ Pointer es un **sistema interno**: casi todas sus pantallas están detrás de un
 | Página | Título | Descripción | Indexar |
 |---|---|---|---|
 | `login.html` | Ingresar · Pointer | Sistema de ventas, stock y caja para kioscos. Ingresá con tu usuario. | Sí |
-| `dashboard.html` y `pos.html` (aplicación) | Pointer · Panel | Panel de gestión del kiosco. | No (`noindex`) |
+| `dashboard.html` (aplicación) | Pointer · Panel | Panel de gestión del kiosco. | No (`noindex`) |
+| `pos.html` (aplicación) | Pointer · Punto de venta | Panel de gestión del kiosco. | No (`noindex`) |
 | `index.html` | Pointer | Redirige a login o panel. | No (`noindex`) |
 
 ```html
@@ -45,7 +46,7 @@ Una ruta desconocida recibe `index.html`, así que su protección es la meta `ro
 
 ## Lista de control
 
-- [ ] Título único en cada página
+- [x] Título único en cada página
 - [ ] Un solo `<h1>` por página
 - [x] `lang="es"` en todas las páginas
 - [x] `noindex` solo en las pantallas privadas (meta robots y cabecera `X-Robots-Tag` por ruta en `netlify.toml`); `login.html` se indexa
