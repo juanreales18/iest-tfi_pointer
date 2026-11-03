@@ -98,7 +98,7 @@
   - **Listo cuando:** los tres casos tienen su línea de resultado, y el de `crear_venta` comprueba que subió `saldo_actual`; `npm test` en verde.
   - **Commit:** `agrega las pruebas sql de ventas y reinicio con el guard`
 
-- [ ] T12 · **Autor:** correr las pruebas antes de migrar
+- [x] T12 · **Autor:** correr las pruebas antes de migrar
   - **RF:** 03, 05, 06, 07
   - **Archivos:** `memory.md` y, si hace falta, `tests/sql/caja-guard.sql`
   - **Hace:** el autor corre el script en el panel con el guard viejo. Comprueba dos cosas: que las pruebas detectan el problema y que el panel muestra el texto del error (D7). Si no lo muestra, se cambia cómo se informa, sin cambiar las pruebas.
