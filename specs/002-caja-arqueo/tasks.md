@@ -149,7 +149,7 @@
   - **Listo cuando:** `npm test` en verde (no queda la resta de la vista previa en `app.js`); en local, se ve el esperado y la diferencia al escribir; con la red cortada no aparece $0 ni un saldo viejo.
   - **Commit:** `usa la vista previa de caja-logica en la sección caja`
 
-- [ ] T19 · Sección Caja: `update` de cierre
+- [x] T19 · Sección Caja: `update` de cierre
   - **RF:** 02, 05, 07
   - **Archivos:** `sistema/js/app.js` (`modalCerrarCaja`), `tests/caja.test.js`
   - **Hace:** saca la lectura previa y la `diferencia` del `update`. Usa `validarContado` con `validity.badInput`. Pide la fila con `.select(...)`; vacía es error (D4). El movimiento y la auditoría usan esa fila. Ante un rechazo: muestra el texto y vuelve a leer. Sin internet: «No se pudo cerrar la caja», lo escrito queda y el botón vuelve (caso límite 10).

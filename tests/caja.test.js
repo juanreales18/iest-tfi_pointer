@@ -357,3 +357,37 @@ test('app cierre: D6 · con la caja ya cerrada avisa y no abre el modal', () => 
     assert.ok(aviso >= 0 && aviso < cierre.indexOf("openModal('Cerrar caja'"));
     assert.match(cierre, /toastWarning\(CajaLogica\.MENSAJES\.cajaYaCerrada\)/);
 });
+
+// ---------------------------------------------------------------
+// Sección Caja de app.js: update de cierre (RF-002-02, 05 y 07)
+// ---------------------------------------------------------------
+test('app cierre: RF-002-05 · no calcula ni manda la diferencia, ni lee la caja antes', () => {
+    const cierre = cierreEnApp();
+    assert.doesNotMatch(cierre, /cajaFreshCheck/);
+    assert.doesNotMatch(cierre, /diferencia:/);
+    assert.doesNotMatch(cierre, /Math\.round/);
+});
+
+test('app cierre: RF-002-02 · valida el contado con validity.badInput antes de mandar nada', () => {
+    const cierre = cierreEnApp();
+    assert.match(cierre, /CajaLogica\.validarContado\(campo\.value, campo\.validity\.badInput\)/);
+    assert.match(cierre, /id="contado-cierre-error"/);
+    assert.ok(cierre.indexOf("showFieldError('contado-cierre', validacion.mensaje)") < cierre.indexOf('.update('));
+    assert.doesNotMatch(cierre, /contadoRaw/);
+});
+
+test('app cierre: D4 · pide la fila, vacía es error, y el movimiento usa esa fila', () => {
+    const cierre = cierreEnApp();
+    assert.match(cierre, /\.select\('id, saldo_inicial, saldo_actual, saldo_contado, diferencia'\)/);
+    assert.match(cierre, /error \|\| !data\?\.length/);
+    assert.match(cierre, /const fila = data\[0\];/);
+    assert.match(cierre, /parseFloat\(fila\.saldo_actual\s+\?\? 0\)/);
+});
+
+test('app cierre: RF-002-07 y caso límite 10 · el rechazo vuelve a leer y sin red el botón vuelve', () => {
+    const cierre = cierreEnApp();
+    assert.match(cierre, /CajaLogica\.interpretarErrorCaja\(error, 'cerrar'\)/);
+    assert.match(cierre, /fallo\.releer/);
+    assert.match(cierre, /btn\.disabled = false;/);
+    assert.doesNotMatch(cierre, /toastError\('No se pudo cerrar la caja'\)/);
+});

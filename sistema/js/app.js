@@ -773,6 +773,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="form-group">
                 <label class="form-label">Efectivo contado en caja <span style="font-weight:400;color:var(--color-gray)">(opcional)</span></label>
                 <input type="number" id="contado-cierre" class="form-input" placeholder="0.00" min="0" step="0.01">
+                <span class="field-error" id="contado-cierre-error"></span>
                 <span class="form-hint" id="esperado-hint">${textoEsperado}</span>
             </div>
             <div class="form-group" style="margin-bottom:0">
@@ -801,53 +802,52 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Evitar doble click
             if (btn.disabled) return;
-            btn.disabled = true;
-            btn.textContent = 'Cerrando...';
 
-            // Obtener valores frescos de la DB (evita usar datos desactualizados)
-            const { data: cajaFreshCheck } = await window._supabase
-                .from('cajas')
-                .select('id, estado, saldo_actual, saldo_inicial')
-                .eq('id', cajaData.id)
-                .single();
-
-            if (!cajaFreshCheck || cajaFreshCheck.estado !== 'abierta') {
-                closeModal();
-                toastWarning('La caja ya fue cerrada');
-                await renderCaja(area);
-                await loadCajaStatus();
+            clearFieldErrors('modal-body');
+            const campo = document.getElementById('contado-cierre');
+            const validacion = CajaLogica.validarContado(campo.value, campo.validity.badInput);
+            if (!validacion.valido) {
+                showFieldError('contado-cierre', validacion.mensaje);
                 return;
             }
 
-            const saldoActualFinal  = parseFloat(cajaFreshCheck.saldo_actual  ?? 0);
-            const saldoInicialFinal = parseFloat(cajaFreshCheck.saldo_inicial ?? 0);
-            const recaudadoFinal    = saldoActualFinal - saldoInicialFinal;
+            btn.disabled = true;
+            btn.textContent = 'Cerrando...';
 
             const notas = document.getElementById('notas-cierre').value.trim();
 
-            // Arqueo: efectivo contado vs. efectivo esperado
-            const contadoRaw = document.getElementById('contado-cierre')?.value;
-            const contado    = (contadoRaw !== '' && contadoRaw != null && !isNaN(parseFloat(contadoRaw)))
-                ? parseFloat(contadoRaw) : null;
-            const diferencia = contado === null ? null : Math.round((contado - saldoActualFinal) * 100) / 100;
-
-            const { error } = await window._supabase
+            // La diferencia la calcula la base con el saldo del momento (RF-002-05)
+            const { data, error } = await window._supabase
                 .from('cajas')
                 .update({
                     estado:        'cerrada',
                     fecha_cierre:  new Date().toISOString(),
                     notas_cierre:  notas || null,
-                    saldo_contado: contado,
-                    diferencia:    diferencia,
+                    saldo_contado: validacion.contado,
                 })
-                .eq('id', cajaData.id);
+                .eq('id', cajaData.id)
+                .select('id, saldo_inicial, saldo_actual, saldo_contado, diferencia');
 
-            if (error) {
-                toastError('No se pudo cerrar la caja');
-                btn.disabled = false;
-                btn.textContent = 'Cerrar caja';
+            // Un update bloqueado por RLS no da error: vuelve vacio (D4)
+            if (error || !data?.length) {
+                const fallo = CajaLogica.interpretarErrorCaja(error, 'cerrar');
+                toastError(fallo.mensaje);
+                if (fallo.releer) {
+                    closeModal();
+                    await renderCaja(area);
+                    await loadCajaStatus();
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Cerrar caja';
+                }
                 return;
             }
+
+            const fila = data[0];
+            const saldoActualFinal  = parseFloat(fila.saldo_actual  ?? 0);
+            const saldoInicialFinal = parseFloat(fila.saldo_inicial ?? 0);
+            const recaudadoFinal    = saldoActualFinal - saldoInicialFinal;
+            const diferencia        = CajaLogica.armarResumenCierre(fila).diferencia;
 
             // La base acepta monto 0 en apertura y cierre, asi que siempre se registra
             const { error: movErr } = await window._supabase
