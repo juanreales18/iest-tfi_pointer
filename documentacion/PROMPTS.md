@@ -48,4 +48,24 @@
 - **Cómo se detectó:** el autor ejecutó la consulta en el panel y pegó el error. No se cambió ningún dato.
 - **Cómo se corrigió:** la consulta pasó a `'public.cajas_guard()'::regprocedure` en `tasks.md`, en el mismo commit de la T01.
 
+### E-08 · Pruebas de la caja que no detectaban los pasos 8 y 9
+- **Qué hizo mal:** escribió `tests/sql/caja-guard.sql` sin ninguna prueba que distinguiera lo que puede el dueño de lo que no puede el empleado. Sin los pasos 8 y 9 del guard, el script seguía dando todo verde.
+- **Cómo se detectó:** el propio agente, en la T13, al sacar cada paso del guard de a uno en PGlite. El autor no llegó a correrlo en ese estado.
+- **Cómo se corrigió:** el script sumó 7 corridas, y sin esos pasos ahora fallan. Los pasos 1, 2 y 4 a 7 se midieron antes de sumarlas y no se volvieron a medir.
+
+### E-09 · Test mal escrito en la T19 de la spec 002
+- **Qué hizo mal:** el test pedía un solo espacio en `fila.saldo_actual ?? 0`, y el código alinea con dos, como el resto del archivo. Además, el primer arreglo con `sed` no cambió la línea y dio otra corrida en rojo.
+- **Cómo se detectó:** `npm test` siguió en rojo después de escribir el código. El agente leyó el mensaje real del test.
+- **Cómo se corrigió:** el test acepta la alineación. No cambió el código ni se hizo commit en rojo.
+
+### E-10 · Poco contraste en el resumen de cierre
+- **Qué hizo mal:** en la T20 usó `--color-success` y `--color-danger` como color de texto sobre blanco. Dan unos 2,5:1 y 3,8:1, por debajo de lo que pide P7. Lo mencionó como algo para mirar, sin calcularlo.
+- **Cómo se detectó:** el propio agente, en la verificación de la T27. El autor había aprobado la tarea sin que el contraste estuviera calculado.
+- **Cómo se corrigió:** el resultado pasó a texto oscuro sobre `--color-success-light` y `--color-danger-light`, en la T28.
+
+### E-11 · Decir que estos errores no se registraban
+- **Qué hizo mal:** en la T25 le dijo al autor que `PROMPTS.md` no correspondía porque el autor no había marcado errores. P8 pide registrar cada error de la IA, lo detecte quien lo detecte.
+- **Cómo se detectó:** el propio agente, al revisar P8 en la T27.
+- **Cómo se corrigió:** se registraron E-08 a E-11. `AGENTS.md` sigue diciendo «que el autor detecte», y eso llevó a la confusión; P8 es más amplio y manda, así que el agente también anota los que detecta solo.
+
 > Durante la Actividad 2 se agregan los errores nuevos con el mismo formato.
