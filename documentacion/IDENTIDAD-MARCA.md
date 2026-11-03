@@ -7,7 +7,7 @@
 | Elemento | Definición |
 |---|---|
 | **Nombre** | Pointer |
-| **Eslogan** | *A confirmar por el autor* (propuesta: "Cada venta, en su lugar.") |
+| **Eslogan** | «Cada venta, en su lugar.» |
 | **Misión** | Que cualquier kiosquero pueda vender, controlar su stock y cerrar la caja de forma rápida y segura, sin planillas ni cuadernos. |
 | **Visión** | Ser el sistema de gestión de referencia para kioscos y comercios chicos del interior de Argentina. |
 | **Personalidad** | Rápida, práctica, confiable y cercana. |
