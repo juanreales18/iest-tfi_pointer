@@ -48,7 +48,7 @@ Se diseña **desde 360 px** (celular) hacia arriba. Todas las imágenes tienen `
 
 ## P8 · Uso responsable de la IA
 
-La IA **propone; la persona decide**. Ningún código, texto o imagen generado con IA entra al repositorio sin que el autor lo haya leído, entendido y aprobado. Nunca se pegan en un prompt datos personales reales, contraseñas ni claves. Toda pieza generada con IA lleva la leyenda **«Generado con IA»** y su ficha en `multimedia/FICHAS-IA.md`. No se generan imágenes, voces ni videos de personas reales.
+La IA **propone; la persona decide**. Ningún código, texto o imagen generado con IA entra al repositorio sin que el autor lo haya leído, entendido y aprobado. Nunca se pegan en un prompt datos personales reales, contraseñas ni claves. Toda pieza generada con IA se declara como tal y tiene su ficha en `multimedia/FICHAS-IA.md`: en el sitio, con una sola nota visible al pie de la página que dice qué se hizo con IA y con qué herramientas; en el informe y en el spot, con su leyenda **«Generado con IA»**. No se generan imágenes, voces ni videos de personas reales.
 
 **Comprobación:** cada pedido importante y cada error de la IA quedan en `documentacion/PROMPTS.md`; cada pieza de `multimedia/` tiene su ficha; la declaración firmada está en `documentacion/DECLARACION-IA.md`.
 

@@ -26,12 +26,12 @@
 | R3 | **Datos inventados** en gráficos o en el informe | Riesgo propio de pedirle números a una IA | Los gráficos se arman con datos del repositorio y llevan la fuente al pie; cuando la fuente estaba mal escrita, se corrigió | `multimedia/graficos/`, Figuras 5 a 8 de `FICHAS-IA.md` |
 | R4 | **Voz sintética y licencias** | La voz de ElevenLabs suena como una persona real; el plan gratuito no permite uso comercial | Voz de catálogo (sin clonar a nadie), atribución «elevenlabs.io» en el video y en YouTube, uso académico y no monetizado | Cierre del spot, Figura 2 de `FICHAS-IA.md` |
 | R5 | **Sesgo en la representación de personas** | En el spot el kiosquero es un hombre y quien compra es una mujer, lo que repite un estereotipo del comercio de barrio | Se registró al revisar el spot. En las imágenes fotorrealistas se representan dueñas y dueños de kiosco de distintas edades | Imágenes de la Actividad 4 *(completar al producirlas)* |
-| R6 | **Que el público no sepa qué hizo la IA** | Piezas que parecen hechas a mano o grabadas | Leyenda «Generado con IA» en cada pieza, ficha en `FICHAS-IA.md` y etiqueta de contenido sintético en YouTube | Epígrafes del sitio, cierre del spot, descripción del video |
+| R6 | **Que el público no sepa qué hizo la IA** | Piezas que parecen hechas a mano o grabadas | Nota de transparencia al pie del sitio, leyenda «Generado con IA» en el spot y el informe, ficha en `FICHAS-IA.md` y etiqueta de contenido sintético en YouTube | Nota al pie del sitio, cierre del spot, descripción del video |
 
 ## Dónde están las etiquetas «Generado con IA»
 
 - **Spot:** leyenda en la escena final y en la descripción de YouTube, con la etiqueta de contenido alterado o sintético activada.
-- **Sitio:** epígrafe debajo de cada pieza en la página de presentación, copiado de su ficha.
+- **Sitio:** una sola nota al pie de la página de presentación, que dice qué se hizo con IA y con qué herramientas, incluida la atribución a elevenlabs.io.
 - **Informe:** epígrafe de cada figura, con el número de ficha.
 
 Declaro que leí, revisé y comprendo todo el código y el contenido entregado; que las piezas generadas con IA están identificadas como tales; que no utilicé la imagen, la voz ni los datos de personas reales sin su consentimiento; y que puedo explicar y defender cada decisión tomada en este trabajo.

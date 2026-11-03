@@ -67,6 +67,7 @@
 | 2026-11 | Eslogan definitivo: «Cada venta, en su lugar.» | Decisión del autor |
 | 2026-11 | `/login.html` no redirige a `/login`: solo lleva `<link rel="canonical">` hacia `/login` | Decisión del autor: una 301 podría romper el login, porque `sw.js` guarda `/login.html` en caché y el código navega ahí |
 | 2026-11 | La CSP va ruta por ruta y no en `/*`; `index.html` la lleva también en una meta para las rutas desconocidas; solo `/presentacion` permite `youtube-nocookie.com` | Pedido del autor: ajustarla solo para esa página. Netlify no documenta que una regla específica reemplace a `/*`; si se sumaran, el navegador aplicaría las dos y bloquearía el reproductor |
+| 2026-11 | En el sitio, la transparencia va en una sola nota al pie de la presentación, no debajo de cada pieza (cambia P8) | Decisión del autor: pidió sacar las leyendas de las piezas. La nota mantiene el aviso y la atribución obligatoria a elevenlabs.io |
 | 2026-11 | Las miniaturas de los videos se sirven desde `sistema/img/presentacion/` | Así YouTube no recibe ningún pedido hasta el clic |
 | 2026-11 | «Reintentar» y el asterisco de obligatorio tienen variables propias (`--color-reintentar-*`, `--color-requerido`) con sus valores de antes | Decisión del autor: `#f5a623`, `#111` y `red` no están en la paleta y no había que cambiar ningún color |
 

@@ -10,6 +10,7 @@
 | P-02 | 2026-10 | Caja | «Hice una venta por transferencia de $4.000 y la caja quedó en 0.» | La IA explicó que era por diseño (la caja cuenta solo efectivo) y propuso cambiar los textos; el autor eligió eso en lugar de cambiar la lógica. |
 | P-03 | 2026-10 | Reportes | «Corregí los descuentos en Rentabilidad.» | Ventas netas = brutas − descuentos; la IA además cambió la consulta para no armar listas de ids en la URL. |
 | P-04 | 2026-10 | Actividad 1 | «Empecemos por la actividad 1, ya tenemos el sistema.» | Se armó el repositorio con constitución, arnés, comandos y skills. El autor eligió el nombre Pointer y Claude Code + VS Code. |
+| P-06 | 2026-11-03 | Actividad 3 | «Borrá las leyendas de IA de la página de presentación.» | La IA frenó porque chocaba con P8, la Declaración y la atribución que pide ElevenLabs, y propuso una sola nota al pie. El autor la eligió. |
 | P-05 | 2026-11-03 | Actividad 3 | «Página de presentación de Pointer. Hacela de una, sin plan previo ni preguntas: si algo no está claro, decidí lo más razonable y anotalo al final.» | La IA hizo `presentacion.html` con un commit y sin spec, como pidió el autor. La lista de lo que decidió sola y de lo que el autor tiene que revisar queda en `memory.md`. |
 
 ## Errores de la IA
