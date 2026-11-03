@@ -177,7 +177,7 @@
   - **Listo cuando:** `npm test` en verde; en local, con la red cortada se ve el mensaje y nunca $0.
   - **Commit:** `usa la vista previa de caja-logica en el punto de venta`
 
-- [ ] T23 · POS: `update` de cierre
+- [x] T23 · POS: `update` de cierre
   - **RF:** 02, 05, 07
   - **Archivos:** `sistema/js/pos.js` (`openCajaModal`), `tests/caja.test.js`
   - **Hace:** igual que T19. Saca las dos lecturas previas. Sin internet, `POS.cajaAbierta` no cambia y «Cobrar» no se bloquea (caso límite 10).

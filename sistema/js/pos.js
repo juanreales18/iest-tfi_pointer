@@ -1061,6 +1061,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="form-group">
                     <label class="form-label">Efectivo contado en caja <span style="font-weight:400;color:var(--color-gray)">(opcional)</span></label>
                     <input type="number" id="pos-contado" class="form-input" placeholder="0.00" min="0" step="0.01">
+                    <span class="field-error" id="pos-contado-error"></span>
                     <span class="form-hint" id="pos-esperado-hint">${textoEsperado}</span>
                 </div>
                 <div class="form-group">
@@ -1173,52 +1174,49 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Evitar doble click
             if (btn.disabled) return;
+
+            clearFieldErrors('modal-caja-body');
+            const campo = document.getElementById('pos-contado');
+            const validacion = CajaLogica.validarContado(campo.value, campo.validity.badInput);
+            if (!validacion.valido) {
+                showFieldError('pos-contado', validacion.mensaje);
+                return;
+            }
+
             btn.disabled = true;
             btn.textContent = 'Cerrando...';
 
-            // Verificar que la caja siga abierta antes de ejecutar
-            const { data: estadoActual } = await window._supabase
-                .from('cajas').select('estado').eq('id', POS.cajaId).single();
-
-            if (estadoActual?.estado !== 'abierta') {
-                closePOSCajaModal();
-                toastWarning('La caja ya fue cerrada');
-                POS.cajaAbierta = false;
-                await cargarCaja();
-                calcularTotales();
-                return;
-            }
-
-            // Obtener saldo actual y saldo inicial para calcular solo lo recaudado
-            const { data: cajaData } = await window._supabase
-                .from('cajas').select('saldo_actual, saldo_inicial').eq('id', POS.cajaId).single();
-
-            const saldoActual  = parseFloat(cajaData?.saldo_actual  || 0);
-            const saldoInicial = parseFloat(cajaData?.saldo_inicial || 0);
-            const recaudado    = saldoActual - saldoInicial;
-
             const notas = document.getElementById('pos-notas-cierre')?.value.trim();
 
-            // Arqueo: efectivo contado vs. efectivo esperado
-            const contadoRaw = document.getElementById('pos-contado')?.value;
-            const contado    = (contadoRaw !== '' && contadoRaw != null && !isNaN(parseFloat(contadoRaw)))
-                ? parseFloat(contadoRaw) : null;
-            const diferencia = contado === null ? null : Math.round((contado - saldoActual) * 100) / 100;
-
-            const { error } = await window._supabase.from('cajas').update({
+            // La diferencia la calcula la base con el saldo del momento (RF-002-05)
+            const { data, error } = await window._supabase.from('cajas').update({
                 estado:        'cerrada',
                 fecha_cierre:  new Date().toISOString(),
                 notas_cierre:  notas || null,
-                saldo_contado: contado,
-                diferencia:    diferencia,
-            }).eq('id', POS.cajaId);
+                saldo_contado: validacion.contado,
+            }).eq('id', POS.cajaId).select('id, saldo_inicial, saldo_actual, saldo_contado, diferencia');
 
-            if (error) {
-                toastError('No se pudo cerrar la caja');
-                btn.disabled = false;
-                btn.textContent = 'Cerrar caja';
+            // Un update bloqueado por RLS no da error: vuelve vacio (D4).
+            // Sin internet la caja sigue abierta: POS.cajaAbierta no cambia (caso limite 10)
+            if (error || !data?.length) {
+                const fallo = CajaLogica.interpretarErrorCaja(error, 'cerrar');
+                toastError(fallo.mensaje);
+                if (fallo.releer) {
+                    closePOSCajaModal();
+                    await cargarCaja();
+                    calcularTotales();
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Cerrar caja';
+                }
                 return;
             }
+
+            const fila = data[0];
+            const saldoActual  = parseFloat(fila.saldo_actual  ?? 0);
+            const saldoInicial = parseFloat(fila.saldo_inicial ?? 0);
+            const recaudado    = saldoActual - saldoInicial;
+            const diferencia   = CajaLogica.armarResumenCierre(fila).diferencia;
 
             const { error: movErr } = await window._supabase.from('movimientos_caja').insert({
                 caja_id:         POS.cajaId,

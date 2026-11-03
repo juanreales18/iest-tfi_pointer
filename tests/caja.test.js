@@ -507,3 +507,44 @@ test('pos cierre: D6 · lee antes de abrir, y con la caja ya cerrada avisa y no 
     assert.ok(lectura >= 0 && lectura < aviso && aviso < abre);
     assert.match(MODAL_EN_POS, /toastWarning\(CajaLogica\.MENSAJES\.cajaYaCerrada\);\s+await cargarCaja\(\);\s+calcularTotales\(\);\s+return;/);
 });
+
+// ---------------------------------------------------------------
+// Punto de venta, pos.js: update de cierre (RF-002-02, 05 y 07)
+// ---------------------------------------------------------------
+const CIERRE_EN_POS = POS_JS.slice(POS_JS.indexOf('// Confirmar cierre'), POS_JS.indexOf('function closePOSCajaModal'));
+
+test('pos cierre: RF-002-05 · no calcula ni manda la diferencia, ni lee la caja antes', () => {
+    assert.doesNotMatch(CIERRE_EN_POS, /estadoActual/);
+    assert.doesNotMatch(CIERRE_EN_POS, /\.select\('estado'\)/);
+    assert.doesNotMatch(CIERRE_EN_POS, /\.select\('saldo_actual, saldo_inicial'\)/);
+    assert.doesNotMatch(CIERRE_EN_POS, /diferencia:/);
+    assert.doesNotMatch(CIERRE_EN_POS, /Math\.round/);
+});
+
+test('pos cierre: RF-002-02 · valida el contado con validity.badInput antes de mandar nada', () => {
+    assert.match(CIERRE_EN_POS, /CajaLogica\.validarContado\(campo\.value, campo\.validity\.badInput\)/);
+    assert.match(POS_JS, /id="pos-contado-error"/);
+    const mensaje = CIERRE_EN_POS.indexOf("showFieldError('pos-contado', validacion.mensaje)");
+    assert.ok(mensaje >= 0 && mensaje < CIERRE_EN_POS.indexOf('.update('));
+    assert.doesNotMatch(CIERRE_EN_POS, /contadoRaw/);
+});
+
+test('pos cierre: D4 · pide la fila, vacía es error, y el movimiento usa esa fila', () => {
+    assert.match(CIERRE_EN_POS, /\.select\('id, saldo_inicial, saldo_actual, saldo_contado, diferencia'\)/);
+    assert.match(CIERRE_EN_POS, /error \|\| !data\?\.length/);
+    assert.match(CIERRE_EN_POS, /const fila = data\[0\];/);
+    assert.match(CIERRE_EN_POS, /parseFloat\(fila\.saldo_actual\s+\?\? 0\)/);
+});
+
+test('pos cierre: RF-002-07 · el rechazo vuelve a leer con cargarCaja', () => {
+    assert.match(CIERRE_EN_POS, /CajaLogica\.interpretarErrorCaja\(error, 'cerrar'\)/);
+    const releer = CIERRE_EN_POS.slice(CIERRE_EN_POS.indexOf('fallo.releer'));
+    assert.match(releer, /closePOSCajaModal\(\);\s+await cargarCaja\(\);\s+calcularTotales\(\);/);
+});
+
+test('pos cierre: caso límite 10 · sin red el botón vuelve y POS.cajaAbierta no cambia', () => {
+    const fallo = CIERRE_EN_POS.slice(CIERRE_EN_POS.indexOf('error || !data?.length'), CIERRE_EN_POS.indexOf('const fila = data[0];'));
+    assert.match(fallo, /btn\.disabled = false;/);
+    assert.doesNotMatch(fallo, /POS\.cajaAbierta/);
+    assert.doesNotMatch(CIERRE_EN_POS, /toastError\('No se pudo cerrar la caja'\)/);
+});
