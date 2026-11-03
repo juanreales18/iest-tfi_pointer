@@ -285,7 +285,7 @@ function mostrarPantallaBloqueo(mensaje, sinConexion = false) {
 </head>
 <body>
     <div class="bloqueo-card">
-        <div class="bloqueo-logo">KioscoSystem</div>
+        <div class="bloqueo-logo">Pointer</div>
         <div class="bloqueo-icon">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2">

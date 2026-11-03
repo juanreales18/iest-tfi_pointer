@@ -89,6 +89,57 @@ test('marca: index.html y el aviso de bloqueo cargan las variables de styles.css
 });
 
 // ---------------------------------------------------------------
+// Nombre y SEO (documentacion/09-SEO.md)
+// ---------------------------------------------------------------
+const PAGINAS_SEO = {
+    'login.html': ['Ingresar · Pointer', 'Sistema de ventas, stock y caja para kioscos. Ingresá con tu usuario.'],
+    'dashboard.html': ['Pointer · Panel', 'Panel de gestión del kiosco.'],
+    'pos.html': ['Pointer · Panel', 'Panel de gestión del kiosco.'],
+    'index.html': ['Pointer', 'Redirige a login o panel.'],
+};
+
+test('nombre: ninguna pantalla muestra el nombre viejo', () => {
+    const conNombreViejo = archivos(SRC, ['.html', '.js'])
+        .filter((f) => /KioscoSystem|Kiosco Web/.test(leer(f)))
+        .map(relativo);
+    assert.deepEqual(conNombreViejo, [], `Nombre viejo en: ${conNombreViejo.join(', ')}`);
+    assert.match(leer(path.join(SRC, 'js', 'config.js')), /const APP_NAME\s*=\s*'Pointer';/);
+    assert.match(leer(path.join(SRC, 'dashboard.html')), /<span class="sidebar-logo-text">Pointer<\/span>/);
+    assert.match(leer(path.join(SRC, 'login.html')), /<h1 class="brand-title">Pointer<\/h1>/);
+    assert.match(leer(path.join(SRC, 'js', 'auth.js')), /<div class="bloqueo-logo">Pointer<\/div>/);
+});
+
+test('nombre: el ícono de cada pantalla lleva la inicial de Pointer', () => {
+    assert.match(leer(path.join(SRC, 'dashboard.html')), /<span class="sidebar-logo-icon">P<\/span>/);
+    assert.match(leer(path.join(SRC, 'login.html')), /<span class="brand-icon">P<\/span>/);
+    assert.match(leer(path.join(SRC, 'pos.html')), /<span class="pos-logo-icon">P<\/span>/);
+});
+
+test('seo: cada página tiene el título y la descripción de 09-SEO.md', () => {
+    for (const [pagina, [titulo, descripcion]] of Object.entries(PAGINAS_SEO)) {
+        const html = leer(path.join(SRC, pagina));
+        assert.ok(html.includes(`<title>${titulo}</title>`), `${pagina}: falta el título «${titulo}»`);
+        assert.ok(html.includes(`<meta name="description" content="${descripcion}">`), `${pagina}: falta la descripción`);
+    }
+});
+
+test('marca: cada página usa los favicons de Pointer, iguales a los de multimedia/marca', () => {
+    for (const tamano of ['32', '192']) {
+        const nombre = `favicon-${tamano}.png`;
+        const publicado = fs.readFileSync(path.join(SRC, 'img', nombre));
+        assert.ok(publicado.equals(fs.readFileSync(path.join(RAIZ, 'multimedia', 'marca', nombre))), `${nombre} es distinto`);
+        for (const pagina of Object.keys(PAGINAS_SEO)) {
+            const enlace = `<link rel="icon" type="image/png" sizes="${tamano}x${tamano}" href="img/${nombre}">`;
+            assert.ok(leer(path.join(SRC, pagina)).includes(enlace), `${pagina}: falta ${nombre}`);
+        }
+    }
+});
+
+test('accesibilidad: la X del modal de caja tiene aria-label', () => {
+    assert.match(leer(path.join(SRC, 'pos.html')), /id="modal-caja-close" aria-label="Cerrar"/);
+});
+
+// ---------------------------------------------------------------
 // P3 · Capas: las ventas solo se crean y anulan en la base
 // ---------------------------------------------------------------
 test('capas: no hay insert directo en ventas ni detalle_ventas', () => {

@@ -29,7 +29,7 @@
 
     if (!SUPABASE_URL || !SUPABASE_ANON) {
         console.error(
-            '[KioscoSystem] Credenciales de Supabase no configuradas.\n' +
+            '[Pointer] Credenciales de Supabase no configuradas.\n' +
             'Configura SUPABASE_URL y SUPABASE_ANON en las variables de entorno de Netlify,\n' +
             'o crea un archivo /js/env.js para desarrollo local.'
         );
@@ -43,7 +43,7 @@
 // =============================================================
 // CONSTANTES GLOBALES
 // =============================================================
-const APP_NAME    = 'KioscoSystem';
+const APP_NAME    = 'Pointer';
 const VERSION     = '1.0.0';
 const ITEMS_PAGE  = 20; // registros por pagina
 const TZ_AR      = '-03:00'; // Argentina no usa horario de verano
