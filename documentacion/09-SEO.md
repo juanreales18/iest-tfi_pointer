@@ -23,6 +23,10 @@ Pointer es un **sistema interno**: casi todas sus pantallas están detrás de un
 <meta name="robots" content="noindex, nofollow">
 ```
 
+Además, `sistema/netlify.toml` manda la cabecera `X-Robots-Tag: noindex, nofollow` por ruta: `/`, `/index.html`, `/dashboard`, `/dashboard.html`, `/pos` y `/pos.html`. Netlify sirve cada página con y sin `.html`, por eso van las dos.
+
+Una ruta desconocida recibe `index.html`, así que su protección es la meta `robots` de ese archivo: no hay que sacarla.
+
 ## Palabras clave
 
 | Tema | Palabras |
@@ -44,7 +48,7 @@ Pointer es un **sistema interno**: casi todas sus pantallas están detrás de un
 - [ ] Título único en cada página
 - [ ] Un solo `<h1>` por página
 - [x] `lang="es"` en todas las páginas
-- [x] `noindex` en las pantallas privadas (meta robots y cabecera `X-Robots-Tag` en `netlify.toml`)
+- [x] `noindex` solo en las pantallas privadas (meta robots y cabecera `X-Robots-Tag` por ruta en `netlify.toml`); `login.html` se indexa
 - [ ] Todas las imágenes con `alt`
 - [ ] Etiquetas semánticas (`header`, `nav`, `main`, `table`)
 - [ ] PageSpeed de 90 o más en la pantalla de ingreso

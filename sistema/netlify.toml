@@ -22,8 +22,6 @@
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
     # Politica de permisos (deshabilita APIs no usadas)
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-    # Que los buscadores no indexen el sistema (es privado de cada negocio)
-    X-Robots-Tag = "noindex, nofollow"
     # Politica de seguridad de contenido: solo se carga codigo del propio sitio y las
     # conexiones salen unicamente hacia Supabase. Se mantiene 'unsafe-inline' porque el
     # sistema usa scripts y estilos en linea (onclick, style=). Fuentes: Google Fonts.
@@ -36,6 +34,33 @@
   for = "/index.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+    X-Robots-Tag = "noindex, nofollow"
+
+# Las pantallas internas no se indexan; login.html si. Netlify tambien las sirve sin .html
+[[headers]]
+  for = "/"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/dashboard"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/dashboard.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/pos"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/pos.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
 
 # 3. Cache agresivo para assets estaticos (Esto está perfecto porque tienen nombres/rutas fijas)
 # Cache controlado para assets estaticos (Eliminamos 'immutable' y bajamos el tiempo)

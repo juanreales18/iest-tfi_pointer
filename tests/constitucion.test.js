@@ -135,6 +135,24 @@ test('marca: cada página usa los favicons de Pointer, iguales a los de multimed
     }
 });
 
+test('seo: solo las pantallas internas llevan noindex en su meta robots', () => {
+    const noindex = /<meta name="robots"\s+content="noindex, nofollow">/;
+    assert.doesNotMatch(leer(path.join(SRC, 'login.html')), /<meta name="robots"/);
+    // index.html también protege las rutas desconocidas: netlify.toml las sirve con ese archivo
+    for (const pagina of ['dashboard.html', 'pos.html', 'index.html']) {
+        assert.match(leer(path.join(SRC, pagina)), noindex, `${pagina}: falta noindex`);
+    }
+});
+
+test('seo: netlify.toml pone noindex por ruta y solo en las pantallas internas', () => {
+    const conNoindex = leer(path.join(SRC, 'netlify.toml'))
+        .split('[[headers]]')
+        .filter((bloque) => /^\s*X-Robots-Tag\s*=\s*"noindex, nofollow"/m.test(bloque))
+        .map((bloque) => bloque.match(/for\s*=\s*"([^"]+)"/)?.[1])
+        .sort();
+    assert.deepEqual(conNoindex, ['/', '/dashboard', '/dashboard.html', '/index.html', '/pos', '/pos.html']);
+});
+
 test('accesibilidad: la X del modal de caja tiene aria-label', () => {
     assert.match(leer(path.join(SRC, 'pos.html')), /id="modal-caja-close" aria-label="Cerrar"/);
 });
