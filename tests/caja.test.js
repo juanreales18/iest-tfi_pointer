@@ -213,3 +213,79 @@ test('carga: en el navegador deja CajaLogica en window', () => {
     vm.runInNewContext(leer('sistema', 'js', 'caja-logica.js'), { window: ventana });
     assert.equal(typeof ventana.CajaLogica.validarContado, 'function');
 });
+
+// ---------------------------------------------------------------
+// fijarModal (RF-002-08): corre el config.js real con un DOM falso
+// ---------------------------------------------------------------
+function elementoFalso() {
+    const clases = new Set();
+    const eventos = {};
+    return {
+        style: {},
+        classList: { add: (c) => clases.add(c), remove: (c) => clases.delete(c), contains: (c) => clases.has(c) },
+        addEventListener: (nombre, fn) => { eventos[nombre] = fn; },
+        clic(target) { eventos.click({ target: target || this }); },
+    };
+}
+
+function abrirConfig() {
+    const overlay = elementoFalso();
+    const cerrar = elementoFalso();
+    const elementos = { 'modal-overlay': overlay, 'modal-close': cerrar, modal: elementoFalso() };
+    let alCargar;
+    const documento = {
+        body: elementoFalso(),
+        querySelector: () => null,
+        getElementById: (id) => elementos[id] || null,
+        addEventListener: (nombre, fn) => { if (nombre === 'DOMContentLoaded') alCargar = fn; },
+    };
+    const contexto = vm.createContext({
+        window: {},
+        document: documento,
+        console: { error() {}, warn() {}, log() {} },
+        supabase: { createClient: () => ({}) },
+    });
+    vm.runInContext(leer('sistema', 'js', 'config.js'), contexto);
+    alCargar();
+    return { contexto, overlay, cerrar, abierto: () => overlay.classList.contains('open') };
+}
+
+test('fijarModal: sin fijar, la X y el clic afuera cierran como siempre', () => {
+    const { contexto, overlay, cerrar, abierto } = abrirConfig();
+    contexto.openModal('t', 'b');
+    cerrar.clic();
+    assert.equal(abierto(), false);
+    contexto.openModal('t', 'b');
+    overlay.clic();
+    assert.equal(abierto(), false);
+});
+
+test('fijarModal: fijado, la X y el clic afuera no lo cierran', () => {
+    const { contexto, overlay, cerrar, abierto } = abrirConfig();
+    contexto.openModal('t', 'b');
+    contexto.fijarModal();
+    cerrar.clic();
+    assert.equal(abierto(), true);
+    overlay.clic();
+    assert.equal(abierto(), true);
+});
+
+test('fijarModal: closeModal, que es lo que hace «Listo», lo cierra igual y lo reinicia', () => {
+    const { contexto, cerrar, abierto } = abrirConfig();
+    contexto.openModal('t', 'b');
+    contexto.fijarModal();
+    contexto.closeModal();
+    assert.equal(abierto(), false);
+    contexto.openModal('t', 'b');
+    cerrar.clic();
+    assert.equal(abierto(), false);
+});
+
+test('fijarModal: openModal lo reinicia, aunque el anterior no se haya cerrado', () => {
+    const { contexto, overlay, abierto } = abrirConfig();
+    contexto.openModal('t', 'b');
+    contexto.fijarModal();
+    contexto.openModal('otro', 'b');
+    overlay.clic();
+    assert.equal(abierto(), false);
+});

@@ -128,7 +128,7 @@
   - **Listo cuando:** `npm test` en verde; en local, las dos pantallas abren sin errores en la consola y `window.CajaLogica` existe.
   - **Commit:** `carga caja-logica.js en la sección caja y el punto de venta`
 
-- [ ] T16 · `fijarModal` en `config.js`
+- [x] T16 · `fijarModal` en `config.js`
   - **RF:** 08
   - **Archivos:** `sistema/js/config.js`, `tests/caja.test.js`
   - **Hace:** con el modal fijado, la X y el clic afuera no lo cierran. `openModal` y `closeModal` lo vuelven a su estado normal.

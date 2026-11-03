@@ -289,6 +289,9 @@ function toastWarning(msg) { toast(msg, 'warning'); }
 // UTILIDADES: MODAL GLOBAL (solo para dashboard.html)
 // =============================================================
 
+// Con el modal fijado, la X y el clic afuera no lo cierran
+let modalFijado = false;
+
 /**
  * Abrir modal global
  * @param {string} title
@@ -300,6 +303,8 @@ function openModal(title, bodyHtml, footerHtml = '', size = '') {
     const overlay = document.getElementById('modal-overlay');
     const modal   = document.getElementById('modal');
     if (!overlay || !modal) return;
+
+    modalFijado = false;
 
     // Reset tamanio
     modal.className = 'modal ' + size;
@@ -318,8 +323,17 @@ function openModal(title, bodyHtml, footerHtml = '', size = '') {
 function closeModal() {
     const overlay = document.getElementById('modal-overlay');
     if (!overlay) return;
+    modalFijado = false;
     overlay.classList.remove('open');
     document.body.style.overflow = '';
+}
+
+/**
+ * Fijar el modal abierto: solo se cierra con closeModal (el boton de adentro).
+ * openModal y closeModal lo vuelven a su estado normal
+ */
+function fijarModal() {
+    modalFijado = true;
 }
 
 // Cerrar modal al hacer click en overlay o boton X
@@ -329,11 +343,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (overlay) {
         overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) closeModal();
+            if (e.target === overlay && !modalFijado) closeModal();
         });
     }
     if (closeBtn) {
-        closeBtn.addEventListener('click', closeModal);
+        closeBtn.addEventListener('click', () => {
+            if (!modalFijado) closeModal();
+        });
     }
 });
 
