@@ -324,3 +324,36 @@ test('app apertura: RF-002-03 · ante un rechazo cierra, muestra el texto y vuel
     assert.match(ABRIR_EN_APP, /fallo\.releer/);
     assert.doesNotMatch(ABRIR_EN_APP, /toastError\('No se pudo abrir la caja'\)/);
 });
+
+// ---------------------------------------------------------------
+// Sección Caja de app.js: modal de cierre (RF-002-04, D6)
+// ---------------------------------------------------------------
+function cierreEnApp() {
+    const inicio = APP.indexOf('async function modalCerrarCaja');
+    return APP.slice(inicio, APP.indexOf('\n    }\n', inicio));
+}
+
+test('app cierre: RF-002-04 · la vista previa usa calcularVistaPrevia y no resta en la pantalla', () => {
+    const cierre = cierreEnApp();
+    assert.match(cierre, /CajaLogica\.calcularVistaPrevia\(/);
+    assert.doesNotMatch(cierre, /parseFloat\(v\)/);
+});
+
+test('app cierre: caso límite 10 · sin lectura avisa y no calcula con un saldo viejo', () => {
+    const cierre = cierreEnApp();
+    assert.match(cierre, /CajaLogica\.MENSAJES\.esperadoNoLeido/);
+    assert.match(cierre, /calcularVistaPrevia\(esperadoLeido \? cajaFresh\.saldo_actual : null,/);
+});
+
+test('app cierre: RF-002-04 · sin lectura no se muestran el resumen del turno ni el desglose', () => {
+    const cierre = cierreEnApp();
+    assert.match(cierre, /\$\{esperadoLeido \? `\s*<!-- Resumen del turno -->/);
+    assert.ok(cierre.indexOf('<!-- Desglose por metodo de pago -->') < cierre.indexOf("` : ''}"));
+});
+
+test('app cierre: D6 · con la caja ya cerrada avisa y no abre el modal', () => {
+    const cierre = cierreEnApp();
+    const aviso = cierre.indexOf("cajaFresh?.estado === 'cerrada'");
+    assert.ok(aviso >= 0 && aviso < cierre.indexOf("openModal('Cerrar caja'"));
+    assert.match(cierre, /toastWarning\(CajaLogica\.MENSAJES\.cajaYaCerrada\)/);
+});

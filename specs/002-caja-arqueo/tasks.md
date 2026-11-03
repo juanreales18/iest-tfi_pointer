@@ -142,7 +142,7 @@
   - **Listo cuando:** `npm test` en verde (`app.js` ya no usa `parseFloat` en `saldo-apertura`); en local, vacío y `1e` muestran «Ingresá un monto de 0 o más» y `0` abre.
   - **Commit:** `valida la apertura de caja en la sección caja`
 
-- [ ] T18 · Sección Caja: modal de cierre y vista previa
+- [x] T18 · Sección Caja: modal de cierre y vista previa
   - **RF:** 04
   - **Archivos:** `sistema/js/app.js` (`modalCerrarCaja`), `tests/caja.test.js`
   - **Hace:** usa `calcularVistaPrevia`. Lectura fallida: «No se pudo leer el efectivo esperado. Revisá la conexión.», sin vista previa y sin «Resumen del turno». Caja ya cerrada: avisa, no abre el modal y actualiza la pantalla (D6).

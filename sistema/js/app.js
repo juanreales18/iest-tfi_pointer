@@ -682,6 +682,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             .eq('id', caja.id)
             .single();
 
+        // Una caja cerrada conserva su saldo: no se muestra como esperado (D6)
+        if (cajaFresh?.estado === 'cerrada') {
+            toastWarning(CajaLogica.MENSAJES.cajaYaCerrada);
+            await renderCaja(area);
+            await loadCajaStatus();
+            return;
+        }
+
+        // Sin lectura no hay esperado: nunca $0 ni un saldo viejo (caso limite 10)
+        const esperadoLeido = Boolean(cajaFresh);
         const cajaData     = cajaFresh || caja;
         const saldoInicial = parseFloat(cajaData.saldo_inicial ?? 0);
         const saldoActual  = parseFloat(cajaData.saldo_actual  ?? 0);
@@ -716,7 +726,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <span style="font-weight:600">${formatCurrency(d.total)}</span>
                 </div>`).join('');
 
+        const textoEsperado = esperadoLeido
+            ? `Efectivo esperado (fondo inicial + ventas en efectivo): ${formatCurrency(saldoActual)}`
+            : CajaLogica.MENSAJES.esperadoNoLeido;
+
         const body = `
+            ${esperadoLeido ? `
             <!-- Resumen del turno -->
             <div style="background:var(--color-dark);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:14px">
                 <div style="font-family:var(--font-condensed);font-weight:700;font-size:11px;
@@ -753,12 +768,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>` : `
             <div style="text-align:center;padding:10px 0 14px;font-size:13px;color:var(--color-gray)">
                 Sin ventas registradas en este turno
-            </div>`}
+            </div>`}` : ''}
 
             <div class="form-group">
                 <label class="form-label">Efectivo contado en caja <span style="font-weight:400;color:var(--color-gray)">(opcional)</span></label>
                 <input type="number" id="contado-cierre" class="form-input" placeholder="0.00" min="0" step="0.01">
-                <span class="form-hint" id="esperado-hint">Efectivo esperado (fondo inicial + ventas en efectivo): ${formatCurrency(saldoActual)}</span>
+                <span class="form-hint" id="esperado-hint">${textoEsperado}</span>
             </div>
             <div class="form-group" style="margin-bottom:0">
                 <label class="form-label">Notas de cierre</label>
@@ -775,12 +790,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const v    = document.getElementById('contado-cierre').value;
             const hint = document.getElementById('esperado-hint');
             if (!hint) return;
-            if (v === '') {
-                hint.textContent = `Efectivo esperado (fondo inicial + ventas en efectivo): ${formatCurrency(saldoActual)}`;
-            } else {
-                const dif = Math.round((parseFloat(v) - saldoActual) * 100) / 100;
-                hint.textContent = `Esperado: ${formatCurrency(saldoActual)} · Diferencia: ${dif > 0 ? '+' : ''}${formatCurrency(dif)}`;
-            }
+            const dif = CajaLogica.calcularVistaPrevia(esperadoLeido ? cajaFresh.saldo_actual : null, v);
+            hint.textContent = dif === null
+                ? textoEsperado
+                : `Esperado: ${formatCurrency(saldoActual)} · Diferencia: ${dif > 0 ? '+' : ''}${formatCurrency(dif)}`;
         });
 
         document.getElementById('confirm-cerrar-caja').addEventListener('click', async () => {
