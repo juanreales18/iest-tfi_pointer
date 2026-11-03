@@ -289,3 +289,38 @@ test('fijarModal: openModal lo reinicia, aunque el anterior no se haya cerrado',
     overlay.clic();
     assert.equal(abierto(), false);
 });
+
+// ---------------------------------------------------------------
+// Sección Caja de app.js (RF-002-01, 02 y 03)
+// ---------------------------------------------------------------
+const APP = leer('sistema', 'js', 'app.js').replace(/\r\n/g, '\n');
+const ABRIR_EN_APP = APP.slice(APP.indexOf('async function modalAbrirCaja'), APP.indexOf('async function modalCerrarCaja'));
+
+test('app apertura: RF-002-02 · valida con validity.badInput y no con parseFloat', () => {
+    assert.doesNotMatch(ABRIR_EN_APP, /parseFloat/);
+    assert.match(ABRIR_EN_APP, /CajaLogica\.validarMontoApertura\(campo\.value, campo\.validity\.badInput\)/);
+});
+
+test('app apertura: RF-002-02 · si no es válido, muestra el mensaje antes de mandar nada', () => {
+    const mensaje = ABRIR_EN_APP.indexOf("showFieldError('saldo-apertura', validacion.mensaje)");
+    const update = ABRIR_EN_APP.indexOf('.update(');
+    assert.ok(mensaje >= 0 && mensaje < update);
+    assert.match(ABRIR_EN_APP, /id="saldo-apertura-error"/);
+});
+
+test('app apertura: RF-002-03 · el botón se deshabilita mientras procesa y vuelve si hay error', () => {
+    assert.match(ABRIR_EN_APP, /btn\.disabled = true;/);
+    assert.match(ABRIR_EN_APP, /btn\.disabled = false;/);
+});
+
+test('app apertura: D4 · pide la fila y una respuesta vacía es error', () => {
+    assert.match(ABRIR_EN_APP, /\.select\('id'\)/);
+    assert.doesNotMatch(ABRIR_EN_APP, /\.single\(\)/);
+    assert.match(ABRIR_EN_APP, /error \|\| !data\?\.length/);
+});
+
+test('app apertura: RF-002-03 · ante un rechazo cierra, muestra el texto y vuelve a leer', () => {
+    assert.match(ABRIR_EN_APP, /CajaLogica\.interpretarErrorCaja\(error, 'abrir'\)/);
+    assert.match(ABRIR_EN_APP, /fallo\.releer/);
+    assert.doesNotMatch(ABRIR_EN_APP, /toastError\('No se pudo abrir la caja'\)/);
+});

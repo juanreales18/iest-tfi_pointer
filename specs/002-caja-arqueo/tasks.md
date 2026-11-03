@@ -135,7 +135,7 @@
   - **Listo cuando:** `npm test` en verde (el test comprueba que `openModal` y `closeModal` lo reinician); en local, otro modal del panel se sigue cerrando con la X y con el clic afuera después de haber usado `fijarModal`.
   - **Commit:** `agrega fijarModal al modal global`
 
-- [ ] T17 · Sección Caja: apertura
+- [x] T17 · Sección Caja: apertura
   - **RF:** 01, 02, 03
   - **Archivos:** `sistema/js/app.js` (`modalAbrirCaja`), `tests/caja.test.js`
   - **Hace:** usa `validarMontoApertura` con `validity.badInput`; si no es válido, no manda nada y el modal queda abierto. «Abrir caja» se deshabilita mientras procesa y vuelve si hay error. Pide la fila con `.select(...)`; vacía es error (D4). Ante un rechazo: cierra, muestra el texto y vuelve a leer con `renderCaja` y `loadCajaStatus`.

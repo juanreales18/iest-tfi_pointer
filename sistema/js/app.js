@@ -596,6 +596,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="form-group">
                 <label class="form-label">Saldo inicial en efectivo</label>
                 <input type="number" id="saldo-apertura" class="form-input" placeholder="0.00" min="0" step="0.01" value="0">
+                <span class="field-error" id="saldo-apertura-error"></span>
                 <span class="form-hint">Este monto es el fondo de caja. No se cuenta como recaudacion del turno.</span>
             </div>
             <div class="form-group">
@@ -609,11 +610,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         openModal('Abrir caja', body, footer, 'modal-sm');
 
-        document.getElementById('confirm-abrir-caja').addEventListener('click', async () => {
-            const saldo = parseFloat(document.getElementById('saldo-apertura').value) || 0;
-            const notas = document.getElementById('notas-apertura').value.trim();
+        const btn = document.getElementById('confirm-abrir-caja');
+        btn.addEventListener('click', async () => {
+            clearFieldErrors('modal-body');
+            const campo = document.getElementById('saldo-apertura');
+            const validacion = CajaLogica.validarMontoApertura(campo.value, campo.validity.badInput);
+            if (!validacion.valido) {
+                showFieldError('saldo-apertura', validacion.mensaje);
+                return;
+            }
 
-            const { error } = await window._supabase
+            const saldo = validacion.monto;
+            const notas = document.getElementById('notas-apertura').value.trim();
+            btn.disabled = true;
+
+            const { data, error } = await window._supabase
                 .from('cajas')
                 .update({
                     estado:         'abierta',
@@ -626,9 +637,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                     saldo_contado:  null,
                     diferencia:     null,
                 })
-                .eq('id', caja.id);
+                .eq('id', caja.id)
+                .select('id');
 
-            if (error) { toastError('No se pudo abrir la caja'); return; }
+            // Un update bloqueado por RLS no da error: vuelve vacio (D4)
+            if (error || !data?.length) {
+                const fallo = CajaLogica.interpretarErrorCaja(error, 'abrir');
+                toastError(fallo.mensaje);
+                if (fallo.releer) {
+                    closeModal();
+                    await renderCaja(area);
+                    await loadCajaStatus();
+                } else {
+                    btn.disabled = false;
+                }
+                return;
+            }
 
             // Movimiento de apertura
             await window._supabase.from('movimientos_caja').insert({
