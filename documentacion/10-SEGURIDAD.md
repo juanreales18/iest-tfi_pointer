@@ -31,7 +31,7 @@ En Pointer el navegador **no es de confianza**: cualquier persona puede abrir la
 | Ventas | La función `crear_venta` calcula totales y stock en el servidor, con precios de la base |
 | Autenticación | Sin registro público: los usuarios los crea el dueño (a verificar en Supabase) |
 | Frontend | No usar `innerHTML` con datos del usuario; usar `textContent` |
-| Publicación | Cabeceras CSP en `netlify.toml` (hoy con `unsafe-inline`, protección parcial) |
+| Publicación | Cabeceras CSP en `netlify.toml`, ruta por ruta (hoy con `unsafe-inline`, protección parcial). Solo `/presentacion` agrega `frame-src https://www.youtube-nocookie.com`; las rutas desconocidas reciben `index.html`, que lleva la misma política en una meta |
 | Código | El repositorio no contiene claves ni archivos `.env` |
 
 ## Validaciones

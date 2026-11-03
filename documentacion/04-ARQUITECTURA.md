@@ -8,11 +8,16 @@ iest-tfi_pointer/sistema/
 ├── login.html              ← pantalla de ingreso
 ├── dashboard.html          ← aplicación (barra lateral + secciones dinámicas)
 ├── pos.html                ← punto de venta con lector de código de barras
+├── presentacion.html       ← página pública de presentación (no entra en la caché de sw.js)
 ├── sw.js                   ← Service Worker (caché que se renueva en cada deploy)
 ├── netlify.toml            ← cabeceras de seguridad (CSP) y redirección
 ├── css/
 │   ├── styles.css          ← variables de marca y estilos de componentes
-│   └── pos.css             ← estilos de la pantalla de venta
+│   ├── pos.css             ← estilos de la pantalla de venta
+│   └── presentacion.css    ← estilos de la página de presentación
+├── img/
+│   ├── favicon-32.png y favicon-192.png
+│   └── presentacion/       ← copias en WebP de las piezas de multimedia/ (hasta 1200 px)
 ├── js/
 │   ├── vendor/
 │   │   └── supabase.js     ← librería de Supabase incluida en el proyecto (sin CDN)
@@ -24,7 +29,8 @@ iest-tfi_pointer/sistema/
 │   ├── products.js         ← productos, categorías, proveedores, compras y gastos
 │   ├── reports.js          ← reportes de ventas y ganancias
 │   ├── pos-logica.js       ← reglas del carrito y del lector, sin pantalla ni base
-│   └── pos.js              ← carrito, cobro y lector de código de barras
+│   ├── pos.js              ← carrito, cobro y lector de código de barras
+│   └── presentacion.js     ← carga el reproductor de YouTube al hacer clic
 └── (sin carpetas documentacion/ ni specs/: viven en la raíz del repositorio)
 ```
 
@@ -33,6 +39,7 @@ iest-tfi_pointer/sistema/
 | Parte | Responsabilidad |
 |---|---|
 | `login.html` / `dashboard.html` / `pos.html` | Páginas del sistema; `dashboard.html` carga cada sección dentro del área de contenido |
+| `presentacion.html` | Página pública, sin Supabase y sin Service Worker propio; toma las variables de `styles.css` |
 | `css/styles.css` | Variables de marca, botones, tablas, tarjetas, modales y diseño responsive |
 | `js/config.js` | Crea el cliente de Supabase; nadie más se conecta a la base |
 | `js/auth.js` | Verifica la sesión y el rol antes de mostrar cada sección |

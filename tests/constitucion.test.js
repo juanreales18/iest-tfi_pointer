@@ -96,6 +96,7 @@ const PAGINAS_SEO = {
     'dashboard.html': ['Pointer · Panel', 'Panel de gestión del kiosco.'],
     'pos.html': ['Pointer · Punto de venta', 'Panel de gestión del kiosco.'],
     'index.html': ['Pointer', 'Redirige a login o panel.'],
+    'presentacion.html': ['Pointer · Cada venta, en su lugar', 'Pointer es un sistema web para kioscos: ventas con lector de código de barras, stock, caja con arqueo y reportes. Mirá cómo funciona.'],
 };
 
 test('nombre: ninguna pantalla muestra el nombre viejo', () => {
