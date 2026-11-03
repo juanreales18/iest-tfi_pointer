@@ -30,9 +30,9 @@ El logo se guarda en `multimedia/marca/`.
 
 **Concepto:** se conserva el recurso del TP N° 3, un cuadrado de esquinas redondeadas color amarillo `#F59E0B` con la inicial en carbón `#1F2937`, seguido del nombre **Pointer** en el mismo carbón. Es el mismo recurso visual de la barra lateral del sistema, así la marca y la pantalla son coherentes.
 
-> **Pendiente:** reemplazar el logo de Re-Kiosco por el de Pointer en `multimedia/marca/` (lo diseña el autor en Canva). Hasta entonces no se usa ningún logo generado por la IA.
+> **Hecho (noviembre de 2026):** el logo de Pointer reemplaza al de Re-Kiosco. Se generó con la herramienta de diseño con IA de Canva a partir de este manual, y el autor eligió una opción entre varias y pidió los cambios (colores de la paleta de Pointer, grosor de las letras y tamaño de la inicial). Claude hizo esas ediciones en Canva y el autor revisó y exportó el resultado. Archivos en `multimedia/marca/`: `logo-horizontal.png`, `isotipo.png`, `favicon-32.png` y `favicon-192.png` (todos con fondo transparente).
 
-**Tipografía del logo:** Nourd (peso semibold). Se usa **solo dentro de la imagen del logo**, no como fuente de la interfaz.
+**Tipografía del logo:** sans-serif en negrita de la biblioteca de Canva, usada solo dentro de la imagen del logo. Reemplaza a Nourd, que figuraba en la versión anterior de este manual. El logo es una imagen: no hace falta instalar ninguna fuente.
 
 ### Reglas del logo
 
@@ -87,7 +87,7 @@ Los colores de estado **solo avisan**, no se usan como color de marca.
 |---|---|---|---|
 | Títulos, números grandes, encabezados de tabla | **Barlow Condensed** | 700 y 800 | En mayúsculas, con `letter-spacing: 0.5px` |
 | Textos, formularios, botones | **Barlow** | 400, 500, 600 y 700 | Tamaño base 15 px |
-| Logo (solo dentro de la imagen) | **Nourd** | Semibold | No se usa en la interfaz web |
+| Logo (solo dentro de la imagen) | Sans-serif de Canva | Bold | No se usa en la interfaz web |
 
 Ambas son de Google Fonts con licencia libre (OFL), por lo que se pueden usar en la web sin restricciones.
 
