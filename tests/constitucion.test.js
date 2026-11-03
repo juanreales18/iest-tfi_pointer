@@ -146,6 +146,12 @@ test('seo: solo las pantallas internas llevan noindex en su meta robots', () => 
     }
 });
 
+test('seo: login.html declara /login como canonical y no redirige', () => {
+    assert.ok(leer(path.join(SRC, 'login.html')).includes('<link rel="canonical" href="https://pointer-demo.netlify.app/login">'), 'Falta el canonical');
+    // Una redirección de /login.html podría romper el login: sw.js guarda esa dirección en caché
+    assert.doesNotMatch(leer(path.join(SRC, 'netlify.toml')), /from\s*=\s*"\/login/);
+});
+
 test('seo: netlify.toml pone noindex por ruta y solo en las pantallas internas', () => {
     const conNoindex = leer(path.join(SRC, 'netlify.toml'))
         .split('[[headers]]')

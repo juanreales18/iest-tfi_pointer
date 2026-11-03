@@ -59,6 +59,7 @@
 | 2026-11 | Los `rgba()` usan variables de canales (`rgba(var(--color-primary-rgb), 0.18)`); los grises del ticket tienen variables propias `--ticket-*` | Decisión del autor. Sin efecto visual: `#111` no es `--color-dark-2` y `#ccc` no es `--color-border-dark` |
 | 2026-11 | `index.html` y el aviso de bloqueo de `auth.js` cargan `styles.css` para tener las variables, y compensan sus reglas globales (`font-size`, `line-height`, `box-sizing`) | Decisión del autor. Si no, cambian los tamaños de esas pantallas |
 | 2026-11 | `login.html` se indexa; el `noindex` queda solo en `/`, `/dashboard` y `/pos`, por ruta y con y sin `.html`, más la meta `robots` | Decisión del autor. Las rutas desconocidas reciben `index.html`: su meta `robots` es lo que las protege |
+| 2026-11 | `/login.html` no redirige a `/login`: solo lleva `<link rel="canonical">` hacia `/login` | Decisión del autor: una 301 podría romper el login, porque `sw.js` guarda `/login.html` en caché y el código navega ahí |
 | 2026-11 | «Reintentar» y el asterisco de obligatorio tienen variables propias (`--color-reintentar-*`, `--color-requerido`) con sus valores de antes | Decisión del autor: `#f5a623`, `#111` y `red` no están en la paleta y no había que cambiar ningún color |
 
 ## Lecciones (errores que no hay que repetir)
