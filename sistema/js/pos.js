@@ -86,7 +86,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const dot   = document.getElementById('pos-caja-dot');
             const label = document.getElementById('pos-caja-label');
-            const info  = document.getElementById('pos-caja-info');
 
             if (dot) dot.className = `pos-caja-dot ${POS.cajaAbierta ? 'open' : 'closed'}`;
             if (label) {
@@ -110,9 +109,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Mostrar alerta si caja cerrada
             toggleVisible('#pos-caja-alert', !POS.cajaAbierta);
-
-            // Click en info de caja abre modal
-            info?.addEventListener('click', () => openCajaModal());
 
         } catch(e) {}
     }
@@ -1058,6 +1054,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <label class="form-label">Saldo inicial en efectivo</label>
                     <input type="number" id="pos-saldo-apertura" class="form-input"
                         placeholder="0.00" min="0" step="0.01" value="0">
+                    <span class="field-error" id="pos-saldo-apertura-error"></span>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Notas de apertura</label>
@@ -1100,10 +1097,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Confirmar apertura
         document.getElementById('pos-confirm-apertura')?.addEventListener('click', async () => {
-            const saldo = parseFloat(document.getElementById('pos-saldo-apertura')?.value) || 0;
-            const notas = document.getElementById('pos-notas-apertura')?.value.trim();
+            const btn = document.getElementById('pos-confirm-apertura');
+            clearFieldErrors('modal-caja-body');
+            const campo = document.getElementById('pos-saldo-apertura');
+            const validacion = CajaLogica.validarMontoApertura(campo.value, campo.validity.badInput);
+            if (!validacion.valido) {
+                showFieldError('pos-saldo-apertura', validacion.mensaje);
+                return;
+            }
 
-            const { error } = await window._supabase.from('cajas').update({
+            const saldo = validacion.monto;
+            const notas = document.getElementById('pos-notas-apertura')?.value.trim();
+            btn.disabled = true;
+
+            const { data, error } = await window._supabase.from('cajas').update({
                 estado:         'abierta',
                 saldo_inicial:  saldo,
                 saldo_actual:   saldo,
@@ -1113,9 +1120,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 fecha_cierre:   null,
                 saldo_contado:  null,
                 diferencia:     null,
-            }).eq('id', POS.cajaId);
+            }).eq('id', POS.cajaId).select('id');
 
-            if (error) { toastError('No se pudo abrir la caja'); return; }
+            // Un update bloqueado por RLS no da error: vuelve vacio (D4)
+            if (error || !data?.length) {
+                const fallo = CajaLogica.interpretarErrorCaja(error, 'abrir');
+                toastError(fallo.mensaje);
+                if (fallo.releer) {
+                    closePOSCajaModal();
+                    await cargarCaja();
+                    calcularTotales();
+                } else {
+                    btn.disabled = false;
+                }
+                return;
+            }
 
             const { error: movErr } = await window._supabase.from('movimientos_caja').insert({
                 caja_id:          POS.cajaId,

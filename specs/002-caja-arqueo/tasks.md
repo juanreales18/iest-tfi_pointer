@@ -163,7 +163,7 @@
   - **Listo cuando:** `npm test` en verde (`marca: sin colores escritos a mano`); en local, el resumen no se cierra con la X, con el clic afuera ni con Enter, y se distingue el resultado sin depender del color.
   - **Commit:** `muestra el resumen de cierre en la sección caja`
 
-- [ ] T21 · POS: listener repetido y apertura
+- [x] T21 · POS: listener repetido y apertura
   - **RF:** 01, 02, 03
   - **Archivos:** `sistema/js/pos.js` (`cargarCaja`, `openCajaModal`), `tests/caja.test.js`
   - **Hace:** saca el `addEventListener` de `cargarCaja` (D8). Apertura igual que T17. Ante un rechazo vuelve a leer con `cargarCaja` y `calcularTotales`, y así se corrige `POS.cajaAbierta` y se destraba «Cobrar».

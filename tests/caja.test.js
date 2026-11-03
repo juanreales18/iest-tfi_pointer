@@ -444,3 +444,43 @@ test('app resumen: los estilos caja-resumen usan solo variables de marca', () =>
         assert.doesNotMatch(regla, /#[0-9a-f]{3,8}\b|rgba?\(/i, regla);
     }
 });
+
+// ---------------------------------------------------------------
+// Punto de venta, pos.js: clic de la caja y apertura (D8, RF-002-01, 02 y 03)
+// ---------------------------------------------------------------
+const POS_JS = leer('sistema', 'js', 'pos.js').replace(/\r\n/g, '\n');
+const ABRIR_EN_POS = POS_JS.slice(POS_JS.indexOf('// Confirmar apertura'), POS_JS.indexOf('// Confirmar cierre'));
+
+test('pos: D8 · el clic de la caja se registra una sola vez', () => {
+    assert.equal((POS_JS.match(/info\?\.addEventListener\(/g) || []).length, 1);
+    const cargar = POS_JS.slice(POS_JS.indexOf('async function cargarCaja'), POS_JS.indexOf('// 6. CATEGORIAS'));
+    assert.doesNotMatch(cargar, /addEventListener/);
+});
+
+test('pos apertura: RF-002-02 · valida con validity.badInput y no con parseFloat', () => {
+    assert.doesNotMatch(ABRIR_EN_POS, /parseFloat/);
+    assert.match(ABRIR_EN_POS, /CajaLogica\.validarMontoApertura\(campo\.value, campo\.validity\.badInput\)/);
+});
+
+test('pos apertura: RF-002-02 · si no es válido, muestra el mensaje antes de mandar nada', () => {
+    const mensaje = ABRIR_EN_POS.indexOf("showFieldError('pos-saldo-apertura', validacion.mensaje)");
+    assert.ok(mensaje >= 0 && mensaje < ABRIR_EN_POS.indexOf('.update('));
+    assert.match(POS_JS, /id="pos-saldo-apertura-error"/);
+});
+
+test('pos apertura: RF-002-03 · el botón se deshabilita mientras procesa y vuelve si hay error', () => {
+    assert.match(ABRIR_EN_POS, /btn\.disabled = true;/);
+    assert.match(ABRIR_EN_POS, /btn\.disabled = false;/);
+});
+
+test('pos apertura: D4 · pide la fila y una respuesta vacía es error', () => {
+    assert.match(ABRIR_EN_POS, /\.select\('id'\)/);
+    assert.match(ABRIR_EN_POS, /error \|\| !data\?\.length/);
+});
+
+test('pos apertura: RF-002-03 · ante un rechazo vuelve a leer y destraba «Cobrar»', () => {
+    assert.match(ABRIR_EN_POS, /CajaLogica\.interpretarErrorCaja\(error, 'abrir'\)/);
+    const releer = ABRIR_EN_POS.slice(ABRIR_EN_POS.indexOf('fallo.releer'));
+    assert.match(releer, /closePOSCajaModal\(\);\s+await cargarCaja\(\);\s+calcularTotales\(\);/);
+    assert.doesNotMatch(ABRIR_EN_POS, /toastError\('No se pudo abrir la caja'\)/);
+});
