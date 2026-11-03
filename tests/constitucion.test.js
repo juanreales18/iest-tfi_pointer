@@ -40,18 +40,17 @@ test('stack: sistema/ no tiene package.json ni scripts cargados desde internet',
 
 // ---------------------------------------------------------------
 // P2 · Marca: colores solo desde variables CSS
-// Deuda conocida al empezar el TFI: el CSS heredado tiene colores
-// escritos a mano. El test impide que la deuda crezca; la tarea de
-// llevarla a 0 está en documentacion/08-TAREAS.md (Etapa 7).
+// Cuenta hexadecimales y rgba() con números; rgba(var(--x-rgb), 0.5)
+// está permitido porque el color sale de :root.
 // ---------------------------------------------------------------
-const DEUDA_COLORES_CSS = 54;
+const DEUDA_COLORES_CSS = 0;
 
 test('marca: no se agregan colores escritos a mano fuera de :root', () => {
     let total = 0;
     const detalle = [];
     for (const f of archivos(path.join(SRC, 'css'), ['.css'])) {
         const sinRoot = leer(f).replace(/:root\s*\{[^}]*\}/g, '');
-        const n = (sinRoot.match(/#[0-9a-fA-F]{3,8}\b/g) || []).length;
+        const n = (sinRoot.match(/#[0-9a-fA-F]{3,8}\b|rgba?\(\s*\d/g) || []).length;
         total += n;
         if (n) detalle.push(`${relativo(f)}: ${n}`);
     }

@@ -62,7 +62,7 @@ La IA trabaja **una tarea por vez** y la marca con `[x]` al terminar.
 - [ ] Actividad 1: constitución, arnés del agente y matriz de herramientas
 - [ ] Actividad 2: tres funcionalidades con el ciclo SDD completo en `specs/`
 - [ ] Actividad 3: tests en verde, Lighthouse de 80 o más y publicación final
-- [ ] Pasar a variables CSS los 54 colores escritos a mano que quedan en `sistema/css/` (deuda medida por `tests/constitucion.test.js`; bajar `DEUDA_COLORES_CSS` a 0)
+- [x] Pasar a variables CSS los 54 colores escritos a mano que quedan en `sistema/css/` (deuda medida por `tests/constitucion.test.js`; bajar `DEUDA_COLORES_CSS` a 0)
 - [ ] Actividad 4: imágenes, video, gráficos y fichas en `multimedia/`
 - [ ] Actividad 5: declaración de uso de IA y análisis de riesgos
 - [ ] Actividad 6: informe guionado y defensa

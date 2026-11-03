@@ -128,6 +128,39 @@ Copiar tal cual en `css/styles.css`. La IA usa **siempre** estas variables, nunc
 | `--color-danger` | `#EF4444` |
 | `--color-info` | `#3B82F6` |
 
+### Variables derivadas
+
+Salen del CSS heredado y están en el `:root` de `sistema/css/styles.css`. No son colores de marca nuevos: se usan solo donde dice la tabla.
+
+| Variable | Valor | Uso |
+|---|---|---|
+| `--color-success-dark` | `#059669` | Hover del botón de éxito |
+| `--color-success-text` | `#065F46` | Texto de alertas y etiquetas de éxito |
+| `--color-success-border` | `#6EE7B7` | Borde de alertas de éxito |
+| `--color-danger-dark` | `#DC2626` | Hover del botón de peligro |
+| `--color-danger-text` | `#991B1B` | Texto de alertas y etiquetas de peligro |
+| `--color-danger-border` | `#FCA5A5` | Borde de alertas de peligro |
+| `--color-warning-text` | `#92400E` | Texto de alertas, etiquetas y avisos |
+| `--color-warning-border` | `#FCD34D` | Borde de alertas y avisos |
+| `--color-info-text` | `#1E40AF` | Texto de alertas, etiquetas y avisos |
+| `--color-info-border` | `#93C5FD` | Borde de alertas de información |
+| `--color-info-border-light` | `#BFDBFE` | Borde del aviso del punto de venta |
+| `--ticket-text` | `#111` | Texto y línea del total del ticket |
+| `--ticket-text-soft` | `#555` | Encabezado del ticket |
+| `--ticket-text-muted` | `#777` | Pie del ticket |
+| `--ticket-divider` | `#999` | Divisores del ticket |
+| `--ticket-border` | `#ccc` | Borde del ticket |
+
+Para usar un color con transparencia hay variables de canales: `rgba(var(--color-primary-rgb), 0.18)`.
+
+| Variable | Valor |
+|---|---|
+| `--color-primary-rgb` | `245, 158, 11` |
+| `--color-success-rgb` | `16, 185, 129` |
+| `--color-danger-rgb` | `239, 68, 68` |
+| `--color-white-rgb` | `255, 255, 255` |
+| `--color-black-rgb` | `0, 0, 0` |
+
 ```css
 /* css/styles.css */
 :root {
