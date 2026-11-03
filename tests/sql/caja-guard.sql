@@ -17,9 +17,9 @@
 --   nombre   lo que se informa
 --   prep     como se deja la caja antes: cerrada, abierta, abierta_pareja,
 --            abierta_negativa o abierta_con_venta
---   accion   la sentencia; $1 caja, $2 usuario, $3 metodo de pago, $4 items, $5 venta
+--   accion   la sentencia; $1 caja, $2 usuario, $3 metodo de pago, $4 items, $5 venta, $6 el otro usuario
 --   rechazo  NULL: tiene que pasar. '*': cualquier rechazo. Si no, el texto exacto
---   control  condicion sobre la fila despues de la accion (NULL: ninguna); $2 es la venta
+--   control  condicion sobre la fila despues de la accion (NULL: ninguna); $2 es la venta y $3 el otro usuario
 -- =============================================================
 DO $prueba$
 DECLARE
@@ -31,6 +31,8 @@ DECLARE
     C_CAMBIAR CONSTANT text := 'UPDATE public.cajas SET %s WHERE id = $1';
     C_YA_ABIERTA CONSTANT text := 'La caja ya está abierta';
     C_YA_CERRADA CONSTANT text := 'La caja ya fue cerrada';
+    C_APERTURA_INVALIDA CONSTANT text := 'Apertura de caja invalida';
+    C_CIERRE_CAMBIA_APERTURA CONSTANT text := 'El cierre no puede cambiar la apertura';
     -- Como queda una caja cerrada por prep: si cambia, no se protegio
     C_ARQUEO_INTACTO CONSTANT text := 'estado = ''cerrada'' AND saldo_inicial = 1000 AND saldo_actual = 1500 '
         || 'AND saldo_contado = 1450 AND diferencia = -50 AND fecha_cierre < now()';
@@ -45,6 +47,7 @@ DECLARE
     v_dueno    uuid;
     v_empleado uuid;
     v_usuario  uuid;
+    v_otro     uuid;
     v_metodo   uuid;
     v_producto uuid;
     v_items    jsonb;
@@ -96,6 +99,8 @@ BEGIN
             -- D3: los saldos son iguales y solo cambiaria la fecha de apertura
             ('doble apertura con el mismo monto', 'abierta_pareja', format(C_ABRIR, 1000, 1000), C_YA_ABIERTA,
                 'saldo_inicial = 1000 AND saldo_actual = 1000 AND fecha_apertura < now()'),
+            -- RF-002-03: el contado se carga al cerrar, no con la caja abierta
+            ('caja abierta cambia contado', 'abierta', format(C_CAMBIAR, 'saldo_contado = 1'), C_YA_ABIERTA, 'saldo_contado IS NULL'),
             -- RF-002-06
             ('apertura negativa', 'cerrada', format(C_ABRIR, -1, -1), '*', 'estado = ''cerrada'''),
             -- H-02: al abrir, los dos saldos tienen que ser iguales
@@ -143,12 +148,24 @@ BEGIN
                 'saldo_actual = 1500 AND (SELECT estado::text FROM public.ventas WHERE id = $2) = ''cancelada'''),
             -- H-01: el panel limpia la caja en cualquier estado; a otro rol el guard se lo rechazaria
             ('panel', 'reinicio con la caja abierta', 'abierta', format(C_CAMBIAR, C_REINICIO), NULL, C_REINICIADA),
-            ('panel', 'reinicio con la caja cerrada', 'cerrada', format(C_CAMBIAR, C_REINICIO), NULL, C_REINICIADA)
+            ('panel', 'reinicio con la caja cerrada', 'cerrada', format(C_CAMBIAR, C_REINICIO), NULL, C_REINICIADA),
+            -- Pasos 8 y 9: el empleado abre a su nombre y no cambia la apertura al cerrar; el dueno puede
+            ('empleado', 'apertura a nombre de otro', 'cerrada', format(C_CAMBIAR, 'estado = ''abierta'', saldo_inicial = 0, saldo_actual = 0, usuario_id = $6'),
+                C_APERTURA_INVALIDA, 'estado = ''cerrada'''),
+            ('dueno', 'apertura a nombre de otro', 'cerrada', format(C_CAMBIAR, 'estado = ''abierta'', saldo_inicial = 0, saldo_actual = 0, usuario_id = $6'),
+                NULL, 'estado = ''abierta'' AND usuario_id = $3'),
+            ('empleado', 'cierre cambia quien abrio', 'abierta', format(C_CAMBIAR, 'estado = ''cerrada'', usuario_id = $6'),
+                C_CIERRE_CAMBIA_APERTURA, 'estado = ''abierta'' AND usuario_id <> $3'),
+            ('dueno', 'cierre cambia quien abrio', 'abierta', format(C_CAMBIAR, 'estado = ''cerrada'', usuario_id = $6'),
+                NULL, 'estado = ''cerrada'' AND usuario_id = $3'),
+            ('empleado', 'cierre cambia fecha de apertura', 'abierta', format(C_CAMBIAR, 'estado = ''cerrada'', fecha_apertura = now()'),
+                C_CIERRE_CAMBIA_APERTURA, 'estado = ''abierta'' AND fecha_apertura < now()')
     LOOP
         v_falla := NULL;
         v_error := NULL;
         v_venta := NULL;
         v_usuario := CASE c.rol WHEN 'empleado' THEN v_empleado ELSE v_dueno END;
+        v_otro := CASE c.rol WHEN 'empleado' THEN v_dueno ELSE v_empleado END;
 
         BEGIN
             -- Como postgres: el guard no controla la preparacion
@@ -175,7 +192,7 @@ BEGIN
             END IF;
 
             BEGIN
-                EXECUTE c.accion USING v_caja, v_usuario, v_metodo, v_items, v_venta;
+                EXECUTE c.accion USING v_caja, v_usuario, v_metodo, v_items, v_venta, v_otro;
                 GET DIAGNOSTICS v_filas = ROW_COUNT;
             EXCEPTION WHEN OTHERS THEN
                 v_error := SQLERRM;
@@ -196,7 +213,7 @@ BEGIN
             END IF;
 
             IF v_falla IS NULL AND c.control IS NOT NULL THEN
-                EXECUTE 'SELECT (' || c.control || ') FROM public.cajas WHERE id = $1' INTO v_control USING v_caja, v_venta;
+                EXECUTE 'SELECT (' || c.control || ') FROM public.cajas WHERE id = $1' INTO v_control USING v_caja, v_venta, v_otro;
                 IF v_control IS NOT TRUE THEN
                     v_falla := 'la caja quedó distinta de lo esperado';
                 END IF;

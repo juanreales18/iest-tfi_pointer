@@ -105,7 +105,7 @@
   - **Listo cuando:** se leen los resultados en el panel; las pruebas del dueño (doble apertura, negativo, saldo inventado) y la diferencia inventada dan «falla»; ventas, cancelación y reinicio dan «pasa»; los datos de la caja no cambiaron.
   - **Commit:** `registra la corrida de las pruebas sql antes de la migración`
 
-- [ ] T13 · Migración de `cajas_guard`
+- [x] T13 · Migración de `cajas_guard`
   - **RF:** 01, 03, 05, 06, 07
   - **Archivos:** `base-de-datos/20-caja-arqueo.sql` (nuevo), `base-de-datos/00-estructura.sql` (sección 7.7), `tests/caja.test.js`
   - **Hace:** reemplaza la función con los 9 pasos del plan, sin `SECURITY DEFINER`. Test: los dos textos de la base están letra por letra en los dos archivos y coinciden con `MENSAJES`; la migración no tiene `POLICY`.

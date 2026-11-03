@@ -120,3 +120,68 @@ test('caja-guard: el reinicio manda lo mismo que 90-reinicio-total.sql', () => {
         assert.ok(CAJA_GUARD_SIN_COMENTARIOS.includes(columna), `falta «${columna}»`);
     }
 });
+
+// ---------------------------------------------------------------
+// cajas_guard: la migración y la estructura (plan, sección 3)
+// ---------------------------------------------------------------
+const { MENSAJES } = require('../sistema/js/caja-logica.js');
+
+const MIGRACION = leer('base-de-datos', '20-caja-arqueo.sql');
+
+// La función sin comentarios ni saltos de Windows; un deshacer comentado no cuenta
+function guardDe(texto) {
+    const guard = texto.match(/^CREATE OR REPLACE FUNCTION public\.cajas_guard\(\)[\s\S]*?\$function\$;/m);
+    return guard ? guard[0].replace(/\r\n/g, '\n') : '';
+}
+
+const GUARD = guardDe(MIGRACION);
+
+test('migración: trae cajas_guard', () => {
+    assert.notEqual(GUARD, '');
+});
+
+test('migración: la función es igual en 00-estructura.sql', () => {
+    assert.equal(guardDe(leer('base-de-datos', '00-estructura.sql')), GUARD);
+});
+
+test('migración: H-01 · la función no es SECURITY DEFINER, porque depende de current_user', () => {
+    assert.doesNotMatch(GUARD, /SECURITY DEFINER/i);
+    assert.match(GUARD, /current_user/);
+});
+
+test('migración: no crea ni cambia políticas de RLS', () => {
+    assert.doesNotMatch(MIGRACION, /POLICY/i);
+});
+
+test('migración: D9 · los dos rechazos son letra por letra los de MENSAJES', () => {
+    assert.ok(GUARD.includes(`raise exception '${MENSAJES.cajaYaAbierta}'`));
+    assert.ok(GUARD.includes(`raise exception '${MENSAJES.cajaYaCerrada}'`));
+});
+
+test('migración: RF-002-05 · la diferencia es el contado menos el saldo anterior', () => {
+    assert.match(GUARD, /new\.diferencia := new\.saldo_contado - old\.saldo_actual;/);
+});
+
+test('migración: los 9 pasos están en el orden del plan', () => {
+    const posiciones = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((paso) => GUARD.indexOf(`-- Paso ${paso}:`));
+    assert.ok(posiciones.every((posicion) => posicion >= 0), 'falta algún paso');
+    assert.deepEqual(posiciones, [...posiciones].sort((a, b) => a - b));
+});
+
+const PRUEBAS_POR_ROL = [
+    "('empleado', 'apertura a nombre de otro'",
+    "('dueno', 'apertura a nombre de otro'",
+    "('empleado', 'cierre cambia quien abrio'",
+    "('dueno', 'cierre cambia quien abrio'",
+    "('empleado', 'cierre cambia fecha de apertura'",
+];
+
+for (const prueba of PRUEBAS_POR_ROL) {
+    test(`caja-guard: pasos 8 y 9 · prueba ${prueba}`, () => {
+        assert.ok(CAJA_GUARD_SIN_COMENTARIOS.includes(prueba));
+    });
+}
+
+test('caja-guard: RF-002-03 · prueba «caja abierta cambia contado»', () => {
+    assert.ok(CAJA_GUARD_SIN_COMENTARIOS.includes("'caja abierta cambia contado'"));
+});
