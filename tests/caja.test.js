@@ -391,3 +391,56 @@ test('app cierre: RF-002-07 y caso límite 10 · el rechazo vuelve a leer y sin 
     assert.match(cierre, /btn\.disabled = false;/);
     assert.doesNotMatch(cierre, /toastError\('No se pudo cerrar la caja'\)/);
 });
+
+// ---------------------------------------------------------------
+// Sección Caja de app.js: resumen de cierre (RF-002-08, D5)
+// ---------------------------------------------------------------
+function resumenEnApp() {
+    const inicio = APP.indexOf('function mostrarResumenCierre');
+    return inicio < 0 ? '' : APP.slice(inicio, APP.indexOf('\n    }\n', inicio));
+}
+
+test('app resumen: RF-002-08 · sale de la fila de la base, después del movimiento y la auditoría', () => {
+    const cierre = cierreEnApp();
+    const auditoria = cierre.indexOf("registrarAuditoria('cierre_caja'");
+    const resumen = cierre.indexOf('mostrarResumenCierre(resumen)');
+    assert.ok(auditoria >= 0 && auditoria < resumen);
+    assert.match(cierre, /const resumen\s+= CajaLogica\.armarResumenCierre\(fila\);/);
+});
+
+test('app resumen: RF-002-08 · reemplaza al aviso temporal y actualiza la pantalla de atrás', () => {
+    const despues = cierreEnApp().split('mostrarResumenCierre(resumen)')[1] || '';
+    assert.match(despues, /renderCaja\(area\)/);
+    assert.match(despues, /loadCajaStatus\(\)/);
+    assert.doesNotMatch(cierreEnApp(), /Caja cerrada con una diferencia/);
+    assert.doesNotMatch(despues, /closeModal\(\)/);
+});
+
+test('app resumen: RF-002-08 · solo «Listo» lo cierra', () => {
+    const resumen = resumenEnApp();
+    assert.ok(resumen.indexOf('openModal(') >= 0 && resumen.indexOf('openModal(') < resumen.indexOf('fijarModal()'));
+    assert.match(resumen, /onclick="closeModal\(\)">\$\{CajaLogica\.MENSAJES\.listo\}/);
+});
+
+test('app resumen: D5 · el foco va al título, no a «Listo»', () => {
+    const resumen = resumenEnApp();
+    assert.match(resumen, /getElementById\('modal-title'\)/);
+    assert.match(resumen, /titulo\.focus\(\)/);
+    assert.doesNotMatch(resumen, /autofocus/);
+});
+
+test('app resumen: RF-002-08 · muestra el esperado, y el contado solo si hubo', () => {
+    const resumen = resumenEnApp();
+    assert.match(resumen, /formatCurrency\(datos\.esperado\)/);
+    assert.match(resumen, /datos\.contado === null/);
+    assert.match(resumen, /datos\.texto/);
+});
+
+test('app resumen: los estilos caja-resumen usan solo variables de marca', () => {
+    const css = leer('sistema', 'css', 'styles.css').replace(/\r\n/g, '\n');
+    const reglas = css.match(/\.caja-resumen[^{]*\{[^}]*\}/g) || [];
+    assert.ok(reglas.length > 0, 'faltan las clases caja-resumen');
+    for (const regla of reglas) {
+        assert.doesNotMatch(regla, /#[0-9a-f]{3,8}\b|rgba?\(/i, regla);
+    }
+});

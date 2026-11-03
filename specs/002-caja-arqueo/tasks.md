@@ -156,7 +156,7 @@
   - **Listo cuando:** `npm test` en verde (no queda el cálculo de la diferencia ni la lectura previa en `app.js`); en local, `1e` no cierra, y con la red cortada se conserva lo escrito.
   - **Commit:** `deja que la base calcule la diferencia en la sección caja`
 
-- [ ] T20 · Sección Caja: resumen de cierre
+- [x] T20 · Sección Caja: resumen de cierre
   - **RF:** 08
   - **Archivos:** `sistema/js/app.js` (`modalCerrarCaja`), `sistema/css/styles.css`
   - **Hace:** después del movimiento y la auditoría, reescribe el modal con `armarResumenCierre` y `fijarModal`, y actualiza la pantalla de atrás. Clases `caja-resumen…` solo con variables de marca. El foco va al título (D5); «Listo» se alcanza con Tab y es lo único que cierra. Un fallo del movimiento o de la auditoría no impide ver el resumen.

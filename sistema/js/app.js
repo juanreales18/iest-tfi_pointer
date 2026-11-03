@@ -847,7 +847,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const saldoActualFinal  = parseFloat(fila.saldo_actual  ?? 0);
             const saldoInicialFinal = parseFloat(fila.saldo_inicial ?? 0);
             const recaudadoFinal    = saldoActualFinal - saldoInicialFinal;
-            const diferencia        = CajaLogica.armarResumenCierre(fila).diferencia;
+            const resumen           = CajaLogica.armarResumenCierre(fila);
+            const diferencia        = resumen.diferencia;
 
             // La base acepta monto 0 en apertura y cierre, asi que siempre se registra
             const { error: movErr } = await window._supabase
@@ -864,15 +865,44 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             await registrarAuditoria('cierre_caja', 'cajas', caja.id,
                 'Cierre de caja' + (diferencia === null ? '' : ` (diferencia ${formatCurrency(diferencia)})`));
-            closeModal();
-            if (diferencia !== null && diferencia !== 0) {
-                toastWarning(`Caja cerrada con una diferencia de ${formatCurrency(diferencia)}`);
-            } else {
-                toastSuccess('Caja cerrada correctamente');
-            }
+
+            mostrarResumenCierre(resumen);
             await renderCaja(area);
             await loadCajaStatus();
         });
+    }
+
+    // Solo numeros y textos fijos, sin notas. El foco va al titulo y no a «Listo»:
+    // el lector termina cada lectura con Enter y cerraria el resumen (D5)
+    function mostrarResumenCierre(datos) {
+        const clase = datos.diferencia > 0 ? 'caja-resumen-sobrante'
+            : datos.diferencia < 0 ? 'caja-resumen-faltante' : '';
+
+        const body = `
+            <div class="caja-resumen">
+                <div class="caja-resumen-fila">
+                    <span>Efectivo esperado</span>
+                    <strong>${formatCurrency(datos.esperado)}</strong>
+                </div>
+                ${datos.contado === null ? '' : `
+                <div class="caja-resumen-fila">
+                    <span>Efectivo contado</span>
+                    <strong>${formatCurrency(datos.contado)}</strong>
+                </div>`}
+                <div class="caja-resumen-fila caja-resumen-resultado ${clase}">
+                    <span>${datos.texto}</span>
+                    ${datos.valor === null ? '' : `<strong>${formatCurrency(datos.valor)}</strong>`}
+                </div>
+            </div>`;
+
+        const footer = `<button class="btn btn-primary" onclick="closeModal()">${CajaLogica.MENSAJES.listo}</button>`;
+
+        openModal('Caja cerrada', body, footer, 'modal-sm');
+        fijarModal();
+
+        const titulo = document.getElementById('modal-title');
+        titulo.setAttribute('tabindex', '-1');
+        titulo.focus();
     }
 
 
