@@ -1,0 +1,82 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><style>
+@font-face{font-family:B;src:url(../video/spot/public/b600.woff2)}@font-face{font-family:BC;src:url(../video/spot/public/bc800.woff2)}
+:root{--am:#F59E0B;--amd:#D97706;--cr:#FEF3C7;--car:#1F2937;--neg:#111827;--gr:#6B7280;--bg:#F9FAFB;--w:#FFFFFF;--ok:#10B981}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;background:var(--bg);font-family:B;color:var(--car);overflow:hidden}
+.top{background:var(--w);padding:56px 64px 40px;border-bottom:8px solid var(--am)}
+.top img{height:96px}
+h1{font-family:BC;font-size:84px;text-transform:uppercase;letter-spacing:1px;margin-top:28px;line-height:1}
+.sub{font-size:28px;color:var(--gr);margin-top:12px}
+.sec{padding:34px 64px 0}
+.lbl{font-family:BC;font-size:30px;text-transform:uppercase;letter-spacing:1.5px;color:var(--amd);margin-bottom:16px}
+.flow{display:flex;gap:14px;align-items:stretch}
+.step{flex:1;background:var(--w);border-radius:16px;padding:20px 16px;text-align:center;box-shadow:0 1px 0 rgba(17,24,39,.06)}
+.step .n{width:52px;height:52px;border-radius:12px;background:var(--am);color:var(--car);font-family:BC;font-size:32px;line-height:52px;margin:0 auto 10px}
+.step b{display:block;font-family:BC;font-size:30px;text-transform:uppercase}
+.step span{font-size:19px;color:var(--gr)}
+.arrow{align-self:center;font-family:BC;font-size:40px;color:var(--am)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.card{background:var(--w);border-radius:16px;padding:24px 26px}
+.big{font-family:BC;font-size:96px;line-height:.95;color:var(--car)}
+.big small{font-size:44px;color:var(--amd)}
+.card p{font-size:23px;color:var(--gr);margin-top:6px;line-height:1.25}
+.dark{background:var(--neg);color:var(--w);border-radius:20px;padding:28px 30px}
+.dark .lbl{color:var(--am)}
+.lh{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.ring{text-align:center}
+.ring .c{width:150px;height:150px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-family:BC;font-size:58px;color:var(--w);background:conic-gradient(var(--ok) calc(var(--v)*1%),rgba(255,255,255,.12) 0);position:relative}
+.ring .c::after{content:"";position:absolute;inset:12px;border-radius:50%;background:var(--neg)}
+.ring .c span{position:relative;z-index:1}
+.ring p{font-size:21px;margin-top:10px;color:#D1D5DB}
+.lhnote{font-size:20px;color:#9CA3AF;margin-top:14px}
+.ia{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.ia .card{padding:20px 18px;text-align:left}
+.ia .big{font-size:76px}
+.ia p{font-size:20px}
+.stack{display:flex;gap:12px;flex-wrap:wrap}
+.chip{background:var(--cr);border-radius:999px;padding:10px 22px;font-size:23px;color:var(--car)}
+.foot{margin-top:40px;background:var(--car);color:#D1D5DB;padding:22px 64px;font-size:17px;line-height:1.45}
+.foot b{color:var(--am);font-family:BC;font-size:26px;letter-spacing:.5px}
+</style></head><body>
+<div class="top"><img src="../marca/logo-horizontal.png" alt="Pointer">
+<h1>Pointer en números</h1><div class="sub">Sistema web para kioscos · Trabajo Final Integrador · IEST Tinogasta, 2026</div></div>
+
+<div class="sec"><div class="lbl">Cómo funciona</div>
+<div class="flow">
+<div class="step"><div class="n">1</div><b>Escaneá</b><span>el producto con el lector</span></div><div class="arrow">›</div>
+<div class="step"><div class="n">2</div><b>Cobrá</b><span>con vuelto y sin duplicados</span></div><div class="arrow">›</div>
+<div class="step"><div class="n">3</div><b>Cerrá</b><span>la caja: sobra o falta</span></div><div class="arrow">›</div>
+<div class="step"><div class="n">4</div><b>Mirá</b><span>tus ventas del día</span></div>
+</div></div>
+
+<div class="sec"><div class="lbl">Desarrollo con SDD</div>
+<div class="grid">
+<div class="card"><div class="big">23</div><p>requisitos de prioridad Alta, escritos en EARS, <b style="color:var(--ok)">100 % cumplidos</b></p></div>
+<div class="card"><div class="big">43</div><p>tareas hechas una por una, con su commit, en 2 funcionalidades</p></div>
+<div class="card"><div class="big">267</div><p>tests automáticos en verde, 0 fallos</p></div>
+<div class="card"><div class="big">90<small> → </small>0</div><p>colores escritos a mano en el CSS: ahora todo sale de las variables de la marca</p></div>
+</div></div>
+
+<div class="sec"><div class="dark"><div class="lbl">Calidad del sitio publicado · Lighthouse (celular)</div>
+<div class="lh">
+<div class="ring"><div class="c" style="--v:98"><span>98</span></div><p>Rendimiento</p></div>
+<div class="ring"><div class="c" style="--v:92"><span>92</span></div><p>Accesibilidad</p></div>
+<div class="ring"><div class="c" style="--v:100"><span>100</span></div><p>Buenas prácticas</p></div>
+<div class="ring"><div class="c" style="--v:92"><span>92</span></div><p>SEO</p></div>
+</div><div class="lhnote">En computadora: 100 · 93 · 100 · 92. Mínimo pedido: 80 en cada categoría.</div></div></div>
+
+<div class="sec"><div class="lbl">Uso responsable de la IA</div>
+<div class="ia">
+<div class="card"><div class="big">11</div><p>errores de la IA detectados y corregidos</p></div>
+<div class="card"><div class="big">7</div><p>riesgos identificados, cada uno con su mitigación</p></div>
+<div class="card"><div class="big">16</div><p>piezas con ficha y leyenda «Generado con IA»</p></div>
+<div class="card"><div class="big">0</div><p>personas reales en imágenes, voces o videos</p></div>
+</div></div>
+
+<div class="sec"><div class="lbl">Tecnologías</div>
+<div class="stack"><span class="chip">HTML, CSS y JavaScript</span><span class="chip">Supabase (base de datos y RLS)</span><span class="chip">Netlify</span><span class="chip">node:test</span><span class="chip">Claude Code + VS Code</span></div></div>
+
+<div class="foot"><b>Cada venta, en su lugar.</b><br>
+Fuentes: specs/001 y specs/002 (spec.md, tasks.md, verificacion.md), npm test y Lighthouse del 3 de noviembre de 2026, documentacion/PROMPTS.md, DECLARACION-IA.md y multimedia/FICHAS-IA.md.<br>
+Infografía generada con código escrito por IA (Claude) a partir de datos reales del proyecto. Autor: Juan Angel Reales.</div>
+</body></html>
