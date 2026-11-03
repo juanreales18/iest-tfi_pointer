@@ -184,7 +184,7 @@
   - **Listo cuando:** `npm test` en verde (no queda el cálculo de la diferencia ni las lecturas previas en `pos.js`); en local, `1e` no cierra y con la red cortada «Cobrar» sigue habilitado.
   - **Commit:** `deja que la base calcule la diferencia en el punto de venta`
 
-- [ ] T24 · POS: resumen de cierre
+- [x] T24 · POS: resumen de cierre
   - **RF:** 08
   - **Archivos:** `sistema/js/pos.js` (`openCajaModal`, `closePOSCajaModal`, `setupKeyboard`, `setupSearch`)
   - **Hace:** resumen con `armarResumenCierre` y las clases de T20. Marca `POS.resumenCajaVisible`: con ella no actúan la X, el clic afuera, el lector, F2, F10 ni Escape, que hoy le sacaría el foco al resumen. El foco va al título (D5). «Listo» baja la marca.

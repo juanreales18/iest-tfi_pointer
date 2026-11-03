@@ -548,3 +548,70 @@ test('pos cierre: caso límite 10 · sin red el botón vuelve y POS.cajaAbierta 
     assert.doesNotMatch(fallo, /POS\.cajaAbierta/);
     assert.doesNotMatch(CIERRE_EN_POS, /toastError\('No se pudo cerrar la caja'\)/);
 });
+
+// ---------------------------------------------------------------
+// Punto de venta, pos.js: resumen de cierre (RF-002-08, D5)
+// ---------------------------------------------------------------
+function resumenEnPos() {
+    const inicio = POS_JS.indexOf('function mostrarResumenCierre');
+    return inicio < 0 ? '' : POS_JS.slice(inicio, POS_JS.indexOf('\n    }\n', inicio));
+}
+
+test('pos resumen: RF-002-08 · sale de la fila de la base, después del movimiento y la auditoría', () => {
+    const auditoria = CIERRE_EN_POS.indexOf("registrarAuditoria('cierre_caja'");
+    const resumen = CIERRE_EN_POS.indexOf('mostrarResumenCierre(resumen)');
+    assert.ok(auditoria >= 0 && auditoria < resumen);
+    assert.match(CIERRE_EN_POS, /const resumen\s+= CajaLogica\.armarResumenCierre\(fila\);/);
+});
+
+test('pos resumen: RF-002-08 · reemplaza al aviso temporal y actualiza la pantalla de atrás', () => {
+    const despues = CIERRE_EN_POS.split('mostrarResumenCierre(resumen)')[1] || '';
+    assert.match(despues, /await cargarCaja\(\);\s+calcularTotales\(\);/);
+    assert.doesNotMatch(CIERRE_EN_POS, /Caja cerrada con una diferencia/);
+    assert.doesNotMatch(despues, /closePOSCajaModal\(\)/);
+});
+
+test('pos resumen: RF-002-08 · muestra el esperado, y el contado solo si hubo', () => {
+    const resumen = resumenEnPos();
+    assert.match(resumen, /formatCurrency\(datos\.esperado\)/);
+    assert.match(resumen, /datos\.contado === null/);
+    assert.match(resumen, /datos\.texto/);
+    assert.match(resumen, /class="caja-resumen"/);
+});
+
+test('pos resumen: RF-002-08 · la marca se prende al mostrarlo, y solo «Listo» la baja', () => {
+    const resumen = resumenEnPos();
+    assert.match(resumen, /POS\.resumenCajaVisible = true;/);
+    assert.match(resumen, /onclick="closePOSCajaModal\(\)">\$\{CajaLogica\.MENSAJES\.listo\}/);
+    const cerrar = POS_JS.slice(POS_JS.indexOf('function closePOSCajaModal'), POS_JS.indexOf('window.closePOSCajaModal'));
+    assert.match(cerrar, /POS\.resumenCajaVisible = false;/);
+});
+
+test('pos resumen: D5 · el foco va al título, no a «Listo»', () => {
+    const resumen = resumenEnPos();
+    assert.match(resumen, /getElementById\('modal-caja-title'\)/);
+    assert.match(resumen, /titulo\.focus\(\)/);
+    assert.doesNotMatch(resumen, /autofocus/);
+});
+
+test('pos resumen: RF-002-08 · la X y el clic afuera no lo cierran', () => {
+    assert.match(MODAL_EN_POS, /e\.target === overlay && !POS\.resumenCajaVisible/);
+    assert.match(MODAL_EN_POS, /closeBtn\?\.addEventListener\('click', \(\) => \{\s+if \(!POS\.resumenCajaVisible\) closePOSCajaModal\(\);/);
+});
+
+test('pos resumen: D5 · el lector no actúa', () => {
+    const inicio = POS_JS.indexOf('function setupSearch');
+    const lector = POS_JS.slice(POS_JS.indexOf("addEventListener('keydown'", inicio));
+    assert.match(lector, /^addEventListener\('keydown', \(e\) => \{\s+if \(POS\.resumenCajaVisible\) return;/);
+});
+
+test('pos resumen: D5 · F2, F10 y Escape no actúan', () => {
+    const inicio = POS_JS.indexOf('function setupKeyboard');
+    const teclado = POS_JS.slice(POS_JS.indexOf("addEventListener('keydown'", inicio));
+    assert.match(teclado, /^addEventListener\('keydown', \(e\) => \{\s+if \(POS\.resumenCajaVisible\) \{/);
+    assert.ok(teclado.indexOf('POS.resumenCajaVisible') < teclado.indexOf("e.key === 'Escape'"));
+});
+
+test('pos resumen: con el resumen abierto no se abre otro modal de caja', () => {
+    assert.match(MODAL_EN_POS, /^async function openCajaModal\(\) \{\s+if \(POS\.resumenCajaVisible\) return;/);
+});

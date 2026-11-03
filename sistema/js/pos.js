@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         cajaAbierta:    false,
         config:         {},       // configuracion del negocio
         productos:      [],       // cache de productos cargados
+        resumenCajaVisible: false, // con el resumen de cierre abierto solo actua «Listo»
     };
 
     // =========================================================
@@ -466,6 +467,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const SCAN_SPEED  = 50;   // ms entre teclas del lector
 
         document.addEventListener('keydown', (e) => {
+            if (POS.resumenCajaVisible) return;
+
             // Ignorar si el foco esta en otro input que no sea la busqueda
             // (ej: campos de cantidad del carrito, notas, etc.)
             const tag = document.activeElement?.tagName;
@@ -1023,6 +1026,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function openCajaModal() {
+        if (POS.resumenCajaVisible) return;
+
         const overlay  = document.getElementById('modal-caja-overlay');
         const title    = document.getElementById('modal-caja-title');
         const body     = document.getElementById('modal-caja-body');
@@ -1092,9 +1097,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (overlay) overlay.classList.add('open');
         document.body.style.overflow = 'hidden';
 
-        closeBtn?.addEventListener('click', closePOSCajaModal, { once: true });
+        closeBtn?.addEventListener('click', () => {
+            if (!POS.resumenCajaVisible) closePOSCajaModal();
+        }, { once: true });
         overlay?.addEventListener('click', (e) => {
-            if (e.target === overlay) closePOSCajaModal();
+            if (e.target === overlay && !POS.resumenCajaVisible) closePOSCajaModal();
         }, { once: true });
 
         // Arqueo: la diferencia contra lo contado solo informa, la que vale la calcula la base
@@ -1216,7 +1223,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const saldoActual  = parseFloat(fila.saldo_actual  ?? 0);
             const saldoInicial = parseFloat(fila.saldo_inicial ?? 0);
             const recaudado    = saldoActual - saldoInicial;
-            const diferencia   = CajaLogica.armarResumenCierre(fila).diferencia;
+            const resumen      = CajaLogica.armarResumenCierre(fila);
+            const diferencia   = resumen.diferencia;
 
             const { error: movErr } = await window._supabase.from('movimientos_caja').insert({
                 caja_id:         POS.cajaId,
@@ -1232,12 +1240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             await registrarAuditoria('cierre_caja', 'cajas', POS.cajaId,
                 'Cierre de caja' + (diferencia === null ? '' : ` (diferencia ${formatCurrency(diferencia)})`));
 
-            closePOSCajaModal();
-            if (diferencia !== null && diferencia !== 0) {
-                toastWarning(`Caja cerrada con una diferencia de ${formatCurrency(diferencia)}`);
-            } else {
-                toastSuccess('Caja cerrada correctamente');
-            }
+            mostrarResumenCierre(resumen);
             POS.cajaAbierta = false;
             await cargarCaja();
             calcularTotales();
@@ -1246,11 +1249,44 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function closePOSCajaModal() {
         const overlay = document.getElementById('modal-caja-overlay');
+        POS.resumenCajaVisible = false;
         if (overlay) overlay.classList.remove('open');
         document.body.style.overflow = '';
     }
 
     window.closePOSCajaModal = closePOSCajaModal;
+
+    // Solo numeros y textos fijos, sin notas. El foco va al titulo y no a «Listo»:
+    // el lector termina cada lectura con Enter y cerraria el resumen (D5)
+    function mostrarResumenCierre(datos) {
+        const titulo = document.getElementById('modal-caja-title');
+        const clase = datos.diferencia > 0 ? 'caja-resumen-sobrante'
+            : datos.diferencia < 0 ? 'caja-resumen-faltante' : '';
+
+        POS.resumenCajaVisible = true;
+        titulo.textContent = 'Caja cerrada';
+        document.getElementById('modal-caja-body').innerHTML = `
+            <div class="caja-resumen">
+                <div class="caja-resumen-fila">
+                    <span>Efectivo esperado</span>
+                    <strong>${formatCurrency(datos.esperado)}</strong>
+                </div>
+                ${datos.contado === null ? '' : `
+                <div class="caja-resumen-fila">
+                    <span>Efectivo contado</span>
+                    <strong>${formatCurrency(datos.contado)}</strong>
+                </div>`}
+                <div class="caja-resumen-fila caja-resumen-resultado ${clase}">
+                    <span>${datos.texto}</span>
+                    ${datos.valor === null ? '' : `<strong>${formatCurrency(datos.valor)}</strong>`}
+                </div>
+            </div>`;
+        document.getElementById('modal-caja-footer').innerHTML =
+            `<button class="btn btn-primary" onclick="closePOSCajaModal()">${CajaLogica.MENSAJES.listo}</button>`;
+
+        titulo.setAttribute('tabindex', '-1');
+        titulo.focus();
+    }
 
 
     // =========================================================
@@ -1258,6 +1294,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // =========================================================
     function setupKeyboard() {
         document.addEventListener('keydown', (e) => {
+            if (POS.resumenCajaVisible) {
+                if (e.key === 'F2' || e.key === 'F10') e.preventDefault();
+                return;
+            }
+
             // F2: enfocar busqueda
             if (e.key === 'F2') {
                 e.preventDefault();
