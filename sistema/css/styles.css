@@ -801,7 +801,7 @@ h4 { font-size: 1rem; }
     flex-shrink: 0;
 }
 
-/* Resumen de cierre de caja: el resultado se lee en el texto, el color solo acompana */
+/* Resumen de cierre de caja: el resultado se lee en el texto; texto oscuro y fondo suave por contraste (P7) */
 .caja-resumen-fila {
     display: flex;
     justify-content: space-between;
@@ -828,11 +828,17 @@ h4 { font-size: 1rem; }
     font-size: 1.4rem;
     color: inherit;
 }
+.caja-resumen-sobrante,
+.caja-resumen-faltante {
+    padding: 10px 12px;
+    border-top: none;
+    border-radius: var(--radius-md);
+}
 .caja-resumen-sobrante {
-    color: var(--color-success);
+    background: var(--color-success-light);
 }
 .caja-resumen-faltante {
-    color: var(--color-danger);
+    background: var(--color-danger-light);
 }
 
 

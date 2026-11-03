@@ -642,5 +642,23 @@ for (const archivo of ['caja-logica.js', 'pos-logica.js', '20-caja-arqueo.sql', 
 test('publicación: CACHE_VERSION subió para caja y arqueo', () => {
     const version = leer('sistema', 'sw.js').match(/CACHE_VERSION = '([^']+)'/);
     assert.ok(version);
-    assert.notEqual(version[1], 'kiosco-v-2026-11-02T15-45-00');
+    assert.notEqual(version[1], 'kiosco-v-2026-11-03T01-35-00');
 });
+
+// ---------------------------------------------------------------
+// P7: contraste del resultado del resumen, en las dos pantallas
+// ---------------------------------------------------------------
+function reglaCss(selector) {
+    const css = leer('sistema', 'css', 'styles.css').replace(/\r\n/g, '\n');
+    // La última: la primera puede ser un selector agrupado
+    const inicio = css.lastIndexOf(`\n${selector} {`);
+    return inicio < 0 ? '' : css.slice(inicio, css.indexOf('}', inicio));
+}
+
+for (const [clase, fondo] of [['sobrante', 'success'], ['faltante', 'danger']]) {
+    test(`resumen: P7 · ${clase} es texto oscuro sobre un fondo suave`, () => {
+        const regla = reglaCss(`.caja-resumen-${clase}`);
+        assert.match(regla, new RegExp(`background: var\\(--color-${fondo}-light\\)`));
+        assert.doesNotMatch(regla, new RegExp(`[^-]color: var\\(--color-${fondo}\\)`));
+    });
+}

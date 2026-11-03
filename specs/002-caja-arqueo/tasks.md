@@ -214,6 +214,13 @@
   - **Listo cuando:** cada RF figura como cumple / no cumple / prueba manual pendiente, con el test que lo cubre; `npm test` en verde.
   - **Commit:** `agrega la verificación de caja y arqueo`
 
+- [x] T28 · Contraste del resumen de cierre
+  - **RF:** 08 (P7). Sale de la observación 1 de `verificacion.md`; no cambia ningún requisito.
+  - **Archivos:** `sistema/css/styles.css`, `sistema/sw.js`, `tests/caja.test.js`, `specs/002-caja-arqueo/verificacion.md`
+  - **Hace:** «Sobrante» y «Faltante» pasan a texto oscuro sobre un fondo suave. Sube `CACHE_VERSION` otra vez, porque hay que volver a publicar.
+  - **Listo cuando:** `npm test` en verde; el autor publica en `pointer-demo` y ve los dos resultados.
+  - **Commit:** `mejora el contraste del resumen de cierre`
+
 > Si al abrir `app.js` o `pos.js` alguna de T17 a T24 resulta de más de 30 minutos, se parte en dos antes de empezar.
 
 ## Cobertura RF → tareas
