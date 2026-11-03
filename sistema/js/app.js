@@ -740,19 +740,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
                 <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px">
                     <span style="color:var(--color-gray-light)">Cantidad de ventas</span>
-                    <span style="font-family:var(--font-condensed);font-weight:700;font-size:1.1rem;color:#fff">${totalVentas}</span>
+                    <span style="font-family:var(--font-condensed);font-weight:700;font-size:1.1rem;color:var(--color-surface)">${totalVentas}</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px">
                     <span style="color:var(--color-gray-light)">Total vendido (todos los medios)</span>
-                    <span style="font-weight:600;color:#fff">${formatCurrency(Object.values(porMetodo).reduce((s, d) => s + d.total, 0))}</span>
+                    <span style="font-weight:600;color:var(--color-surface)">${formatCurrency(Object.values(porMetodo).reduce((s, d) => s + d.total, 0))}</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px">
                     <span style="color:var(--color-gray-light)">Fondo inicial</span>
-                    <span style="font-weight:600;color:#fff">${formatCurrency(saldoInicial)}</span>
+                    <span style="font-weight:600;color:var(--color-surface)">${formatCurrency(saldoInicial)}</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;padding:8px 0 4px;
-                            border-top:1px solid rgba(255,255,255,0.1);margin-top:6px;font-size:15px">
-                    <span style="font-weight:700;color:#fff">Recaudado en efectivo</span>
+                            border-top:1px solid rgba(var(--color-white-rgb), 0.1);margin-top:6px;font-size:15px">
+                    <span style="font-weight:700;color:var(--color-surface)">Recaudado en efectivo</span>
                     <strong style="color:var(--color-primary);font-family:var(--font-condensed);font-size:1.3rem">${formatCurrency(recaudado)}</strong>
                 </div>
             </div>
@@ -1002,12 +1002,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     function modalGasto() {
         const body = `
             <div class="form-group">
-                <label class="form-label">Concepto <span style="color:red">*</span></label>
+                <label class="form-label">Concepto <span style="color:var(--color-requerido)">*</span></label>
                 <input type="text" id="gasto-concepto" class="form-input" placeholder="Ej: Alquiler, luz, limpieza...">
                 <span class="field-error" id="gasto-concepto-error"></span>
             </div>
             <div class="form-group">
-                <label class="form-label">Monto <span style="color:red">*</span></label>
+                <label class="form-label">Monto <span style="color:var(--color-requerido)">*</span></label>
                 <input type="number" id="gasto-monto" class="form-input" placeholder="0.00" min="0.01" step="0.01">
                 <span class="field-error" id="gasto-monto-error"></span>
             </div>
@@ -1133,28 +1133,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         const body = `
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
                 <div class="form-group">
-                    <label class="form-label">Nombre <span style="color:red">*</span></label>
+                    <label class="form-label">Nombre <span style="color:var(--color-requerido)">*</span></label>
                     <input type="text" id="nu-nombre" class="form-input" placeholder="Juan">
                     <span class="field-error" id="nu-nombre-error"></span>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Apellido <span style="color:red">*</span></label>
+                    <label class="form-label">Apellido <span style="color:var(--color-requerido)">*</span></label>
                     <input type="text" id="nu-apellido" class="form-input" placeholder="Perez">
                     <span class="field-error" id="nu-apellido-error"></span>
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label">Email <span style="color:red">*</span></label>
+                <label class="form-label">Email <span style="color:var(--color-requerido)">*</span></label>
                 <input type="email" id="nu-email" class="form-input" placeholder="usuario@kiosco.com">
                 <span class="field-error" id="nu-email-error"></span>
             </div>
             <div class="form-group">
-                <label class="form-label">Contrasena <span style="color:red">*</span></label>
+                <label class="form-label">Contrasena <span style="color:var(--color-requerido)">*</span></label>
                 <input type="password" id="nu-pass" class="form-input" placeholder="Minimo 8 caracteres" autocomplete="new-password">
                 <span class="field-error" id="nu-pass-error"></span>
             </div>
             <div class="form-group">
-                <label class="form-label">Rol <span style="color:red">*</span></label>
+                <label class="form-label">Rol <span style="color:var(--color-requerido)">*</span></label>
                 <select id="nu-rol" class="form-select">${rolesOpts}</select>
             </div>`;
 

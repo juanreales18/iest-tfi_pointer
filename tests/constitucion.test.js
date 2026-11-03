@@ -60,6 +60,34 @@ test('marca: no se agregan colores escritos a mano fuera de :root', () => {
     );
 });
 
+// Lo único que queda con el valor literal, y por qué:
+const EXCEPCIONES_COLORES = {
+    // <input type="color"> solo acepta un hex: con var() guardaría negro
+    [path.join('sistema', 'js', 'products.js')]: ["value=\"${cat?.color || '#F59E0B'}\""],
+    // La consola no resuelve variables; &#039; es la comilla de escapeHtml, no un color
+    [path.join('sistema', 'js', 'config.js')]: ["'color:#F59E0B;font-weight:800;font-size:16px;'", '&#039;'],
+};
+
+test('marca: los html y js de sistema/ no tienen colores escritos a mano', () => {
+    const detalle = [];
+    for (const f of archivos(SRC, ['.html', '.js'])) {
+        let texto = leer(f);
+        for (const permitido of EXCEPCIONES_COLORES[relativo(f)] || []) {
+            assert.ok(texto.includes(permitido), `Excepción vieja en ${relativo(f)}: ${permitido}`);
+            texto = texto.replace(permitido, '');
+        }
+        const n = (texto.match(/#[0-9a-fA-F]{3,8}\b|rgba?\(\s*\d|color:\s*red\b/g) || []).length;
+        if (n) detalle.push(`${relativo(f)}: ${n}`);
+    }
+    assert.deepEqual(detalle, [], `Colores escritos a mano en: ${detalle.join('; ')}`);
+});
+
+test('marca: index.html y el aviso de bloqueo cargan las variables de styles.css', () => {
+    const hoja = /<link rel="stylesheet" href="css\/styles\.css">/;
+    assert.match(leer(path.join(SRC, 'index.html')), hoja);
+    assert.match(leer(path.join(SRC, 'js', 'auth.js')), hoja);
+});
+
 // ---------------------------------------------------------------
 // P3 · Capas: las ventas solo se crean y anulan en la base
 // ---------------------------------------------------------------

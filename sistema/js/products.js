@@ -246,7 +246,7 @@ function modalProducto(prod, categorias, onSaved) {
     const body = `
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <div class="form-group" style="grid-column:1/-1">
-                <label class="form-label">Nombre del producto <span style="color:red">*</span></label>
+                <label class="form-label">Nombre del producto <span style="color:var(--color-requerido)">*</span></label>
                 <input type="text" id="mp-nombre" class="form-input"
                     value="${escapeHtml(prod?.nombre || '')}" placeholder="Ej: Coca Cola 500ml">
                 <span class="field-error" id="mp-nombre-error"></span>
@@ -269,7 +269,7 @@ function modalProducto(prod, categorias, onSaved) {
                     value="${prod?.precio_costo || 0}" min="0" step="0.01">
             </div>
             <div class="form-group">
-                <label class="form-label">Precio de venta <span style="color:red">*</span></label>
+                <label class="form-label">Precio de venta <span style="color:var(--color-requerido)">*</span></label>
                 <input type="number" id="mp-precio" class="form-input"
                     value="${prod?.precio_venta || ''}" min="0" step="0.01" placeholder="0.00">
                 <span class="field-error" id="mp-precio-error"></span>
@@ -396,7 +396,7 @@ function modalAjusteStock(prod, onSaved) {
             </select>
         </div>
         <div class="form-group">
-            <label class="form-label">Cantidad <span style="color:red">*</span></label>
+            <label class="form-label">Cantidad <span style="color:var(--color-requerido)">*</span></label>
             <input type="number" id="ajuste-cantidad" class="form-input" min="0" placeholder="0">
             <span class="field-error" id="ajuste-cantidad-error"></span>
         </div>
@@ -488,8 +488,8 @@ async function renderCategorias(area) {
                 : data.map(c => `
                 <div class="card" style="padding:16px">
                     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-                        <div style="width:38px;height:38px;border-radius:var(--radius-md);background:${escapeHtml(c.color || '#F59E0B')}22;display:flex;align-items:center;justify-content:center">
-                            <div style="width:12px;height:12px;border-radius:50%;background:${escapeHtml(c.color || '#F59E0B')}"></div>
+                        <div style="width:38px;height:38px;border-radius:var(--radius-md);background:${c.color ? `${escapeHtml(c.color)}22` : 'rgba(var(--color-primary-rgb), 0.133)'};display:flex;align-items:center;justify-content:center">
+                            <div style="width:12px;height:12px;border-radius:50%;background:${escapeHtml(c.color || 'var(--color-primary)')}"></div>
                         </div>
                         <div>
                             <div style="font-weight:700;font-size:14px">${escapeHtml(c.nombre)}</div>
@@ -540,7 +540,7 @@ function modalCategoria(cat, onSaved) {
     const isEdit = !!cat;
     const body = `
         <div class="form-group">
-            <label class="form-label">Nombre <span style="color:red">*</span></label>
+            <label class="form-label">Nombre <span style="color:var(--color-requerido)">*</span></label>
             <input type="text" id="cat-nombre" class="form-input"
                 value="${escapeHtml(cat?.nombre || '')}" placeholder="Ej: Bebidas">
             <span class="field-error" id="cat-nombre-error"></span>
@@ -773,7 +773,7 @@ function modalProveedor(prov, onSaved) {
     const body = `
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <div class="form-group" style="grid-column:1/-1">
-                <label class="form-label">Razon social <span style="color:red">*</span></label>
+                <label class="form-label">Razon social <span style="color:var(--color-requerido)">*</span></label>
                 <input type="text" id="pv-razon" class="form-input"
                     value="${escapeHtml(prov?.razon_social || '')}" placeholder="Ej: Distribuidora Norte SRL">
                 <span class="field-error" id="pv-razon-error"></span>
@@ -1390,7 +1390,7 @@ function modalCliente(cli, onSaved) {
     const body = `
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <div class="form-group">
-                <label class="form-label">Nombre <span style="color:red">*</span></label>
+                <label class="form-label">Nombre <span style="color:var(--color-requerido)">*</span></label>
                 <input type="text" id="cl-nombre" class="form-input"
                     value="${escapeHtml(cli?.nombre || '')}" placeholder="Juan">
                 <span class="field-error" id="cl-nombre-error"></span>

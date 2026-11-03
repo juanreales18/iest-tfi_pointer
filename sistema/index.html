@@ -8,16 +8,18 @@
     <meta name="license-key"   content="LIC-06J57OI3">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KioscoSystem</title>
+    <link rel="stylesheet" href="css/styles.css">
     <style>
         body {
             margin: 0;
-            background: #1F2937;
+            background: var(--color-dark);
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
             font-family: 'Segoe UI', sans-serif;
-            color: #fff;
+            line-height: normal;
+            color: var(--color-surface);
         }
         .loader {
             display: flex;
@@ -28,13 +30,14 @@
         .spinner {
             width: 40px;
             height: 40px;
-            border: 3px solid rgba(245,158,11,0.3);
-            border-top-color: #F59E0B;
+            box-sizing: content-box;
+            border: 3px solid rgba(var(--color-primary-rgb), 0.3);
+            border-top-color: var(--color-primary);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        p { margin: 0; font-size: 14px; color: #9CA3AF; }
+        p { margin: 0; font-size: 14px; color: var(--color-gray-light); }
     </style>
     <!-- Service Worker: invalida cache automaticamente en cada deploy -->
     <script>

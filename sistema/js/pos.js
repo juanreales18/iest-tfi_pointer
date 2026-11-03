@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 btn.className   = 'category-chip';
                 btn.dataset.id  = cat.id;
                 btn.textContent = cat.nombre;
-                btn.style.setProperty('--cat-color', cat.color || '#F59E0B');
+                btn.style.setProperty('--cat-color', cat.color || 'var(--color-primary)');
                 container.appendChild(btn);
             });
 
@@ -543,7 +543,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function flashScanner(tipo) {
         const header = document.querySelector('.pos-search-wrapper');
         if (!header) return;
-        const color = tipo === 'success' ? '#10B981' : '#EF4444';
+        const color = tipo === 'success' ? 'var(--color-success)' : 'var(--color-danger)';
         header.style.transition = 'box-shadow 0.1s ease';
         header.style.boxShadow  = `0 0 0 3px ${color}`;
         setTimeout(() => {
@@ -840,9 +840,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     body.printing-ticket #print-area .ticket-container {
                         position: static !important; width: 100% !important; max-width: 72mm;
                         border: none !important; box-shadow: none !important; margin: 0 auto;
-                        color: #000 !important; background: #fff !important;
+                        color: rgb(var(--color-black-rgb)) !important; background: var(--color-surface) !important;
                     }
-                    body.printing-ticket { background: #fff !important; overflow: visible !important; }
+                    body.printing-ticket { background: var(--color-surface) !important; overflow: visible !important; }
                 }`;
             document.head.appendChild(st);
         }

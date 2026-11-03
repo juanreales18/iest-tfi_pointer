@@ -205,11 +205,14 @@ function mostrarPantallaBloqueo(mensaje, sinConexion = false) {
     <title>${titulo}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 100%; }
         body {
             font-family: 'Barlow', sans-serif;
-            background: #111827;
+            line-height: normal;
+            background: var(--color-dark-2);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -217,8 +220,8 @@ function mostrarPantallaBloqueo(mensaje, sinConexion = false) {
             padding: 24px;
         }
         .bloqueo-card {
-            background: #1F2937;
-            border: 1px solid rgba(255,255,255,0.06);
+            background: var(--color-dark);
+            border: 1px solid rgba(var(--color-white-rgb), 0.06);
             border-radius: 16px;
             padding: 48px 40px;
             max-width: 480px;
@@ -228,20 +231,20 @@ function mostrarPantallaBloqueo(mensaje, sinConexion = false) {
         .bloqueo-icon {
             width: 72px;
             height: 72px;
-            background: rgba(239,68,68,0.15);
-            border: 2px solid rgba(239,68,68,0.3);
+            background: rgba(var(--color-danger-rgb), 0.15);
+            border: 2px solid rgba(var(--color-danger-rgb), 0.3);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 24px;
         }
-        .bloqueo-icon svg { color: #EF4444; }
+        .bloqueo-icon svg { color: var(--color-danger); }
         .bloqueo-logo {
             font-family: 'Barlow Condensed', sans-serif;
             font-weight: 800;
             font-size: 1rem;
-            color: #F59E0B;
+            color: var(--color-primary);
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 20px;
@@ -250,33 +253,34 @@ function mostrarPantallaBloqueo(mensaje, sinConexion = false) {
             font-family: 'Barlow Condensed', sans-serif;
             font-weight: 800;
             font-size: 1.8rem;
-            color: #fff;
+            line-height: normal;
+            color: var(--color-surface);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 12px;
         }
         p {
             font-size: 15px;
-            color: #9CA3AF;
+            color: var(--color-gray-light);
             line-height: 1.6;
             margin-bottom: 8px;
         }
         .bloqueo-mensaje {
-            background: rgba(239,68,68,0.1);
-            border: 1px solid rgba(239,68,68,0.25);
+            background: rgba(var(--color-danger-rgb), 0.1);
+            border: 1px solid rgba(var(--color-danger-rgb), 0.25);
             border-radius: 8px;
             padding: 14px 18px;
             font-size: 14px;
-            color: #FCA5A5;
+            color: var(--color-danger-border);
             margin: 20px 0 28px;
             line-height: 1.5;
         }
         .bloqueo-contacto {
             font-size: 13px;
-            color: #6B7280;
+            color: var(--color-gray);
             margin-top: 20px;
         }
-        .bloqueo-contacto strong { color: #F59E0B; }
+        .bloqueo-contacto strong { color: var(--color-primary); }
     </style>
 </head>
 <body>
@@ -292,7 +296,7 @@ function mostrarPantallaBloqueo(mensaje, sinConexion = false) {
         <h1>${titulo}</h1>
         ${sinConexion ? '' : '<p>El acceso al sistema ha sido suspendido.</p>'}
         <div class="bloqueo-mensaje">${mensaje.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
-        ${sinConexion ? '<p><button onclick="location.reload()" style="padding:10px 22px;border:none;border-radius:8px;background:#f5a623;color:#111;font-weight:700;cursor:pointer">Reintentar</button></p>' : '<p>Para reactivar el sistema comunicate con el administrador.</p>'}
+        ${sinConexion ? '<p><button onclick="location.reload()" style="padding:10px 22px;border:none;border-radius:8px;font-family:revert;font-size:revert;background:var(--color-reintentar-bg);color:var(--color-reintentar-text);font-weight:700;cursor:pointer">Reintentar</button></p>' : '<p>Para reactivar el sistema comunicate con el administrador.</p>'}
         <div class="bloqueo-contacto">
             Licencia: <strong>${typeof LICENSE_CONFIG !== 'undefined' ? LICENSE_CONFIG.licencia : '-'}</strong>
         </div>

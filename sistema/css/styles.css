@@ -81,6 +81,11 @@
     --ticket-divider:       #999;
     --ticket-border:        #ccc;
 
+    /* Fuera de la paleta: botón «Reintentar» del aviso de bloqueo y asterisco de obligatorio */
+    --color-reintentar-bg:  #f5a623;
+    --color-reintentar-text: #111;
+    --color-requerido:      red;
+
     /* Tipografia */
     --font-main:            'Barlow', sans-serif;
     --font-condensed:       'Barlow Condensed', sans-serif;

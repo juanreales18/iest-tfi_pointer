@@ -150,6 +150,9 @@ Salen del CSS heredado y están en el `:root` de `sistema/css/styles.css`. No so
 | `--ticket-text-muted` | `#777` | Pie del ticket |
 | `--ticket-divider` | `#999` | Divisores del ticket |
 | `--ticket-border` | `#ccc` | Borde del ticket |
+| `--color-reintentar-bg` | `#f5a623` | Fondo del botón «Reintentar» del aviso de bloqueo |
+| `--color-reintentar-text` | `#111` | Texto del botón «Reintentar» del aviso de bloqueo |
+| `--color-requerido` | `red` | Asterisco de los campos obligatorios |
 
 Para usar un color con transparencia hay variables de canales: `rgba(var(--color-primary-rgb), 0.18)`.
 
