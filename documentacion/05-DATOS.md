@@ -52,9 +52,10 @@ Base de datos PostgreSQL en Supabase. Todas las tablas tienen RLS activo. Los id
 | `descontar_stock_venta` | Trigger | Resta stock y registra el historial al vender |
 | `registrar_movimiento_venta` | Trigger | Suma a la caja las ventas en efectivo |
 | `reponer_stock_compra` | Trigger | Suma stock y actualiza el costo al recibir una compra |
-| `cajas_guard`, `ventas_guard_estado` | Triggers | Impiden que un empleado toque saldos o anule ventas por fuera de `cancelar_venta` |
+| `cajas_guard` | Trigger | Frena a los dos roles: calcula la diferencia del arqueo y rechaza la doble apertura, los montos negativos, los saldos inventados y los cambios en una caja cerrada. Además, el empleado abre a su nombre. Las funciones internas y el panel no pasan por estas reglas |
+| `ventas_guard_estado` | Trigger | Impide anular ventas por fuera de `cancelar_venta` |
 
-La estructura completa está en `base-de-datos/00-estructura.sql`.
+La estructura completa está en `base-de-datos/00-estructura.sql`. Los cambios sobre una base ya instalada van en archivos propios, como `base-de-datos/20-caja-arqueo.sql`.
 
 ## Reglas de integridad
 

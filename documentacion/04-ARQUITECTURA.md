@@ -19,9 +19,11 @@ iest-tfi_pointer/sistema/
 │   ├── config.js           ← crea el cliente de Supabase (window._supabase) y helpers
 │   ├── auth.js             ← sesión, perfil, rol, licencia y registro de auditoría
 │   ├── login.js            ← formulario de ingreso
+│   ├── caja-logica.js      ← reglas y textos de apertura y cierre, sin pantalla ni base
 │   ├── app.js              ← dashboard, caja, usuarios, auditoría y configuración
 │   ├── products.js         ← productos, categorías, proveedores, compras y gastos
 │   ├── reports.js          ← reportes de ventas y ganancias
+│   ├── pos-logica.js       ← reglas del carrito y del lector, sin pantalla ni base
 │   └── pos.js              ← carrito, cobro y lector de código de barras
 └── (sin carpetas documentacion/ ni specs/: viven en la raíz del repositorio)
 ```
@@ -53,9 +55,9 @@ iest-tfi_pointer/
 ├── documentacion/   ← TODOS los .md del proyecto: constitución, kit 01 a 10, marca, prompts, declaración, matriz
 ├── specs/           ← una carpeta por funcionalidad (001, 002, 003)
 ├── sistema/         ← Pointer: el sitio que se publica en Netlify
-├── base-de-datos/   ← SQL de Supabase y la función crear-usuario
+├── base-de-datos/   ← SQL de Supabase, migraciones (como 20-caja-arqueo.sql) y la función crear-usuario
 ├── multimedia/      ← logo, imágenes, video, gráficos y FICHAS-IA.md
-├── tests/           ← tests automáticos (npm test)
+├── tests/           ← tests automáticos (npm test) y, en tests/sql/, pruebas que corre el autor en el panel
 └── .claude/         ← comandos y skills del agente (carpeta oculta: Claude Code la busca con ese nombre)
 ```
 

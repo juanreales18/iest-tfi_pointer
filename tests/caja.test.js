@@ -615,3 +615,23 @@ test('pos resumen: D5 · F2, F10 y Escape no actúan', () => {
 test('pos resumen: con el resumen abierto no se abre otro modal de caja', () => {
     assert.match(MODAL_EN_POS, /^async function openCajaModal\(\) \{\s+if \(POS\.resumenCajaVisible\) return;/);
 });
+
+// ---------------------------------------------------------------
+// Documentación de la caja
+// ---------------------------------------------------------------
+test('docs: 05-DATOS.md · cajas_guard frena a los dos roles, no solo al empleado', () => {
+    const datos = leer('documentacion', '05-DATOS.md');
+    const fila = datos.split('\n').find((linea) => linea.startsWith('| `cajas_guard`')) || '';
+    assert.match(fila, /dos roles/);
+    assert.doesNotMatch(fila, /un empleado/);
+});
+
+test('docs: 05-DATOS.md · nombra la migración de la caja', () => {
+    assert.match(leer('documentacion', '05-DATOS.md'), /20-caja-arqueo\.sql/);
+});
+
+for (const archivo of ['caja-logica.js', 'pos-logica.js', '20-caja-arqueo.sql', 'tests/sql/']) {
+    test(`docs: 04-ARQUITECTURA.md · nombra ${archivo}`, () => {
+        assert.ok(leer('documentacion', '04-ARQUITECTURA.md').includes(archivo));
+    });
+}

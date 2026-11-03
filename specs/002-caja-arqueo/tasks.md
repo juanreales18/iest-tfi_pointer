@@ -193,7 +193,7 @@
 
 ## Etapa 4 · Documentación, publicación y verificación
 
-- [ ] T25 · Documentación
+- [x] T25 · Documentación
   - **RF:** 01 a 08
   - **Archivos:** `documentacion/05-DATOS.md`, `documentacion/04-ARQUITECTURA.md`, `documentacion/PROMPTS.md` (si corresponde)
   - **Hace:** `05-DATOS.md`: `cajas_guard` frena a los dos roles. `04-ARQUITECTURA.md`: agrega `caja-logica.js`, `pos-logica.js`, `20-caja-arqueo.sql` y `tests/sql/`.
