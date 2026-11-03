@@ -200,7 +200,7 @@
   - **Listo cuando:** ninguno de los dos archivos dice que `cajas_guard` frena solo al empleado; `npm test` en verde.
   - **Commit:** `actualiza la documentación de la caja`
 
-- [ ] T26 · **Autor:** publicar en `pointer-demo`
+- [x] T26 · **Autor:** publicar en `pointer-demo`
   - **RF:** 01 a 08
   - **Archivos:** `sistema/sw.js`, `memory.md`
   - **Hace:** sube `CACHE_VERSION` una sola vez y el autor publica `sistema/` a mano. Se publica **después de T14**: la pantalla nueva con el guard viejo mostraría siempre «Cerrada sin arqueo». `pointer-web001` no se toca.

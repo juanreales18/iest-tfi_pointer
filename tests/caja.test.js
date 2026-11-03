@@ -635,3 +635,12 @@ for (const archivo of ['caja-logica.js', 'pos-logica.js', '20-caja-arqueo.sql', 
         assert.ok(leer('documentacion', '04-ARQUITECTURA.md').includes(archivo));
     });
 }
+
+// ---------------------------------------------------------------
+// Publicación: los navegadores tienen que dejar la versión vieja
+// ---------------------------------------------------------------
+test('publicación: CACHE_VERSION subió para caja y arqueo', () => {
+    const version = leer('sistema', 'sw.js').match(/CACHE_VERSION = '([^']+)'/);
+    assert.ok(version);
+    assert.notEqual(version[1], 'kiosco-v-2026-11-02T15-45-00');
+});
