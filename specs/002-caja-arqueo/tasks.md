@@ -207,7 +207,7 @@
   - **Listo cuando:** https://pointer-demo.netlify.app/ carga la versión nueva, con `/js/caja-logica.js` disponible.
   - **Commit:** `publica caja y arqueo en pointer-demo`
 
-- [ ] T27 · **Verificación** de la funcionalidad
+- [x] T27 · **Verificación** de la funcionalidad
   - **RF:** 01 a 08
   - **Archivos:** `specs/002-caja-arqueo/verificacion.md` (nuevo), `memory.md`
   - **Hace:** `/verificar` con la skill `verificar-criterios`. El autor hace las pruebas manuales en `pointer-demo`, con los dos roles y desde las dos pantallas: los criterios de finalización, `1e` en Chrome, dos pantallas (RF-002-03 y RF-002-07), red cortada y lector físico con el resumen abierto.
