@@ -88,3 +88,35 @@ for (const prueba of PRUEBAS_DE_CIERRE) {
         assert.ok(CAJA_GUARD_SIN_COMENTARIOS.includes(`'${prueba}'`));
     });
 }
+
+const PRUEBAS_QUE_NO_SE_ROMPEN = [
+    'venta en efectivo',
+    'cancelacion de venta en efectivo',
+    'reinicio con la caja abierta',
+    'reinicio con la caja cerrada',
+];
+
+for (const prueba of PRUEBAS_QUE_NO_SE_ROMPEN) {
+    test(`caja-guard: RF-002-05 y 07 · H-01 · prueba «${prueba}»`, () => {
+        assert.ok(CAJA_GUARD_SIN_COMENTARIOS.includes(`'${prueba}'`));
+    });
+}
+
+test('caja-guard: la venta comprueba que subió el saldo, con el total que guardó la base', () => {
+    assert.match(CAJA_GUARD_SIN_COMENTARIOS, /saldo_actual = 1500 \+ \(SELECT total FROM public\.ventas/);
+});
+
+test('caja-guard: H-01 · el reinicio corre como el panel, sin cambiar de rol', () => {
+    assert.match(CAJA_GUARD_SIN_COMENTARIOS, /\('panel', 'reinicio con la caja cerrada'/);
+    assert.match(CAJA_GUARD_SIN_COMENTARIOS, /IF c\.rol <> 'panel' THEN/);
+});
+
+test('caja-guard: el reinicio manda lo mismo que 90-reinicio-total.sql', () => {
+    const reinicio = leer('base-de-datos', '90-reinicio-total.sql').match(/UPDATE cajas SET([\s\S]*?);/);
+    assert.ok(reinicio, 'no se encontró el UPDATE de cajas en 90-reinicio-total.sql');
+    const columnas = reinicio[1].split(',').map((parte) => parte.trim().replace(/\s+/g, ' ').replace(/'/g, "''"));
+    assert.equal(columnas.length, 10);
+    for (const columna of columnas) {
+        assert.ok(CAJA_GUARD_SIN_COMENTARIOS.includes(columna), `falta «${columna}»`);
+    }
+});

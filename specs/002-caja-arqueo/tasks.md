@@ -91,7 +91,7 @@
   - **Listo cuando:** cada caso del criterio de finalización de `tests/sql/` tiene su línea de resultado; `npm test` en verde.
   - **Commit:** `agrega las pruebas sql del cierre de caja`
 
-- [ ] T11 · `caja-guard.sql`: lo que no se tiene que romper
+- [x] T11 · `caja-guard.sql`: lo que no se tiene que romper
   - **RF:** 05, 07 (H-01)
   - **Archivos:** `tests/sql/caja-guard.sql`
   - **Hace:** `crear_venta` y `cancelar_venta` con la caja abierta, y el `UPDATE cajas` de `90-reinicio-total.sql`.

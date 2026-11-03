@@ -10,12 +10,16 @@
 -- buscado con una consulta (H-03). Cada prueba prepara antes la caja,
 -- porque la real puede estar abierta o cerrada.
 --
--- Cada prueba se repite con los dos roles. Sus columnas:
+-- Las reglas de la caja se repiten con los dos roles; lo que no se tiene que
+-- romper va con su rol (panel: se queda en postgres, como 90-reinicio-total.sql).
+-- El producto de las ventas lo crea el script: tambien se deshace.
+-- Las columnas de cada prueba:
 --   nombre   lo que se informa
---   prep     como se deja la caja antes: cerrada, abierta, abierta_pareja o abierta_negativa
---   accion   la sentencia; $1 es la caja y $2 el usuario que la manda
+--   prep     como se deja la caja antes: cerrada, abierta, abierta_pareja,
+--            abierta_negativa o abierta_con_venta
+--   accion   la sentencia; $1 caja, $2 usuario, $3 metodo de pago, $4 items, $5 venta
 --   rechazo  NULL: tiene que pasar. '*': cualquier rechazo. Si no, el texto exacto
---   control  condicion sobre la fila despues de la accion (NULL: ninguna)
+--   control  condicion sobre la fila despues de la accion (NULL: ninguna); $2 es la venta
 -- =============================================================
 DO $prueba$
 DECLARE
@@ -30,11 +34,21 @@ DECLARE
     -- Como queda una caja cerrada por prep: si cambia, no se protegio
     C_ARQUEO_INTACTO CONSTANT text := 'estado = ''cerrada'' AND saldo_inicial = 1000 AND saldo_actual = 1500 '
         || 'AND saldo_contado = 1450 AND diferencia = -50 AND fecha_cierre < now()';
+    -- El UPDATE de 90-reinicio-total.sql: tests/caja.test.js comprueba que sea el mismo
+    C_REINICIO CONSTANT text := 'estado = ''cerrada'', saldo_inicial = 0, saldo_actual = 0, usuario_id = NULL, '
+        || 'fecha_apertura = NULL, fecha_cierre = NULL, notas_apertura = NULL, notas_cierre = NULL, '
+        || 'saldo_contado = NULL, diferencia = NULL';
+    C_REINICIADA CONSTANT text := 'estado = ''cerrada'' AND saldo_inicial = 0 AND saldo_actual = 0 AND usuario_id IS NULL '
+        || 'AND fecha_apertura IS NULL AND fecha_cierre IS NULL AND saldo_contado IS NULL AND diferencia IS NULL';
 
     v_caja     uuid;
     v_dueno    uuid;
     v_empleado uuid;
     v_usuario  uuid;
+    v_metodo   uuid;
+    v_producto uuid;
+    v_items    jsonb;
+    v_venta    uuid;
     c          record;
     v_error    text;
     v_filas    integer;
@@ -56,9 +70,16 @@ BEGIN
     WHERE r.nombre = 'empleado' AND u.activo = true AND u.deleted_at IS NULL
     LIMIT 1;
 
-    IF v_caja IS NULL OR v_dueno IS NULL OR v_empleado IS NULL THEN
-        RAISE EXCEPTION 'caja-guard: hacen falta una caja, un dueno activo y un empleado activo';
+    SELECT id INTO v_metodo FROM public.metodos_pago WHERE nombre = 'Efectivo' AND activo LIMIT 1;
+
+    IF v_caja IS NULL OR v_dueno IS NULL OR v_empleado IS NULL OR v_metodo IS NULL THEN
+        RAISE EXCEPTION 'caja-guard: hacen falta una caja, un dueno activo, un empleado activo y el metodo Efectivo';
     END IF;
+
+    INSERT INTO public.productos (nombre, precio_venta, stock_actual)
+    VALUES ('Prueba caja-guard', 100, 1000)
+    RETURNING id INTO v_producto;
+    v_items := jsonb_build_array(jsonb_build_object('producto_id', v_producto, 'cantidad', 1));
 
     FOR c IN
         SELECT r.rol, p.*
@@ -109,12 +130,25 @@ BEGIN
             ('caja cerrada cambia diferencia', 'cerrada', format(C_CAMBIAR, 'diferencia = 0'), C_YA_CERRADA, C_ARQUEO_INTACTO),
             ('caja cerrada cambia fecha de cierre', 'cerrada', format(C_CAMBIAR, 'fecha_cierre = now()'), C_YA_CERRADA, C_ARQUEO_INTACTO),
             -- El plan pone el paso 2 antes que el 5: una pantalla vieja ve este texto y no otro
-            ('caja cerrada con contado negativo', 'cerrada', format(C_CAMBIAR, 'saldo_contado = -1'), C_YA_CERRADA, C_ARQUEO_INTACTO)
+            ('caja cerrada con contado negativo', 'cerrada', format(C_CAMBIAR, 'saldo_contado = -1'), C_YA_CERRADA, C_ARQUEO_INTACTO),
+            -- H-01: la venta sube el saldo desde adentro de una funcion, sin chocar con el guard
+            ('venta en efectivo', 'abierta', 'SELECT public.crear_venta($1, $3, $4)', NULL,
+                'saldo_actual = 1500 + (SELECT total FROM public.ventas WHERE caja_id = cajas.id ORDER BY numero_venta DESC LIMIT 1) '
+                || 'AND saldo_actual > 1500')
         ) AS p(nombre, prep, accion, rechazo, control)
+        UNION ALL
+        VALUES
+            -- H-01: si la venta de la preparacion no hubiera subido el saldo, aca no volveria a 1500
+            ('dueno', 'cancelacion de venta en efectivo', 'abierta_con_venta', 'SELECT public.cancelar_venta($5, ''prueba'')', NULL,
+                'saldo_actual = 1500 AND (SELECT estado::text FROM public.ventas WHERE id = $2) = ''cancelada'''),
+            -- H-01: el panel limpia la caja en cualquier estado; a otro rol el guard se lo rechazaria
+            ('panel', 'reinicio con la caja abierta', 'abierta', format(C_CAMBIAR, C_REINICIO), NULL, C_REINICIADA),
+            ('panel', 'reinicio con la caja cerrada', 'cerrada', format(C_CAMBIAR, C_REINICIO), NULL, C_REINICIADA)
     LOOP
         v_falla := NULL;
         v_error := NULL;
-        v_usuario := CASE c.rol WHEN 'dueno' THEN v_dueno ELSE v_empleado END;
+        v_venta := NULL;
+        v_usuario := CASE c.rol WHEN 'empleado' THEN v_empleado ELSE v_dueno END;
 
         BEGIN
             -- Como postgres: el guard no controla la preparacion
@@ -131,10 +165,17 @@ BEGIN
 
             PERFORM set_config('request.jwt.claims',
                 json_build_object('sub', v_usuario, 'role', 'authenticated')::text, true);
-            SET LOCAL ROLE authenticated;
+
+            IF c.prep = 'abierta_con_venta' THEN
+                v_venta := (public.crear_venta(v_caja, v_metodo, v_items) ->> 'id')::uuid;
+            END IF;
+
+            IF c.rol <> 'panel' THEN
+                SET LOCAL ROLE authenticated;
+            END IF;
 
             BEGIN
-                EXECUTE c.accion USING v_caja, v_usuario;
+                EXECUTE c.accion USING v_caja, v_usuario, v_metodo, v_items, v_venta;
                 GET DIAGNOSTICS v_filas = ROW_COUNT;
             EXCEPTION WHEN OTHERS THEN
                 v_error := SQLERRM;
@@ -155,7 +196,7 @@ BEGIN
             END IF;
 
             IF v_falla IS NULL AND c.control IS NOT NULL THEN
-                EXECUTE 'SELECT (' || c.control || ') FROM public.cajas WHERE id = $1' INTO v_control USING v_caja;
+                EXECUTE 'SELECT (' || c.control || ') FROM public.cajas WHERE id = $1' INTO v_control USING v_caja, v_venta;
                 IF v_control IS NOT TRUE THEN
                     v_falla := 'la caja quedó distinta de lo esperado';
                 END IF;
