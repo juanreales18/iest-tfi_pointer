@@ -50,7 +50,7 @@ Una ruta desconocida recibe `index.html`, así que su protección es la meta `ro
 | Imagen | Texto `alt` |
 |---|---|
 | `img/presentacion/logo-horizontal.webp` | Logo de Pointer: una P carbón en un cuadrado amarillo, seguida del nombre |
-| `img/logo/isotipo.png` | Isotipo de Pointer, una P en un cuadrado amarillo |
+| `img/presentacion/isotipo.webp` | Isotipo de Pointer, una P en un cuadrado amarillo |
 | Imagen de producto | Nombre del producto |
 | Otras imágenes de `presentacion.html` | Descripción de lo que muestra cada una, en su `alt` |
 

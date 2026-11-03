@@ -1,5 +1,4 @@
 // Tests de la página de presentación (sistema/presentacion.html).
-// Las leyendas se copian acá de multimedia/FICHAS-IA.md, salvo la del recorrido, que no tiene ficha.
 // Se corren con: npm test
 'use strict';
 
@@ -16,32 +15,26 @@ const css = leer(path.join(SRC, 'css', 'presentacion.css'));
 const js = leer(path.join(SRC, 'js', 'presentacion.js'));
 const toml = leer(path.join(SRC, 'netlify.toml'));
 
-const GEMINI = 'Imagen generada con IA (Gemini)';
-const MOCKUP = 'Imagen generada con IA (Gemini) con una captura real de Pointer en la pantalla';
-const GRAFICO = 'Gráfico generado con código escrito por IA (Claude) a partir de datos reales del proyecto';
-
-const LEYENDAS = {
-    'logo-horizontal.webp': 'Logo generado con IA (Canva) y editado por el autor',
-    '04-cuaderno-ventas.webp': GEMINI,
-    '08-duena-ventas.webp': GEMINI,
-    'spot-miniatura.webp': 'Animación hecha con código escrito por IA (Claude), con voz generada con IA (elevenlabs.io)',
-    '05-mockup-notebook-pointer.webp': MOCKUP,
-    '06-mockup-celular-pointer.webp': MOCKUP,
-    // Sin ficha en FICHAS-IA.md: el autor tiene que confirmarla
-    'recorrido-miniatura.webp': 'Grabación de pantalla del sistema con la voz del autor',
-    '01-frente-kiosco.webp': GEMINI,
-    '02-kiosquera-atendiendo.webp': GEMINI,
-    '03-kiosquero-escaneando.webp': GEMINI,
-    '07-cierre-caja.webp': GEMINI,
-    'grafico-1-requisitos-ears.webp': GRAFICO,
-    'grafico-2-tests.webp': GRAFICO,
-    'grafico-3-tareas.webp': GRAFICO,
-    'grafico-4-colores.webp': GRAFICO,
-};
+const PIEZAS = [
+    'logo-horizontal.webp',
+    '04-cuaderno-ventas.webp',
+    '08-duena-ventas.webp',
+    'spot-miniatura.webp',
+    '05-mockup-notebook-pointer.webp',
+    '06-mockup-celular-pointer.webp',
+    'recorrido-miniatura.webp',
+    '01-frente-kiosco.webp',
+    '02-kiosquera-atendiendo.webp',
+    '03-kiosquero-escaneando.webp',
+    '07-cierre-caja.webp',
+    'grafico-1-requisitos-ears.webp',
+    'grafico-2-tests.webp',
+    'grafico-3-tareas.webp',
+    'grafico-4-colores.webp',
+];
 
 const figuras = () => (html.match(/<figure\b[\s\S]*?<\/figure>/g) || []).map((figura) => ({
     img: figura.match(/<img\b[^>]*>/)?.[0] || '',
-    leyenda: figura.match(/<figcaption[^>]*>([\s\S]*?)<\/figcaption>/)?.[1].trim(),
 }));
 const atributo = (etiqueta, nombre) => etiqueta.match(new RegExp(`\\b${nombre}="([^"]*)"`))?.[1];
 const archivoDe = (img) => path.basename(atributo(img, 'src') || '');
@@ -62,6 +55,48 @@ test('presentacion: las secciones van en el orden pedido', () => {
     assert.deepEqual(ids, ['portada', 'problema', 'spot', 'que-hace', 'recorrido', 'galeria', 'como-se-hizo', 'pie']);
 });
 
+test('presentacion: la barra de navegación lleva a cada sección, en orden', () => {
+    const barra = html.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/)?.[0];
+    assert.ok(barra, 'Falta el <nav>');
+    assert.match(barra, /<nav\b[^>]*aria-label="[^"]+"/, 'El nav necesita aria-label');
+    assert.ok(html.indexOf('<nav') < html.indexOf('<header'), 'La barra va antes de la portada');
+    const destinos = [...barra.matchAll(/href="#([^"]+)"/g)].map((m) => m[1]);
+    assert.deepEqual(destinos, ['portada', 'problema', 'spot', 'que-hace', 'recorrido', 'galeria', 'como-se-hizo']);
+    // Sobre fondo oscuro va solo el isotipo (IDENTIDAD-MARCA.md); el logo horizontal es carbón y no se leería
+    const isotipo = barra.match(/<a class="navbar-marca"[^>]*>\s*(<img\b[^>]*>)\s*<\/a>/)?.[1];
+    assert.ok(isotipo, 'La marca de la barra es solo el isotipo, sin texto');
+    assert.equal(atributo(isotipo, 'src'), '/img/presentacion/isotipo.webp');
+    assert.equal(atributo(isotipo, 'alt'), 'Isotipo de Pointer, una P en un cuadrado amarillo');
+    assert.equal(atributo(isotipo, 'loading'), undefined, 'Se ve al abrir la página: no lleva lazy');
+    const [ancho, alto] = medidasWebp(path.join(SRC, 'img', 'presentacion', 'isotipo.webp'));
+    assert.equal(atributo(isotipo, 'width'), String(ancho));
+    assert.equal(atributo(isotipo, 'height'), String(alto));
+    assert.match(barra, /<a class="navbar-marca"[^>]*aria-label="[^"]+"/);
+    assert.match(css, /\.navbar-marca img\s*\{[^}]*\bheight:\s*(3[2-9]|[4-9]\d)px/, 'El manual pide al menos 32 px de alto');
+    assert.match(css, /\.navbar\s*\{[^}]*position:\s*sticky/);
+    assert.match(css, /scroll-margin-top/, 'La barra fija no debe tapar el título al que se salta');
+});
+
+test('presentacion: en pantalla ancha, el logo va a la izquierda y el texto a la derecha', () => {
+    const portada = html.match(/<header\b[\s\S]*?<\/header>/)[0];
+    assert.ok(portada.indexOf('portada-logo') < portada.indexOf('<h1'), 'El logo va antes del texto');
+    assert.match(portada, /class="portada-texto"[\s\S]*<h1[\s\S]*portada-frase[\s\S]*class="boton"/);
+    assert.match(css, /@media \(min-width: 800px\)\s*\{[\s\S]*?\.portada-contenido\s*\{[^}]*grid-template-columns/);
+});
+
+test('presentacion: el carrusel de la portada es decorativo, tenue y respeta a quien no quiere animaciones', () => {
+    const portada = html.match(/<header\b[\s\S]*?<\/header>/)[0];
+    assert.match(portada, /<div class="carrusel" aria-hidden="true">/);
+    const fotos = [...css.matchAll(/url\('\/img\/presentacion\/([^']+)'\)/g)].map((m) => m[1]);
+    assert.ok(fotos.length >= 3, 'El carrusel necesita varias fotos');
+    for (const foto of fotos) assert.ok(fs.existsSync(path.join(SRC, 'img', 'presentacion', foto)), `Falta ${foto}`);
+    // 01-frente-kiosco parece la versión descartada en su ficha: no va en la portada hasta aclararlo
+    assert.ok(!fotos.includes('01-frente-kiosco.webp'));
+    const opacidades = [...css.match(/@keyframes carrusel-fundido\s*\{[\s\S]*?\n\}/)[0].matchAll(/opacity:\s*([\d.]+)/g)].map((m) => Number(m[1]));
+    assert.ok(Math.max(...opacidades) <= 0.25, 'Más opacidad le quita contraste al texto y al logo');
+    assert.match(css, /prefers-reduced-motion: reduce[\s\S]*\.carrusel-foto\s*\{[^}]*animation:\s*none/);
+});
+
 test('presentacion: la portada tiene logo, eslogan y botón a /login', () => {
     const portada = html.match(/<header\b[\s\S]*?<\/header>/)[0];
     assert.match(portada, /logo-horizontal\.webp/);
@@ -70,15 +105,25 @@ test('presentacion: la portada tiene logo, eslogan y botón a /login', () => {
     assert.equal((html.match(/<h1\b/g) || []).length, 1, 'Tiene que haber un solo h1');
 });
 
-test('presentacion: cada imagen y video lleva su leyenda exacta y un alt descriptivo', () => {
+test('presentacion: cada imagen y video tiene un alt descriptivo', () => {
     const lista = figuras();
-    assert.deepEqual(lista.map((f) => archivoDe(f.img)), Object.keys(LEYENDAS));
-    for (const { img, leyenda } of lista) {
-        const archivo = archivoDe(img);
-        assert.equal(leyenda, LEYENDAS[archivo], `${archivo}: leyenda distinta`);
-        assert.ok((atributo(img, 'alt') || '').length >= 25, `${archivo}: alt muy corto`);
+    assert.deepEqual(lista.map((f) => archivoDe(f.img)), PIEZAS);
+    for (const { img } of lista) {
+        assert.ok((atributo(img, 'alt') || '').length >= 25, `${archivoDe(img)}: alt muy corto`);
     }
-    assert.equal((html.match(/<img\b/g) || []).length, lista.length, 'Hay una imagen fuera de una figura');
+    // Además de las figuras, solo está el isotipo de la barra
+    assert.equal((html.match(/<img\b/g) || []).length, lista.length + 1, 'Hay una imagen fuera de una figura');
+});
+
+// P8: el sitio declara la IA en una sola nota, en vez de una leyenda por pieza
+test('presentacion: la nota del pie declara la IA, con sus herramientas y la atribución de la voz', () => {
+    assert.doesNotMatch(html, /<figcaption\b/, 'Las leyendas van en la nota del pie');
+    const pie = html.match(/<footer\b[\s\S]*?<\/footer>/)[0];
+    const nota = pie.match(/<p class="pie-nota">([\s\S]*?)<\/p>/)?.[1];
+    assert.ok(nota, 'Falta la nota de transparencia');
+    for (const dato of ['con IA', 'Canva', 'Gemini', 'Claude', 'elevenlabs.io', 'ficticios', 'Música y sonidos generados por código', 'voz del autor']) {
+        assert.ok(nota.includes(dato), `A la nota le falta: ${dato}`);
+    }
 });
 
 test('presentacion: las imágenes son WebP publicados de hasta 1200 px, con lazy salvo la portada', () => {
@@ -92,7 +137,7 @@ test('presentacion: las imágenes son WebP publicados de hasta 1200 px, con lazy
         const esPortada = archivo === 'logo-horizontal.webp';
         assert.equal(atributo(img, 'loading'), esPortada ? undefined : 'lazy', `${archivo}: loading`);
     }
-    assert.equal(fs.readdirSync(path.join(SRC, 'img', 'presentacion')).length, figuras().length, 'Hay imágenes sin usar');
+    assert.equal(fs.readdirSync(path.join(SRC, 'img', 'presentacion')).length, figuras().length + 1, 'Hay imágenes sin usar');
 });
 
 test('presentacion: los videos muestran la miniatura y cargan youtube-nocookie recién al hacer clic', () => {

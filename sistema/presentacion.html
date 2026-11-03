@@ -17,15 +17,38 @@
 </head>
 <body class="presentacion">
 
+    <nav class="navbar" aria-label="Secciones de la página">
+        <div class="contenedor navbar-contenido">
+            <a class="navbar-marca" href="#portada" aria-label="Pointer: volver a la portada">
+                <img src="/img/presentacion/isotipo.webp" alt="Isotipo de Pointer, una P en un cuadrado amarillo" width="96" height="96">
+            </a>
+            <ul class="navbar-enlaces">
+                <li><a href="#problema">El problema</a></li>
+                <li><a href="#spot">Spot</a></li>
+                <li><a href="#que-hace">Qué hace</a></li>
+                <li><a href="#recorrido">Recorrido</a></li>
+                <li><a href="#galeria">Galería</a></li>
+                <li><a href="#como-se-hizo">Cómo se hizo</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <header id="portada" class="portada">
-        <div class="contenedor">
+        <div class="carrusel" aria-hidden="true">
+            <span class="carrusel-foto"></span>
+            <span class="carrusel-foto"></span>
+            <span class="carrusel-foto"></span>
+            <span class="carrusel-foto"></span>
+        </div>
+        <div class="contenedor portada-contenido">
             <figure class="portada-logo">
                 <img src="/img/presentacion/logo-horizontal.webp" alt="Logo de Pointer: una P carbón en un cuadrado amarillo, seguida del nombre" width="840" height="301" fetchpriority="high">
-                <figcaption>Logo generado con IA (Canva) y editado por el autor</figcaption>
             </figure>
-            <h1>Cada venta, en su lugar.</h1>
-            <p class="portada-frase">Pointer es un sistema web para kioscos: vendés con el lector de código de barras, controlás el stock y cerrás la caja sin planillas ni cuadernos.</p>
-            <a class="boton" href="/login">Entrar al sistema</a>
+            <div class="portada-texto">
+                <h1>Cada venta, en su lugar.</h1>
+                <p class="portada-frase">Pointer es un sistema web para kioscos: vendés con el lector de código de barras, controlás el stock y cerrás la caja sin planillas ni cuadernos.</p>
+                <a class="boton" href="/login">Entrar al sistema</a>
+            </div>
         </div>
     </header>
 
@@ -39,7 +62,6 @@
                         <p>Anotás cada venta a mano. A la noche sumás, tachás y volvés a sumar. Para saber qué te queda, tenés que ir a mirar la góndola.</p>
                         <figure>
                             <img src="/img/presentacion/04-cuaderno-ventas.webp" alt="Manos anotando números con una birome en un cuaderno espiral, sobre el mostrador de un kiosco, con monedas y billetes al lado" width="1200" height="670" loading="lazy">
-                            <figcaption>Imagen generada con IA (Gemini)</figcaption>
                         </figure>
                     </article>
                     <article class="comparacion-lado comparacion-pointer">
@@ -47,7 +69,6 @@
                         <p>Escaneás el producto y la venta queda registrada. El stock baja solo. Al cerrar, contás el efectivo y Pointer te muestra si sobra o falta.</p>
                         <figure>
                             <img src="/img/presentacion/08-duena-ventas.webp" alt="Mujer de pelo corto y canoso, con un mate al lado, sonríe tranquila mientras mira su notebook en el mostrador del kiosco" width="1200" height="670" loading="lazy">
-                            <figcaption>Imagen generada con IA (Gemini)</figcaption>
                         </figure>
                     </article>
                 </div>
@@ -65,7 +86,6 @@
                             <span class="video-play" aria-hidden="true"></span>
                         </a>
                     </div>
-                    <figcaption>Animación hecha con código escrito por IA (Claude), con voz generada con IA (elevenlabs.io)</figcaption>
                 </figure>
             </div>
         </section>
@@ -110,11 +130,9 @@
                 <div class="mockups">
                     <figure>
                         <img src="/img/presentacion/05-mockup-notebook-pointer.webp" alt="Notebook abierta sobre el mostrador de un kiosco, con el punto de venta de Pointer en pantalla y un lector de código de barras al lado" width="1200" height="670" loading="lazy">
-                        <figcaption>Imagen generada con IA (Gemini) con una captura real de Pointer en la pantalla</figcaption>
                     </figure>
                     <figure class="mockup-celular">
                         <img src="/img/presentacion/06-mockup-celular-pointer.webp" alt="Mano sosteniendo un celular con el panel de Pointer en pantalla, dentro de un kiosco con góndolas iluminadas" width="928" height="1152" loading="lazy">
-                        <figcaption>Imagen generada con IA (Gemini) con una captura real de Pointer en la pantalla</figcaption>
                     </figure>
                 </div>
             </div>
@@ -131,7 +149,6 @@
                             <span class="video-play" aria-hidden="true"></span>
                         </a>
                     </div>
-                    <figcaption>Grabación de pantalla del sistema con la voz del autor</figcaption>
                 </figure>
             </div>
         </section>
@@ -142,19 +159,15 @@
                 <div class="galeria">
                     <figure>
                         <img src="/img/presentacion/01-frente-kiosco.webp" alt="Frente de un kiosco de barrio con toldo color ámbar y vidriera con golosinas, al atardecer, con un auto estacionado y cerros al fondo" width="1200" height="670" loading="lazy">
-                        <figcaption>Imagen generada con IA (Gemini)</figcaption>
                     </figure>
                     <figure>
                         <img src="/img/presentacion/02-kiosquera-atendiendo.webp" alt="Kiosquera con delantal amarillo que sonríe y le entrega un paquete a una clienta, por encima del mostrador" width="1200" height="670" loading="lazy">
-                        <figcaption>Imagen generada con IA (Gemini)</figcaption>
                     </figure>
                     <figure>
                         <img src="/img/presentacion/03-kiosquero-escaneando.webp" alt="Kiosquero canoso de camisa azul que escanea un paquete con un lector de código de barras, con una notebook en el mostrador" width="1200" height="670" loading="lazy">
-                        <figcaption>Imagen generada con IA (Gemini)</figcaption>
                     </figure>
                     <figure>
                         <img src="/img/presentacion/07-cierre-caja.webp" alt="Kiosquero joven de buzo oscuro que cuenta billetes junto a una notebook, de noche, en el local iluminado" width="1200" height="670" loading="lazy">
-                        <figcaption>Imagen generada con IA (Gemini)</figcaption>
                     </figure>
                 </div>
             </div>
@@ -168,22 +181,18 @@
                     <figure>
                         <p class="grafico-fuente">Fuente: las specs 001 y 002.</p>
                         <img src="/img/presentacion/grafico-1-requisitos-ears.webp" alt="Gráfico de barras de 23 requisitos por tipo de frase EARS. Punto de venta: 7 de evento, 5 no deseados, 1 de estado y 2 de siempre. Caja y arqueo: 3, 4, 1 y 0" width="1200" height="720" loading="lazy">
-                        <figcaption>Gráfico generado con código escrito por IA (Claude) a partir de datos reales del proyecto</figcaption>
                     </figure>
                     <figure>
                         <p class="grafico-fuente">Fuente: las verificaciones de las specs y npm test.</p>
                         <img src="/img/presentacion/grafico-2-tests.webp" alt="Gráfico de barras de tests automáticos que pasan, por hito: 102 al cerrar la spec 001, 265 al cerrar la spec 002 y 267 al pasar los colores a variables" width="1200" height="720" loading="lazy">
-                        <figcaption>Gráfico generado con código escrito por IA (Claude) a partir de datos reales del proyecto</figcaption>
                     </figure>
                     <figure>
                         <p class="grafico-fuente">Fuente: las listas de tareas de las specs.</p>
                         <img src="/img/presentacion/grafico-3-tareas.webp" alt="Gráfico de barras de 43 tareas completadas por funcionalidad: 15 en punto de venta y 28 en caja y arqueo" width="1200" height="720" loading="lazy">
-                        <figcaption>Gráfico generado con código escrito por IA (Claude) a partir de datos reales del proyecto</figcaption>
                     </figure>
                     <figure>
                         <p class="grafico-fuente">Fuente: el conteo de colores y el test de marca.</p>
                         <img src="/img/presentacion/grafico-4-colores.webp" alt="Gráfico de barras de colores escritos a mano en el CSS: antes, 54 hexadecimales y 36 rgba con números; después, ninguno" width="1200" height="720" loading="lazy">
-                        <figcaption>Gráfico generado con código escrito por IA (Claude) a partir de datos reales del proyecto</figcaption>
                     </figure>
                 </div>
             </div>
@@ -192,6 +201,7 @@
 
     <footer id="pie" class="pie">
         <div class="contenedor">
+            <p class="pie-nota">Qué se hizo con IA. Logo: generado con Canva y editado por el autor. Imágenes, también las del fondo de la portada: generadas con Gemini; las personas y el lugar son ficticios, y los mockups llevan una captura de Pointer en la pantalla. Spot: animación hecha con código escrito por Claude y voz generada con elevenlabs.io. Música y sonidos generados por código. Gráficos: código escrito por Claude, con datos reales del proyecto. El recorrido es una grabación de pantalla con la voz del autor.</p>
             <p>Juan Angel Reales · IEST Tinogasta · 2026</p>
             <p><a href="https://github.com/juanreales18/iest-tfi_pointer">Repositorio en GitHub</a></p>
         </div>

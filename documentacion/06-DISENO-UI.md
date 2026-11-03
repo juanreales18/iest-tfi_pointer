@@ -6,7 +6,7 @@ La interfaz usa la paleta y tipografías definidas en `IDENTIDAD-MARCA.md`: fond
 
 | Pantalla | Quién la ve | Qué muestra |
 |---|---|---|
-| Presentación | Público, sin sesión | Portada, el cuaderno contra Pointer, videos, secciones del sistema, galería y cómo se hizo |
+| Presentación | Público, sin sesión | Barra de navegación fija, portada con logo a la izquierda, texto a la derecha y carrusel de fotos tenue detrás, el cuaderno contra Pointer, videos, secciones del sistema, galería y cómo se hizo |
 | Login | Todos | Panel oscuro con la marca a la izquierda y el formulario a la derecha |
 | Inicio | Todos | Tarjetas con ventas del día, estado de caja y productos con stock bajo |
 | Nueva venta | Dueño y empleado | Campo del lector, lista de la venta, total, método de pago y vuelto |

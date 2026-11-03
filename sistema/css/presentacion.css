@@ -14,12 +14,6 @@
     min-width: 0;
 }
 
-.presentacion figcaption {
-    margin-top: 8px;
-    font-size: 0.87rem;
-    color: var(--color-gray);
-}
-
 .contenedor {
     width: min(100% - 32px, 1120px);
     margin-inline: auto;
@@ -87,8 +81,66 @@
     color: var(--color-surface);
 }
 
-.seccion-oscura figcaption {
-    color: var(--color-primary-light);
+/* Barra de navegación: en el celular, los enlaces se deslizan de costado */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-topbar);
+    background: var(--color-dark-2);
+    color: var(--color-surface);
+}
+
+.navbar-contenido {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 52px;
+}
+
+.navbar-marca {
+    flex-shrink: 0;
+}
+
+.presentacion .navbar-marca img {
+    width: 36px;
+    height: 36px;
+    border-radius: 0;
+}
+
+.navbar-enlaces {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.navbar-enlaces::-webkit-scrollbar {
+    display: none;
+}
+
+.navbar-enlaces a {
+    display: block;
+    padding: 14px 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: color var(--transition);
+}
+
+.navbar-enlaces a:hover {
+    color: var(--color-primary);
+}
+
+/* Dentro de la barra, el contorno de foco iría recortado si quedara por fuera del enlace */
+.presentacion .navbar-enlaces a:focus-visible {
+    outline-offset: -3px;
+}
+
+/* Al saltar a una sección, la barra fija no tapa su título */
+.portada,
+.seccion {
+    scroll-margin-top: 52px;
 }
 
 /* Portada: el logo siempre va sobre fondo claro */
@@ -96,6 +148,46 @@
     padding-block: clamp(32px, 7vw, 72px);
     background: var(--color-surface);
     border-bottom: 8px solid var(--color-primary);
+}
+
+.portada {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Fotos decorativas muy tenues sobre blanco: el fondo sigue siendo claro, como pide el logo */
+.carrusel-foto {
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-size: cover;
+    opacity: 0;
+    animation: carrusel-fundido 24s infinite;
+}
+
+.carrusel-foto:nth-child(1) { background-image: url('/img/presentacion/02-kiosquera-atendiendo.webp'); }
+.carrusel-foto:nth-child(2) { background-image: url('/img/presentacion/03-kiosquero-escaneando.webp'); animation-delay: 6s; }
+.carrusel-foto:nth-child(3) { background-image: url('/img/presentacion/07-cierre-caja.webp'); animation-delay: 12s; }
+.carrusel-foto:nth-child(4) { background-image: url('/img/presentacion/08-duena-ventas.webp'); animation-delay: 18s; }
+
+@keyframes carrusel-fundido {
+    0%   { opacity: 0; }
+    6%   { opacity: 0.22; }
+    25%  { opacity: 0.22; }
+    31%  { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+.portada-contenido {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+}
+
+.portada-texto h1,
+.portada-frase {
+    margin-inline: auto;
 }
 
 .portada-logo {
@@ -291,6 +383,14 @@
     text-decoration: underline;
 }
 
+.pie-nota {
+    flex-basis: 100%;
+    max-width: 90ch;
+    margin-bottom: 16px;
+    font-size: 0.87rem;
+    color: var(--color-primary-light);
+}
+
 @media (min-width: 720px) {
     .comparacion,
     .galeria,
@@ -321,9 +421,51 @@
     }
 }
 
+@media (min-width: 800px) {
+    .portada-contenido {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+        align-items: center;
+        gap: 48px;
+        text-align: left;
+    }
+
+    .portada-logo {
+        width: min(100%, 380px);
+        margin-bottom: 0;
+    }
+
+    .portada-texto h1,
+    .portada-frase {
+        margin-inline: 0;
+    }
+
+    .presentacion h1 {
+        font-size: clamp(3.4rem, 7.5vw, 7rem);
+    }
+}
+
+@media (min-width: 900px) {
+    .navbar-enlaces {
+        justify-content: flex-end;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .carrusel-foto {
+        animation: none;
+    }
+
+    .carrusel-foto:nth-child(1) {
+        opacity: 0.22;
+    }
+
     .boton,
-    .video-play {
+    .video-play,
+    .navbar-enlaces a {
         transition: none;
     }
 }
