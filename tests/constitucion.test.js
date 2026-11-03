@@ -155,8 +155,12 @@ test('seo: netlify.toml pone noindex por ruta y solo en las pantallas internas',
     assert.deepEqual(conNoindex, ['/', '/dashboard', '/dashboard.html', '/index.html', '/pos', '/pos.html']);
 });
 
-test('accesibilidad: la X del modal de caja tiene aria-label', () => {
-    assert.match(leer(path.join(SRC, 'pos.html')), /id="modal-caja-close" aria-label="Cerrar"/);
+test('accesibilidad: las X de los modales tienen aria-label', () => {
+    for (const pagina of ['dashboard.html', 'pos.html']) {
+        const botones = leer(path.join(SRC, pagina)).match(/<button class="modal-close"[^>]*>/g) || [];
+        assert.ok(botones.length > 0, `${pagina}: no se encontraron botones`);
+        for (const boton of botones) assert.match(boton, /aria-label="Cerrar"/, `${pagina}: ${boton}`);
+    }
 });
 
 // ---------------------------------------------------------------
