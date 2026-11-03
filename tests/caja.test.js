@@ -64,3 +64,27 @@ for (const prueba of PRUEBAS_DE_APERTURA) {
         assert.ok(CAJA_GUARD_SIN_COMENTARIOS.includes(`'${prueba}'`));
     });
 }
+
+const PRUEBAS_DE_CIERRE = [
+    'cierre con diferencia inventada',
+    'cierre sin mandar diferencia',
+    'cierre con contado 0',
+    'cierre sin contado',
+    'cierre con contado negativo',
+    'cierre con saldo inventado',
+    'cierre con saldo inicial inventado',
+    'cierre con un saldo negativo anterior',
+    'segundo cierre',
+    'caja cerrada cambia saldo inicial',
+    'caja cerrada cambia saldo actual',
+    'caja cerrada cambia contado',
+    'caja cerrada cambia diferencia',
+    'caja cerrada cambia fecha de cierre',
+    'caja cerrada con contado negativo',
+];
+
+for (const prueba of PRUEBAS_DE_CIERRE) {
+    test(`caja-guard: RF-002-05, 06 y 07 · prueba «${prueba}»`, () => {
+        assert.ok(CAJA_GUARD_SIN_COMENTARIOS.includes(`'${prueba}'`));
+    });
+}

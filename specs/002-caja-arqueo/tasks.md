@@ -84,7 +84,7 @@
   - **Listo cuando:** `npm test` en verde; el autor leyó el SQL y entiende cada caso. Todavía no se ejecuta.
   - **Commit:** `agrega las pruebas sql de la apertura de caja`
 
-- [ ] T10 · `caja-guard.sql`: cierre y caja cerrada
+- [x] T10 · `caja-guard.sql`: cierre y caja cerrada
   - **RF:** 05, 06, 07
   - **Archivos:** `tests/sql/caja-guard.sql`
   - **Hace:** con los dos roles: diferencia inventada (se descarta), contado 0, contado vacío (`null`), contado negativo, saldo inventado al cerrar, y una caja cerrada que no cambia su arqueo ni sus saldos.

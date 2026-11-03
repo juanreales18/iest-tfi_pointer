@@ -12,7 +12,7 @@
 --
 -- Cada prueba se repite con los dos roles. Sus columnas:
 --   nombre   lo que se informa
---   prep     como se deja la caja antes: cerrada, abierta o abierta_pareja
+--   prep     como se deja la caja antes: cerrada, abierta, abierta_pareja o abierta_negativa
 --   accion   la sentencia; $1 es la caja y $2 el usuario que la manda
 --   rechazo  NULL: tiene que pasar. '*': cualquier rechazo. Si no, el texto exacto
 --   control  condicion sobre la fila despues de la accion (NULL: ninguna)
@@ -22,7 +22,14 @@ DECLARE
     C_ABRIR CONSTANT text := 'UPDATE public.cajas SET estado = ''abierta'', saldo_inicial = %s, saldo_actual = %s, '
         || 'usuario_id = $2, fecha_apertura = now(), notas_apertura = NULL, fecha_cierre = NULL, '
         || 'saldo_contado = NULL, diferencia = NULL WHERE id = $1';
+    C_CERRAR CONSTANT text := 'UPDATE public.cajas SET estado = ''cerrada'', fecha_cierre = now(), notas_cierre = NULL, '
+        || 'saldo_contado = %s, diferencia = %s WHERE id = $1';
+    C_CAMBIAR CONSTANT text := 'UPDATE public.cajas SET %s WHERE id = $1';
     C_YA_ABIERTA CONSTANT text := 'La caja ya está abierta';
+    C_YA_CERRADA CONSTANT text := 'La caja ya fue cerrada';
+    -- Como queda una caja cerrada por prep: si cambia, no se protegio
+    C_ARQUEO_INTACTO CONSTANT text := 'estado = ''cerrada'' AND saldo_inicial = 1000 AND saldo_actual = 1500 '
+        || 'AND saldo_contado = 1450 AND diferencia = -50 AND fecha_cierre < now()';
 
     v_caja     uuid;
     v_dueno    uuid;
@@ -71,7 +78,38 @@ BEGIN
             -- RF-002-06
             ('apertura negativa', 'cerrada', format(C_ABRIR, -1, -1), '*', 'estado = ''cerrada'''),
             -- H-02: al abrir, los dos saldos tienen que ser iguales
-            ('apertura con saldo inventado', 'cerrada', format(C_ABRIR, 1000, 9000), '*', 'estado = ''cerrada''')
+            ('apertura con saldo inventado', 'cerrada', format(C_ABRIR, 1000, 9000), '*', 'estado = ''cerrada'''),
+            -- RF-002-05: la diferencia es contado menos saldo, mande lo que mande el navegador
+            ('cierre con diferencia inventada', 'abierta', format(C_CERRAR, 1450, 999), NULL,
+                'estado = ''cerrada'' AND saldo_contado = 1450 AND diferencia = -50'),
+            ('cierre sin mandar diferencia', 'abierta',
+                format(C_CAMBIAR, 'estado = ''cerrada'', fecha_cierre = now(), saldo_contado = 1450'), NULL,
+                'estado = ''cerrada'' AND saldo_contado = 1450 AND diferencia = -50'),
+            ('cierre con contado 0', 'abierta', format(C_CERRAR, 0, 'NULL'), NULL,
+                'estado = ''cerrada'' AND saldo_contado = 0 AND diferencia = -1500'),
+            ('cierre sin contado', 'abierta', format(C_CERRAR, 'NULL', 999), NULL,
+                'estado = ''cerrada'' AND saldo_contado IS NULL AND diferencia IS NULL'),
+            -- RF-002-06
+            ('cierre con contado negativo', 'abierta', format(C_CERRAR, -1, 'NULL'), '*', 'estado = ''abierta'''),
+            -- H-01: el rechazo mira el cambio, asi que un negativo que ya estaba no traba el cierre
+            ('cierre con un saldo negativo anterior', 'abierta_negativa', format(C_CERRAR, 'NULL', 'NULL'), NULL,
+                'estado = ''cerrada'' AND saldo_inicial = -5'),
+            -- H-02: al cerrar no cambia ningun saldo
+            ('cierre con saldo inventado', 'abierta',
+                format(C_CAMBIAR, 'estado = ''cerrada'', fecha_cierre = now(), saldo_contado = 1450, saldo_actual = 1450'), '*',
+                'estado = ''abierta'' AND saldo_actual = 1500'),
+            ('cierre con saldo inicial inventado', 'abierta',
+                format(C_CAMBIAR, 'estado = ''cerrada'', fecha_cierre = now(), saldo_inicial = 500'), '*',
+                'estado = ''abierta'' AND saldo_inicial = 1000'),
+            -- RF-002-07: una caja que sigue cerrada no cambia su arqueo ni sus saldos
+            ('segundo cierre', 'cerrada', format(C_CERRAR, 1600, 'NULL'), C_YA_CERRADA, C_ARQUEO_INTACTO),
+            ('caja cerrada cambia saldo inicial', 'cerrada', format(C_CAMBIAR, 'saldo_inicial = 1'), C_YA_CERRADA, C_ARQUEO_INTACTO),
+            ('caja cerrada cambia saldo actual', 'cerrada', format(C_CAMBIAR, 'saldo_actual = 1'), C_YA_CERRADA, C_ARQUEO_INTACTO),
+            ('caja cerrada cambia contado', 'cerrada', format(C_CAMBIAR, 'saldo_contado = 1500'), C_YA_CERRADA, C_ARQUEO_INTACTO),
+            ('caja cerrada cambia diferencia', 'cerrada', format(C_CAMBIAR, 'diferencia = 0'), C_YA_CERRADA, C_ARQUEO_INTACTO),
+            ('caja cerrada cambia fecha de cierre', 'cerrada', format(C_CAMBIAR, 'fecha_cierre = now()'), C_YA_CERRADA, C_ARQUEO_INTACTO),
+            -- El plan pone el paso 2 antes que el 5: una pantalla vieja ve este texto y no otro
+            ('caja cerrada con contado negativo', 'cerrada', format(C_CAMBIAR, 'saldo_contado = -1'), C_YA_CERRADA, C_ARQUEO_INTACTO)
         ) AS p(nombre, prep, accion, rechazo, control)
     LOOP
         v_falla := NULL;
@@ -82,7 +120,7 @@ BEGIN
             -- Como postgres: el guard no controla la preparacion
             UPDATE public.cajas SET
                 estado         = CASE c.prep WHEN 'cerrada' THEN 'cerrada' ELSE 'abierta' END::estado_caja,
-                saldo_inicial  = 1000,
+                saldo_inicial  = CASE c.prep WHEN 'abierta_negativa' THEN -5 ELSE 1000 END,
                 saldo_actual   = CASE c.prep WHEN 'abierta_pareja' THEN 1000 ELSE 1500 END,
                 usuario_id     = v_usuario,
                 fecha_apertura = now() - interval '2 hours',
