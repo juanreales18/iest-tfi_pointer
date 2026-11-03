@@ -469,9 +469,11 @@ function modalAjusteStock(prod, onSaved) {
 
 async function renderCategorias(area) {
     async function load() {
-        const { data } = await window._supabase
+        // Se piden los id en lugar de contar en la consulta: contar la fila entera necesita
+        // permiso sobre precio_costo, que está oculto por columna, y la base responde 403.
+        const { data, error } = await window._supabase
             .from('categorias')
-            .select('*, productos(count)')
+            .select('*, productos(id)')
             .is('deleted_at', null)
             .order('orden');
 
@@ -483,7 +485,9 @@ async function renderCategorias(area) {
                 : ''}
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px">
-            ${!data?.length
+            ${error
+                ? `<p style="color:var(--color-gray);grid-column:1/-1">No pudimos cargar las categorías. Probá de nuevo.</p>`
+                : !data?.length
                 ? `<p style="color:var(--color-gray);grid-column:1/-1">Sin categorias</p>`
                 : data.map(c => `
                 <div class="card" style="padding:16px">
@@ -493,7 +497,7 @@ async function renderCategorias(area) {
                         </div>
                         <div>
                             <div style="font-weight:700;font-size:14px">${escapeHtml(c.nombre)}</div>
-                            <div style="font-size:12px;color:var(--color-gray)">${c.productos?.[0]?.count || 0} productos</div>
+                            <div style="font-size:12px;color:var(--color-gray)">${c.productos?.length || 0} productos</div>
                         </div>
                     </div>
                     <div style="display:flex;align-items:center;justify-content:space-between">
