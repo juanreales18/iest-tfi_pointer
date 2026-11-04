@@ -90,7 +90,7 @@ test('presentacion: el carrusel de la portada es decorativo, tenue y respeta a q
     const fotos = [...css.matchAll(/url\('\/img\/presentacion\/([^']+)'\)/g)].map((m) => m[1]);
     assert.ok(fotos.length >= 3, 'El carrusel necesita varias fotos');
     for (const foto of fotos) assert.ok(fs.existsSync(path.join(SRC, 'img', 'presentacion', foto)), `Falta ${foto}`);
-    // 01-frente-kiosco parece la versión descartada en su ficha: no va en la portada hasta aclararlo
+    // La foto 01 va en la galería; el carrusel de la portada sigue con las otras cuatro
     assert.ok(!fotos.includes('01-frente-kiosco.webp'));
     const opacidades = [...css.match(/@keyframes carrusel-fundido\s*\{[\s\S]*?\n\}/)[0].matchAll(/opacity:\s*([\d.]+)/g)].map((m) => Number(m[1]));
     assert.ok(Math.max(...opacidades) <= 0.25, 'Más opacidad le quita contraste al texto y al logo');
@@ -113,6 +113,13 @@ test('presentacion: cada imagen y video tiene un alt descriptivo', () => {
     }
     // Además de las figuras, solo está el isotipo de la barra
     assert.equal((html.match(/<img\b/g) || []).length, lista.length + 1, 'Hay una imagen fuera de una figura');
+});
+
+test('presentacion: la imagen 1 es la versión elegida en su ficha y los navegadores la renuevan', () => {
+    const img = figuras().find((f) => archivoDe(f.img) === '01-frente-kiosco.webp').img;
+    assert.match(atributo(img, 'alt'), /dos autos/, 'El alt describe la versión con dos autos actuales');
+    const version = leer(path.join(SRC, 'sw.js')).match(/CACHE_VERSION = '([^']+)'/)[1];
+    assert.notEqual(version, 'kiosco-v-2026-11-03T13-53-11', 'Con la versión vieja, los navegadores no renuevan la caché');
 });
 
 // P8: el sitio declara la IA en una sola nota, en vez de una leyenda por pieza
