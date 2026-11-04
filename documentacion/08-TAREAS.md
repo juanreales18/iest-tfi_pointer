@@ -61,7 +61,7 @@ La IA trabaja **una tarea por vez** y la marca con `[x]` al terminar.
 
 - [x] Actividad 1: constitución, arnés del agente y matriz de herramientas
 - [ ] Actividad 2: tres funcionalidades con el ciclo SDD completo en `specs/`
-- [ ] Actividad 3: tests en verde, Lighthouse de 80 o más y publicación final
+- [x] Actividad 3: tests en verde, Lighthouse de 80 o más y publicación final
 - [x] Pasar a variables CSS los 54 colores escritos a mano que quedan en `sistema/css/` (deuda medida por `tests/constitucion.test.js`; bajar `DEUDA_COLORES_CSS` a 0)
 - [x] Actividad 4: imágenes, video, gráficos y fichas en `multimedia/`
 - [x] Producir las imágenes fotorrealistas, con su ficha y su fila en `MATRIZ-HERRAMIENTAS.md`
