@@ -9,9 +9,11 @@
 
 | Qué | Dónde |
 |---|---|
-| Sistema publicado | https://pointer-demo.netlify.app/ |
-| Video promocional | *(se agrega en la Actividad 4)* |
-| Video demo | *(se agrega en la Actividad 4)* |
+| Sistema publicado | https://pointer-demo.netlify.app/login |
+| Página de presentación | https://pointer-demo.netlify.app/presentacion |
+| Video promocional | https://youtu.be/QeGQytGbK9k |
+| Video demo | https://youtu.be/rcM15H-btQ4 |
+| Todos los enlaces | [`ENLACES.md`](ENLACES.md) |
 
 ## Stack
 
@@ -35,7 +37,7 @@ El proyecto sigue **Desarrollo Guiado por Especificaciones (SDD)** con **Claude 
 iest-tfi_pointer/
 ├── README.md · AGENTS.md · CLAUDE.md · memory.md   ← lo que lee el agente (tienen que estar en la raíz)
 ├── documentacion/   ← TODOS los .md del proyecto: constitución, kit 01 a 10, marca, prompts, declaración, matriz
-├── specs/           ← una carpeta por funcionalidad (001, 002, 003)
+├── specs/           ← una carpeta por funcionalidad (001 y 002)
 ├── sistema/         ← Pointer: el sitio que se publica en Netlify
 ├── base-de-datos/   ← SQL de Supabase y la función crear-usuario
 ├── multimedia/      ← logo, imágenes, video, gráficos y FICHAS-IA.md

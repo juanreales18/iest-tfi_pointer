@@ -2,18 +2,19 @@
 
 > Una ficha por cada imagen, video, gráfico, voz o música generada con IA, o hecha con código escrito por una IA. En el informe, cada figura lleva como epígrafe su leyenda de transparencia. En la página de presentación del sitio, por decisión del autor (ver P-06 en `documentacion/PROMPTS.md`), las leyendas van reunidas en una nota al pie que nombra cada pieza y su herramienta, como permite la consigna («en el epígrafe o en una página "Cómo hicimos este sitio"»).
 >
-> Las cantidades marcadas *(completar)* las tiene que confirmar el autor, porque salen de lo que generó en cada herramienta.
+> El video demo (recorrido por el sistema) no lleva ficha: no tiene piezas generadas con IA, porque es una grabación de pantalla con la voz del autor.
+>
 
 ## Registro de producción
 
 | Pieza | Generadas | Usadas | Descartadas |
 |---|---|---|---|
-| Logo (Canva) | *(completar: opciones vistas en las 3 rondas)* | 1 | *(completar)* |
+| Logo (Canva) | 3 rondas de opciones (no se registró la cantidad exacta) | 1 | El resto de las opciones |
 | Voz en off (ElevenLabs) | 18 tomas como mínimo (2 por frase en 9 frases), más las regeneradas de las escenas 4 y 8 | 9 | 9 como mínimo |
 | Spot (Remotion) | 3 versiones renderizadas (isométrica, mixta 2D/3D, ajuste de volumen) | 1 | 2 |
 | Música y efectos (código) | 1 música y 5 efectos | 6 | 0 |
 | Gráficos (código) | 4, y una nueva versión del gráfico 4 | 4 | 1 (primera versión del gráfico 4) |
-| Infografía (código) | 2 versiones | 1 | 1 (la primera cortaba la última sección) |
+| Infografía (código) | 3 versiones | 1 | 2 (la primera cortaba la última sección; la segunda tenía la cantidad de tests anterior) |
 | Montaje de los mockups | 4 (2 con script y 2 rehechos por el autor) | 2 | 2 |
 | Imágenes fotorrealistas (Gemini) | 9 imágenes en 11 intentos (en 2 intentos Gemini no generó nada) | 8 | 1 (primera versión de la imagen 1) |
 
@@ -212,7 +213,7 @@
 | Nº y nombre de la pieza | Figura 17. Infografía «Pointer en números» (`multimedia/graficos/infografia-pointer.png`) |
 | Tipo | Infografía |
 | Herramienta y modelo | HTML y CSS renderizados con Playwright; el código lo escribió Claude a pedido del autor. 3 de noviembre de 2026 |
-| Prompt final | «Hacé la infografía con datos reales del proyecto.» Datos: requisitos y tareas de las specs 001 y 002, `npm test` (267 en verde), Lighthouse del 3 de noviembre de 2026, conteo de colores, `PROMPTS.md` (11 errores), `DECLARACION-IA.md` (7 riesgos) y esta lista de fichas. |
+| Prompt final | «Hacé la infografía con datos reales del proyecto.» Datos: requisitos y tareas de las specs 001 y 002, `npm test` (293 en verde), Lighthouse del 3 de noviembre de 2026, conteo de colores, `PROMPTS.md` (11 errores), `DECLARACION-IA.md` (7 riesgos) y esta lista de fichas. |
 | Iteraciones | 1) La primera versión tenía alto fijo y el pie tapaba la sección «Uso responsable de la IA» y las tecnologías. 2) Alto automático: aprobada. |
 | Edición humana | El autor revisó los datos y el diseño. Las fuentes de cada dato están escritas al pie de la infografía. |
 | Uso en el proyecto | Informe, página de presentación y defensa oral. Código en `multimedia/graficos/infografia-pointer.html` |

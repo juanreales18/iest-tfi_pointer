@@ -29,7 +29,7 @@ En Pointer el navegador **no es de confianza**: cualquier persona puede abrir la
 | Base de datos | Las vistas no se exponen a usuarios anónimos |
 | Base de datos | Funciones con `search_path` fijo y verificación de rol (`is_dueno`) |
 | Ventas | La función `crear_venta` calcula totales y stock en el servidor, con precios de la base |
-| Autenticación | Sin registro público: los usuarios los crea el dueño (a verificar en Supabase) |
+| Autenticación | Sin registro público: los usuarios los crea el dueño (registro desactivado en el panel de Supabase en noviembre de 2026). La protección de contraseñas filtradas requiere el plan pago de Supabase y queda como limitación |
 | Frontend | No usar `innerHTML` con datos del usuario; usar `textContent` |
 | Publicación | Cabeceras CSP en `netlify.toml`, ruta por ruta (hoy con `unsafe-inline`, protección parcial). Solo `/presentacion` agrega `frame-src https://www.youtube-nocookie.com`; las rutas desconocidas reciben `index.html`, que lleva la misma política en una meta |
 | Código | El repositorio no contiene claves ni archivos `.env` |
@@ -55,7 +55,7 @@ await supabase.rpc('crear_venta', { p_items: items, p_metodo_pago_id: metodoId }
 - [x] Vistas cerradas a usuarios anónimos
 - [x] Funciones con `search_path` fijo
 - [x] Función `crear_venta` con cálculo en el servidor
-- [ ] Registro público de usuarios desactivado
+- [x] Registro público de usuarios desactivado
 - [x] `precio_costo` oculto a empleados
 - [x] CSP configurada en Netlify (parcial, con `unsafe-inline`)
 - [ ] CSP sin `unsafe-inline`

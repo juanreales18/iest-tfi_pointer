@@ -2,7 +2,7 @@
 
 > Elección fundamentada a partir de lo investigado en el TP N° 2 (cómo las empresas construyen, entrenan y venden sus modelos). Las condiciones de uso se revisaron en octubre de 2026 y la tabla se actualizó en noviembre de 2026 con las herramientas que se usaron de verdad y **pueden cambiar**: antes de generar cada pieza se vuelven a leer los términos vigentes.
 >
-> Las filas marcadas con *(a confirmar)* son la elección propuesta; si al producir la pieza se usa otra herramienta, se corrige esta tabla y la ficha en `multimedia/FICHAS-IA.md`.
+> Todas las filas muestran las herramientas que se usaron de verdad. Cuando la elección cambió respecto de la propuesta inicial, la fila lo indica, y cada pieza tiene su ficha en `multimedia/FICHAS-IA.md`.
 
 | Uso | Herramienta y modelo | Empresa y plan | Motivo de la elección | Riesgos y mitigación |
 |---|---|---|---|---|
@@ -15,7 +15,7 @@
 | **Video (spot)** | Remotion 4.0 (animación con React), con código escrito por Claude | Remotion · gratuito para personas y equipos chicos | Permite una animación con la marca exacta (colores, tipografías y logo) y cambiar cualquier escena sin volver a generar; el autor aprobó cada escena con un storyboard | Escenas que prometan algo que el sistema no hace → guion revisado por el autor; personajes dibujados, no personas reales. **Cambio respecto de la propuesta:** se descartó Veo porque el autor prefirió una animación a clips realistas |
 | **Voz en off** | ElevenLabs, voz de catálogo «Carlos Pro - Argentinian Documentary & Radio», modelo eleven_v4 | ElevenLabs · plan gratuito | Voz natural con acento argentino, acorde al voseo de la marca | El plan gratuito **no permite uso comercial y exige atribución** («elevenlabs.io»): el video es académico y no monetizado, y la atribución va en el video y en la descripción. Nunca se clona la voz de una persona real |
 | **Música y efectos** | Código Python (`multimedia/video/spot/gen/sonidos.py`) escrito por Claude | Sin costo | Sonido propio, sin muestras ni licencias de terceros | Mezcla que tape la voz → el autor pidió bajar la música al 35 % y los efectos a la mitad. **Cambio respecto de la propuesta:** no se usó Suno ni la biblioteca de YouTube |
-| **Edición de video** | Remotion (el mismo proyecto del spot); para el video demo, grabación de pantalla con la voz del autor *(completar la herramienta)* | — | El montaje, los subtítulos y el volumen quedan en el código del spot y se pueden revisar | **Cambio respecto de la propuesta:** no se usó CapCut |
+| **Edición de video** | Remotion (el mismo proyecto del spot); para el video demo, grabación de pantalla con la voz del autor grabado y editado por el autor | — | El montaje, los subtítulos y el volumen quedan en el código del spot y se pueden revisar | **Cambio respecto de la propuesta:** no se usó CapCut |
 | **Gráficos e infografía** | Python con matplotlib, con código escrito por Claude | Anthropic · plan pago; matplotlib es libre | Los gráficos salen de **datos reales del repositorio** (`spec.md`, `tasks.md`, `verificacion.md`, `npm test`), así se pueden verificar | Datos inventados = falta grave → cada gráfico lleva la fuente al pie y se guarda en `multimedia/graficos/` |
 
 ## Criterios usados para elegir

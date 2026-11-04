@@ -6,9 +6,9 @@ La IA trabaja **una tarea por vez** y la marca con `[x]` al terminar.
 
 - [x] Definir el proyecto y su identidad de marca
 - [x] Escribir el kit de especificación (AGENTS.md y documentacion/)
-- [ ] Crear el repositorio público `iest-tfi_pointer` en GitHub (TFI, Actividad 1)
-- [ ] Conectar el repositorio a Netlify (carpeta de publicación: `sistema/`)
-- [ ] Subir el logo de Pointer y el favicon a `multimedia/marca/`
+- [x] Crear el repositorio público `iest-tfi_pointer` en GitHub (TFI, Actividad 1)
+- [x] Publicar en Netlify (la carpeta `sistema/` se sube a mano; el repositorio no está conectado)
+- [x] Subir el logo de Pointer y el favicon a `multimedia/marca/`
 
 ## Etapa 2 · Base de datos y seguridad
 
@@ -20,7 +20,7 @@ La IA trabaja **una tarea por vez** y la marca con `[x]` al terminar.
 - [x] Trigger de cajas
 - [x] Función `crear_venta` que calcule los totales en el servidor (atómica y con clave anti-duplicados)
 - [x] Cerrar la inserción directa de ventas: solo se vende con `crear_venta`
-- [ ] Desactivar el registro público de usuarios (signup) y verificarlo en el panel de Supabase
+- [x] Desactivar el registro público de usuarios (signup) y verificarlo en el panel de Supabase
 - [x] Crear usuarios desde una Edge Function (`crear-usuario`), solo para el dueño
 - [x] Ocultar `precio_costo` a los empleados (permiso por columna + función `get_costos()` solo para el dueño)
 
@@ -55,7 +55,7 @@ La IA trabaja **una tarea por vez** y la marca con `[x]` al terminar.
 - [ ] Quitar `unsafe-inline` de la CSP moviendo los scripts y `onclick` a archivos .js
 - [ ] Probar en celular y en la PC del mostrador con el lector
 - [ ] Revisar los permisos de cada rol una vez más
-- [ ] Publicar la versión final en Netlify
+- [x] Publicar la versión final en Netlify
 
 ## Etapa 7 · Trabajo Final Integrador
 
@@ -63,11 +63,11 @@ La IA trabaja **una tarea por vez** y la marca con `[x]` al terminar.
 - [ ] Actividad 2: tres funcionalidades con el ciclo SDD completo en `specs/`
 - [ ] Actividad 3: tests en verde, Lighthouse de 80 o más y publicación final
 - [x] Pasar a variables CSS los 54 colores escritos a mano que quedan en `sistema/css/` (deuda medida por `tests/constitucion.test.js`; bajar `DEUDA_COLORES_CSS` a 0)
-- [ ] Actividad 4: imágenes, video, gráficos y fichas en `multimedia/`
-- [ ] Producir las imágenes fotorrealistas, con su ficha y su fila en `MATRIZ-HERRAMIENTAS.md`
-- [ ] Completar las cantidades del logo en el registro de producción de `FICHAS-IA.md`
-- [ ] Grabar el video demo de 2 a 3 minutos con la voz del autor
-- [ ] Hacer la infografía
-- [ ] Actividad 5: declaración de uso de IA y análisis de riesgos
+- [x] Actividad 4: imágenes, video, gráficos y fichas en `multimedia/`
+- [x] Producir las imágenes fotorrealistas, con su ficha y su fila en `MATRIZ-HERRAMIENTAS.md`
+- [x] Completar las cantidades del logo en el registro de producción de `FICHAS-IA.md`
+- [x] Grabar el video demo con la voz del autor (4:30)
+- [x] Hacer la infografía
+- [x] Actividad 5: declaración de uso de IA y análisis de riesgos
 - [ ] Actividad 6: informe guionado y defensa
 

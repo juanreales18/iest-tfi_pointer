@@ -14,14 +14,14 @@
 | Música y efectos | Código Python escrito por Claude | Música de fondo y efectos sin muestras de terceros | Pidió el ajuste de volumen y aprobó la mezcla |
 | Gráficos | Python (matplotlib), código escrito por Claude | 4 gráficos con datos reales del repositorio | Revisó los datos y la fuente de cada gráfico |
 | Imágenes | Google Gemini (Nano Banana), con prompts preparados por Claude; mockups montados por el autor en Photopea (un primer montaje con un script de Python se descartó) | 8 imágenes fotorrealistas del kiosco, 2 de ellas mockups con capturas reales de Pointer | Corrigió los prompts con referencias de Google Street View de Tinogasta, generó y revisó cada imagen con la Tabla 3, descartó la que no cumplía y tomó las capturas del sistema |
-| Video demo | *(completar: grabación de pantalla con la voz del autor)* | | |
-| Informe | *(completar en la Actividad 6)* | | |
+| Video demo | — (sin IA) | Recorrido de 4:30 por las secciones del sistema | Grabó la pantalla, narró con su voz y editó el video |
+| Informe | Claude (chat) | Borrador del informe a partir de los documentos del repositorio | Revisó, corrigió y aprobó el texto final |
 
 ## Riesgos del uso de IA y cómo se mitigaron
 
 | N° | Riesgo | Dónde apareció | Mitigación aplicada | Evidencia |
 |---|---|---|---|---|
-| R1 | **Código o documentos incorrectos aceptados sin revisar** | La IA se equivocó al menos 11 veces durante el proyecto (por ejemplo, una función SQL que PostgreSQL rechazaba y un texto con poco contraste) | Cada edición se aprueba a mano (nunca en modo automático), `npm test` corre antes de cada commit y cada error queda registrado | `documentacion/PROMPTS.md` (E-01 a E-11), 267 tests en verde |
+| R1 | **Código o documentos incorrectos aceptados sin revisar** | La IA se equivocó al menos 11 veces durante el proyecto (por ejemplo, una función SQL que PostgreSQL rechazaba y un texto con poco contraste) | Cada edición se aprueba a mano (nunca en modo automático), `npm test` corre antes de cada commit y cada error queda registrado | `documentacion/PROMPTS.md` (E-01 a E-11), 293 tests en verde |
 | R2 | **Privacidad y datos de terceros** | La IA consultó la base de un cliente creyendo que era la de Pointer (E-06) | Se separaron las bases en `memory.md` y en las specs; la IA no recibe contraseñas ni claves; los cambios que borran datos los ejecuta el autor | `documentacion/PROMPTS.md` (E-06), principio P8 |
 | R3 | **Datos inventados** en gráficos o en el informe | Riesgo propio de pedirle números a una IA | Los gráficos se arman con datos del repositorio y llevan la fuente al pie; cuando la fuente estaba mal escrita, se corrigió | `multimedia/graficos/`, Figuras 5 a 8 de `FICHAS-IA.md` |
 | R4 | **Voz sintética y licencias** | La voz de ElevenLabs suena como una persona real; el plan gratuito no permite uso comercial | Voz de catálogo (sin clonar a nadie), atribución «elevenlabs.io» en el video y en YouTube, uso académico y no monetizado | Cierre del spot, Figura 2 de `FICHAS-IA.md` |

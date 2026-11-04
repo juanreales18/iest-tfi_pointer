@@ -51,6 +51,6 @@
 - Los clips de IA duran unos 8 s cada uno: se recortan en Remotion para ajustar el tiempo de cada escena.
 - Las escenas 6 y 7 usan capturas del sistema real publicado en `pointer-demo`, con datos de prueba (nada de datos reales de clientes).
 - La escena 7 depende de que la funcionalidad 002 (caja y arqueo) esté terminada; si no llega, se reemplaza por una captura del historial de ventas.
-- El eslogan «Cada venta, en su lugar.» es una propuesta: queda pendiente que el autor lo confirme en `documentacion/IDENTIDAD-MARCA.md`.
+- El eslogan «Cada venta, en su lugar.» era una propuesta en esta versión; el autor lo confirmó en noviembre de 2026 (`documentacion/IDENTIDAD-MARCA.md`).
 - Cada clip, la voz y la música llevan su ficha en `multimedia/FICHAS-IA.md`, con el prompt final y las iteraciones.
 - La descripción del video en YouTube declara el uso de IA y activa la etiqueta de contenido alterado o sintético.
